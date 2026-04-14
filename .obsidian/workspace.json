@@ -1,0 +1,224 @@
+{
+  "main": {
+    "id": "523ba81a22f66671",
+    "type": "split",
+    "children": [
+      {
+        "id": "ec559bd80e561e17",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0c64062070f3eba7",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "proyectos/Fangio_CRM/Fangio_CRM.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Fangio_CRM"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "64a5ed173f5f23c5",
+    "type": "split",
+    "children": [
+      {
+        "id": "b907efe9d6b8b0c8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d34a23c50ab124e8",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "f7e94d610ae93a8f",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "d5244ff4da9d4588",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "dc7ddaa1e51beae3",
+    "type": "split",
+    "children": [
+      {
+        "id": "acd2d6b5c87a8f47",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "91b01c47ef6fba6d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "proyectos/Trebol.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes de Trebol"
+            }
+          },
+          {
+            "id": "434cd21e0f865de3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "proyectos/Trebol.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes de Trebol"
+            }
+          },
+          {
+            "id": "25af22f7bec61792",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "24d014cb47aee89b",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas las propiedades"
+            }
+          },
+          {
+            "id": "0b6863e2e9bb2f27",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "proyectos/Trebol.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema de Trebol"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
+    }
+  },
+  "active": "d34a23c50ab124e8",
+  "lastOpenFiles": [
+    "proyectos/Fangio_CRM/MVP.md",
+    "proyectos/Fangio_CRM",
+    "Prompt_Maestro.md",
+    "infra/Prompt_Maestro.md",
+    "infra/Roadmap.md",
+    "proyectos/Fangio_CRM/Fangio_CRM.md",
+    "Roadmap.md",
+    "Fangio_CRM.md",
+    "proyectos/Trebol/Trebol.md",
+    "Bienvenido.md",
+    "Instrucciones Generales.md",
+    "proyectos/Trebol/bugs/2026-04-12 Handoff Blando Jeep Compass.md",
+    "proyectos/Trebol/conversaciones/Malas.md",
+    "proyectos/Trebol/conversaciones/Buenas.md",
+    "proyectos/Trebol.md",
+    "proyectos/Trebol/Trebol_Prod_Architecture.md",
+    "proyectos/Queen_CRM/Queen_CRM.md",
+    "proyectos/Trebol/Testing_Harness.md",
+    "infra/System_Map.md",
+    "contexto-claude/Rules_n8n.md",
+    "contexto-claude/Engineering_Manifesto.md",
+    "proyectos/Trebol/Workflow_v4_Reference.md",
+    "infra/VPS_Architecture.md",
+    "contexto-claude/Architecture_Index.md",
+    "proyectos/Trebol/conversaciones",
+    "proyectos/Trebol/bugs",
+    "proyectos/Trebol/SheetsToMongo_RAG_Inventario.md",
+    "proyectos/Trebol/Pipeline_v4.md",
+    "proyectos/Trebol",
+    "infra/n8n_Gotchas.md",
+    "infra",
+    "contexto-claude",
+    "Claude_Context",
+    "Claude_Agents",
+    "research"
+  ]
+}
