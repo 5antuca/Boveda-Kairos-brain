@@ -12,7 +12,7 @@ Cualquier LLM que opere bajo este usuario debe entender este archivo como la rut
 
 - 👤 **Identidad y Configuración:** [[sobre-mi]] | [[Instrucciones Generales]] | [[Prompt_Maestro]]
 - 🗺️ **Roadmap activo:** [[Roadmap]]
-- 🧠 **Contexto para Claude (`contexto-claude/`):** [[Architecture_Index]] | [[Engineering_Manifesto]] | [[Rules_n8n]] | [[Preferencias_Arquitectura]] | [[Scripts_y_Herramientas]] | [[Comandos_Agentes_Skills]] (índice de `.claude/`)
+- 🧠 **Contexto para Claude (`contexto-claude/`):** [[Architecture_Index]] | [[Engineering_Manifesto]] | [[Rules_n8n]] | [[Preferencias_Arquitectura]] | [[Scripts_y_Herramientas]] | [[Comandos_Agentes_Skills]] (índice de `.claude/`) | [[Sincronizacion_Repos]] (regla dual-push)
 - 🏗️ **Infra compartida (`infra/`):** [[VPS_Architecture]] | [[VPS_Stack]] | [[System_Map]] | [[n8n_Gotchas]] | [[Redis_Postgres_Debug]] | [[Chatwoot_Evolution_Quirks]]
 - 🚀 **Proyectos Activos (`proyectos/`):**
   - [[Trebol]] — El Trébol Automotores (dashboard del proyecto en `proyectos/Trebol/Trebol.md`)

@@ -77,6 +77,8 @@
 
 ## Trebol v4 Test — Refactoring de consolidación (2026-04-03)
 
+> **⏸ PAUSADO 2026-04-14** — Dejamos de iterar sobre `trebol_v4_test.json` por ahora. Toda la sección queda como referencia histórica. Los pendientes (deploy a prod F1+F2+F3+F4+F5, smoke test Jeep Compass, bugs A/E/F/Rocío, monitor de `llm_drift_events`) siguen abiertos pero no se trabajan hasta retomar el tema explícitamente. Working tree del workflow en estado post-Fase 5 sin smoke test — NO commitear hasta validar.
+
 Objetivo: reducir ~152 → ~85 nodos manteniendo TODA la lógica de negocio determinística.
 Principio: consolidar nodos, NO mover lógica crítica al LLM. Las guardias siguen en código.
 
