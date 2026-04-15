@@ -158,6 +158,24 @@ Esto le dice explícitamente al agent qué campo usar como mensaje entrante. En 
 
 ---
 
+## ⚠️ `$env` bloqueado por defecto en n8n 2.x (2026-04-15)
+
+**Síntoma**: `ExpressionError: access to env vars denied` al usar `$env.VARIABLE` en cualquier nodo.
+
+**Causa**: n8n 2.x bloquea el acceso a env vars desde expresiones de nodos por defecto (aunque no estén seteadas explícitamente). El mensaje sugiere sacar `N8N_BLOCK_ENV_ACCESS_IN_NODE`, pero en realidad hay que setearlo en `false`.
+
+**Fix**: agregar en el `environment` de **AMBOS** containers (master y worker) en `docker-compose.yml`:
+```yaml
+- N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+```
+Luego `docker compose up -d n8n n8n-worker`.
+
+**Nota**: el worker también necesita las env vars que los nodos van a usar (`EVOLUTION_URL`, `EVOLUTION_API_KEY`) porque es el worker quien ejecuta los nodos, no el master.
+
+**Nota 2**: n8n Variables (`$vars`) requieren licencia — no disponible en community. Usar `$env` con el flag en false es la solución correcta para self-hosted community.
+
+---
+
 ## ⚠️ AI Agent — `toolsAgent` no existe en n8n 2.2.4 (2026-04-15)
 
 **Síntoma**: `The value "toolsAgent" is not supported!` al abrir o ejecutar el AI Agent node.
