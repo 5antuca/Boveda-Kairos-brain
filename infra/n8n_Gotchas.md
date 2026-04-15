@@ -158,6 +158,18 @@ Esto le dice explícitamente al agent qué campo usar como mensaje entrante. En 
 
 ---
 
+## ⚠️ AI Agent — `toolsAgent` no existe en n8n 2.2.4 (2026-04-15)
+
+**Síntoma**: `The value "toolsAgent" is not supported!` al abrir o ejecutar el AI Agent node.
+
+**Causa**: `toolsAgent` es un tipo de agente agregado en versiones posteriores de n8n. En 2.2.4 no existe.
+
+**Fix**: usar `openAiFunctionsAgent` en su lugar. Es el equivalente funcional para modelos OpenAI — usa function calling nativo, maneja tools estructuradas con la misma confiabilidad.
+
+En el JSON: `"agent": "openAiFunctionsAgent"`. En la UI: AI Agent → Agent → seleccionar "OpenAI Functions Agent".
+
+---
+
 ## Links
 
 - [[Pipeline_v4]]
