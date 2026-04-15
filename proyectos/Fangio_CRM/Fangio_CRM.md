@@ -43,9 +43,9 @@ Para cargar la aplicación en su estado actual, sigue estos pasos:
 
 ### ✅ Fase 3 Completada: Professional Performance Chat (Abril 2026)
 - **Mapping de WhatsApp Real:** Priorización de `pushName` y limpieza de metadatos en la sidebar (`lastMessageContent` sin prefijos).
-- **Estética Dark Premium:** Overrides globales en CSS para eliminar todos los fondos claros heredados de la librería `@chatscope`, logrando una interfaz 100% negra y minimalista.
-- **Flujo Real-Time (WPP Style):** Sincronización optimizada entre n8n y el dashboard. Se implementó el guardado automático de mensajes del cliente en la colección `Message` de MongoDB en cuanto llegan al endpoint de leads, permitiendo ver el flujo natural de la conversación sin latencia.
-- **Legibilidad & Contraste:** Corrección de visibilidad en perfiles de cliente (avatares con texto blanco) y optimización de jerarquía tipográfica.
+- **Estética Dark Premium:** Overrides globales en CSS para eliminar todos los fondos claros heredados de la librería `@chatscope`, logrando una interfaz 100% negra y minimalista. Se implementó una técnica de centrado absoluto para el placeholder de chat vacío, garantizando perfecta alineación visual.
+- **Flujo Real-Time & Data Join:** Sincronización optimizada entre n8n y el dashboard. Se implementó una agregación de MongoDB (`$lookup`) en el backend que garantiza que el sidebar siempre muestre el último mensaje real incluso si la tabla de leads no se actualizó, eliminando el fallback "Chat iniciado".
+- **Legibilidad & Contraste:** Corrección de visibilidad en perfiles de cliente (avatares con texto blanco) y optimización de jerarquía tipográfica. Prioratización absoluta de `pushName` de WhatsApp en el mapeo de nombres.
 
 ### 🔄 Fase 3 En Progreso: FangioBot v2 (2026-04-15)
 - **Tenant activo:** `el-trebol` en MongoDB + Evolution API conectada (`connectionStatus: open`)

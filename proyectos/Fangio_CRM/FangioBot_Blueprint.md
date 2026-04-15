@@ -395,6 +395,28 @@ Para garantizar una experiencia de monitoreo y gestión de leads de primer nivel
 
 ### Tareas Pendientes en la UI de n8n para el Próximo Dev/IA:
 1. Asegurarse de que el sub-nodo **Chat Model** del `AI Agent` esté configurado y conectado a `OpenAI Agent Model`.
+
+---
+
+## 9. Interfaz de Usuario — El Chat Dashboard Profesional
+
+Para garantizar una experiencia de monitoreo y gestión de leads de primer nivel, la interfaz de chat en el dashboard de FangioCRM ha sido profesionalizada utilizando componentes estándar de la industria.
+
+### 9.1 Stack de UI (Dashboard)
+- **Framework**: `@chatscope/chat-ui-kit-react`.
+- **Arquitectura**: 
+  - `MainContainer`: Contenedor principal responsive.
+  - `Sidebar` + `ConversationList`: Manejo de lista de chats con búsqueda integrada.
+  - `ChatContainer` + `MessageList`: Ventana de mensajes con scroll automático nativo y manejo de estados.
+  - `MessageInput`: Input profesional con soporte para envío optimista.
+
+### 9.2 Optimizaciones de UX/UI
+- **WhatsApp Push Meta Mapping**: Se prioriza la propiedad `pushName` (nombre configurado por el usuario en WhatsApp) sobre el número de teléfono en la sidebar.
+- **Flujo Real-Time Sin Latencia**: El backend (`POST /api/leads`) ahora inserta automáticamente los mensajes entrantes en la colección `Message`. Esto asegura que el cliente aparezca en el chat en cuanto el webhook impacta el CRM.
+- **Eliminación de Ruido Blanco**: Overrides masivos en `globals.css` para forzar fondo `#000` y transparencias en cabeceras e inputs, eliminando los grises/blancos por defecto de `@chatscope`.
+- **Polling Dual Inteligente**: Se implementaron dos frecuencias de polling (Leads cada 5s / Chat Activo cada 5s) para mantener la UI sincronizada sin degradar el rendimiento.
+- **Design System Dark**: Coherencia visual garantizada con sombras tipo "glow" en insignias de mensajes no leídos y contraste AA/AAA en todos los paneles laterales.
+- **Optimismo en la UI**: Los mensajes enviados por el vendedor aparecen instantáneamente en la pantalla antes de la confirmación del servidor.
 2. Asegurarse de que el sub-nodo **Memory** del `AI Agent` esté conectado al `Simple Memory`.
 3. Asegurarse de que los sub-nodos **Tool** estén conectados a las 3 tools (`buscar_vehiculos`, `opciones_financiacion`, `derivar_a_vendedor`).
 4. Seleccionar la credencial OpenAI Api resiente en los nodos: `Clasificador LLM Nano`, `OpenAI Agent Model` y `Extractor Lead LLM`.
