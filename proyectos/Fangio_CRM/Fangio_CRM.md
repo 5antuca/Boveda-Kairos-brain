@@ -41,10 +41,11 @@ Para cargar la aplicación en su estado actual, sigue estos pasos:
 - **Aprovisionamiento Automático:** La API de Evolution se crea silenciosamente en segundo plano usando webhooks asíncronos cuando un nuevo tenant se registra, mejorando radicalmente el UX.
 - **Dominio Principal:** Redirección 301 forzada a nivel de servidor de `*.vercel.app` para utilizar únicamente la marca `fangiocrm.com`.
 
-### ✅ Fase 2 Completada: Despliegue de Infraestructura Multitenant (N8N)
-- **Topología Aislada:** Separación total de "Trebol" creando el contenedor `fangiocrm-infra`.
-- **Motor Multitenant Stateless:** n8n configurado como enrutador lógico central (Webhook Maestro) que delega la memoria y persistencia a MongoDB y Redis, habilitando la escala paralela para 100+ concesionarias.
-- **Proxy Traefik & SSL:** Desactivación de puertos expuestos e integración de Let's Encrypt mediante Cloudflare DNS-Only.
+### ✅ Fase 3 Completada: Professional Performance Chat (Abril 2026)
+- **Mapping de WhatsApp Real:** Priorización de `pushName` y limpieza de metadatos en la sidebar (`lastMessageContent` sin prefijos).
+- **Estética Dark Premium:** Overrides globales en CSS para eliminar todos los fondos claros heredados de la librería `@chatscope`, logrando una interfaz 100% negra y minimalista.
+- **Flujo Real-Time (WPP Style):** Sincronización optimizada entre n8n y el dashboard. Se implementó el guardado automático de mensajes del cliente en la colección `Message` de MongoDB en cuanto llegan al endpoint de leads, permitiendo ver el flujo natural de la conversación sin latencia.
+- **Legibilidad & Contraste:** Corrección de visibilidad en perfiles de cliente (avatares con texto blanco) y optimización de jerarquía tipográfica.
 
 ### 🔄 Fase 3 En Progreso: FangioBot v2 (2026-04-15)
 - **Tenant activo:** `el-trebol` en MongoDB + Evolution API conectada (`connectionStatus: open`)
