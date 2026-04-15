@@ -255,7 +255,7 @@ Destino backups: `r2:kairos-backups/backups/daily/YYYYMMDD_HHMMSS/`
 | `validate-backups.sh` | Validación de backups |
 | `cleanup-chatwoot-conversations.sh` | Elimina conversaciones Chatwoot PROD con last_activity > N días (Rails runner) |
 | `daily-snapshot.sh` | Snapshot diario |
-| `health-check-advanced.sh` | Health check avanzado: containers, RAM, disco, backup, response time, WhatsApp zombie + degradado |
+| `health-check-advanced.sh` | Health check cron (5min): containers, RAM, disco, backup, response time, WhatsApp zombie (Mode A / Mode B / init queries fail). Ver [[Chatwoot_Evolution_Quirks#Sesion fantasma - 3 modos de falla]] |
 | `monitor-alerts.sh` | Monitor de alertas |
 | `new-client.sh` | Onboarding de nuevo cliente |
 | `decrypt-credentials.sh` | Descifra CONFIDENTIAL_CREDENTIALS.txt.gpg |

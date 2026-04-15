@@ -349,15 +349,24 @@ Antes de tocar el primer nodo en n8n, confirmar:
 - [ ] Code nodes: `typeVersion: 1` en todos (verificar antes de guardar)
 - [ ] IF nodes con output de Code: `loose` typeValidation activada
 
-## Estado Actual (Lógica en n8n Finalizada - Sprint 5)
-- **Sprints 1 al 5 en n8n**: La lógica del bot está completa y lista para ser activada. Soporta clasificación de intenciones, guardias, extracción de datos y sincronización de dólar blue.
-- **Backend Preparado**: El endpoint de RAG y el de recepción de Leads están implementados en el código de FangioCRM, pero no se ha verificado el flujo en producción con datos reales.
-- **Pendiente de Activación**: Falta conectar el webhook maestro con una instancia real de Evolution API y realizar el mapeo final de credenciales en la UI de n8n.
-- **Normalización**: Soporta lógica para captions de media e imágenes, lista para recibir tráfico.
+## Estado Actual (2026-04-15) — v1 DESCARTADA, en rediseño v2
 
+**Los Sprints 1-5 fueron implementados pero v1 tiene bugs estructurales detectados en el primer test real.**  
+El workflow `fangiobot-master` en n8n tiene el código pero **no está operativo** — se decidió rediseño completo.
 
-### Tareas Pendientes en la UI de n8n para el Próximo Dev/IA:
-1. Asegurarse de que el sub-nodo **Chat Model** del `AI Agent` esté configurado y conectado a `OpenAI Agent Model`.
-2. Asegurarse de que el sub-nodo **Memory** del `AI Agent` esté conectado al `Simple Memory`.
-3. Asegurarse de que los sub-nodos **Tool** estén conectados a las 3 tools (`buscar_vehiculos`, `opciones_financiacion`, `derivar_a_vendedor`).
-4. Seleccionar la credencial OpenAI Api resiente en los nodos: `Clasificador LLM Nano`, `OpenAI Agent Model` y `Extractor Lead LLM`.
+### Bugs críticos encontrados en testing (2026-04-15)
+- `Normalizar Payload` lee path incorrecto del webhook → todo el pipeline recibe `undefined`
+- 4 branches paralelos conectan directo a Code node → crash "hasn't been executed"
+- Guardias usan regex → frágil, no escala, diseño incorrecto
+- Estado disperso en 3 keys Redis (`state`, `ficha`, `permuta_data`) → sin visión unificada
+- Historial de chat (nodo 8d del diseño original) nunca se implementó
+- Evolution → n8n: NAT hairpinning (URL pública no alcanzable desde container) → resuelto con URL interna
+
+### Lo que sí quedó resuelto
+- ✅ Evolution API conectada (`el-trebol`, sesión `open`)
+- ✅ Tenant en MongoDB creado y endpoint `/api/agent/context` funcional
+- ✅ Webhook Evolution → n8n configurado con URL interna Docker
+- ✅ Debounce, bot_off, lock funcionan correctamente
+
+### Próximos pasos
+Ver rediseño completo en [[FangioBot_v2_Architecture]] — Sprints 6-10 pendientes de implementación.

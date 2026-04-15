@@ -46,5 +46,12 @@ Para cargar la aplicación en su estado actual, sigue estos pasos:
 - **Motor Multitenant Stateless:** n8n configurado como enrutador lógico central (Webhook Maestro) que delega la memoria y persistencia a MongoDB y Redis, habilitando la escala paralela para 100+ concesionarias.
 - **Proxy Traefik & SSL:** Desactivación de puertos expuestos e integración de Let's Encrypt mediante Cloudflare DNS-Only.
 
+### 🔄 Fase 3 En Progreso: FangioBot v2 (2026-04-15)
+- **Tenant activo:** `el-trebol` en MongoDB + Evolution API conectada (`connectionStatus: open`)
+- **Infraestructura lista:** webhook Evolution → n8n operativo con URL interna Docker
+- **v1 descartada:** bugs estructurales en pipeline de contexto detectados en testing real
+- **v2 en diseño:** Two-LLM pipeline (Extractor nano + AI Agent), sin guardias, state machine en system prompt
+- Ver diseño completo: [[FangioBot_v2_Architecture]]
+
 ---
 *Nota: Esta es la documentación estratégica en Kairos Brain. El código fuente vive fuera de esta bóveda.*

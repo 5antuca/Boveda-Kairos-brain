@@ -118,6 +118,31 @@ docker ps --filter "name=evolution"
 
 Si pasa a `unhealthy`, chequear conexión con Chatwoot y reiniciar **solo Evolution**, no tocar Chatwoot.
 
+### Sesion fantasma - 3 modos de falla
+
+`docker healthy` + `connectionState=open` **no alcanza** para saber si Evolution está realmente vivo. Baileys tiene 3 modos de degradación silenciosa donde la API reporta todo OK pero los mensajes 1:1 de clientes no bajan. `scripts/health-check-advanced.sh` detecta los tres cada 5min.
+
+**Mode A — Full zombie**
+- Síntoma: 0 `messages.upsert` de cualquier tipo en 30min (ni broadcasts ni grupos ni 1:1).
+- Causa: socket Baileys colgado, WhatsApp dropeó la sesión del lado server.
+- Fix automático: `docker restart trebol-prod-evolution-api` (1 vez por hora max).
+
+**Mode B — Degraded (ghost 1:1)**
+- Síntoma: `state=open`, llegan `status@broadcast` y/o mensajes de grupo (`@g.us`), pero 0 mensajes 1:1 (`@s.whatsapp.net`) en 30min.
+- Causa: WhatsApp entrega eventos broadcast/grupo pero no routea 1:1 a esta sesión. Clásico "ghost session" — el dispositivo sigue registrado pero el routing 1:1 está roto.
+- Fix automático: `POST /instance/restart/{instance}` (API endpoint, más liviano que restart del container). **NO usar docker restart para Mode B** — queda degradado (aprendido 2026-04-01).
+- **Bug histórico (fixed 2026-04-14)**: el script contaba grupos como "1:1 sano" y no detectaba este modo cuando el grupo interno seguía flujo. Ahora filtra `@g.us` explícitamente.
+
+**Mode C — Baileys init queries fail** *(descubierto 2026-04-14)*
+- Síntoma: post-restart/reconexión, el log tira `unexpected error in 'init queries'` con `bad-request` en `executeInitQueries` (fetchProps). El socket llega a `state=open` y arranca `CONNECTED TO WHATSAPP`, pero nunca recibe `messages.upsert` reales.
+- Causa: WhatsApp server rechaza las queries iniciales del socket. Auth state parcialmente corrupto o device kickeado del lado server.
+- Fix automático: **NINGUNO**. Restartear no arregla nada — el socket vuelve a fallar en las mismas queries. Requiere **re-scan manual del QR** desde el celular de la concesionaria via `https://trebol.evo.kairosaisolutions.com/manager/instance/{uuid}/dashboard`.
+- Guard: si el health check detecta zombie (Mode A/B) **y** init queries fallando en la misma ventana, **salta el auto-restart** y alerta `zombie_needs_qr` pidiendo intervención humana. Evita restart loops.
+
+**Secondary signal**: además de contar mensajes, el script chequea ejecuciones del workflow prod (`wf4ts1WKcpOaE90A__FkD`) en `execution_entity` de Postgres. Si hay ejecuciones, el webhook está vivo y el silencio de mensajes puede ser real (horas muertas, domingos). Solo dispara auto-restart si `DIRECT_MSG_COUNT=0` **y** `EXEC_COUNT=0`.
+
+**Ventana operativa del auto-restart**: Lun-Sab 9:00-20:00 local. Fuera de ese horario solo alerta, no restartea (evita falsos positivos por horario muerto).
+
 ## Integración n8n con Chatwoot
 
 ### Webhook que dispara el bot
