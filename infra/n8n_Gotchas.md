@@ -120,6 +120,27 @@ Snapshots del estado del VPS:
   Luego **restart ambos**: `docker restart trebol-test-n8n trebol-test-n8n-worker`
 - **Bug conocido**: alerta `lead_caliente` se duplica — el workflow principal tiene 2 rutas paralelas al mismo nodo (handoff + temperatura). No bloqueante por ahora.
 
+## ⚠️ HTTP Request node — método GET por defecto (2026-04-15)
+
+**Síntoma**: `400 Bad request — Invalid request to GET /v1/chat/completions. You provided a body with this GET request.`
+
+**Causa**: cuando creás un nodo `n8n-nodes-base.httpRequest` vía API (PUT workflow JSON), el campo `method` no tiene default explícito. n8n lo interpreta como GET aunque tengas `sendBody: true` y `specifyBody: "json"`. El body se ignora, se hace GET, la API destino rechaza con 400.
+
+**Fix**: siempre incluir `"method": "POST"` (o el método correcto) explícitamente en `parameters` al construir nodos HTTP vía JSON/script.
+
+```json
+"parameters": {
+  "method": "POST",
+  "url": "https://api.openai.com/v1/chat/completions",
+  "sendBody": true,
+  ...
+}
+```
+
+**Dónde nos pasó**: nodo `Extractor LLM Nano` en FangioBot v2, construido con script Python. Sprint 6, 2026-04-15.
+
+---
+
 ## Links
 
 - [[Pipeline_v4]]
