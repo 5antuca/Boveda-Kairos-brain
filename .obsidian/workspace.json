@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "proyectos/Fangio_CRM/Fangio_CRM.md",
+                "file": "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Fangio_CRM"
+              "title": "Agente_FangioBot_Design"
             }
           }
         ]
@@ -183,14 +183,24 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "d34a23c50ab124e8",
+  "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "contexto-claude/Sincronizacion_Repos.md",
+    "proyectos/Fangio_CRM/Fangio_CRM.md",
+    "proyectos/Fangio_CRM/FangioBot_Blueprint.md",
+    "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
+    "proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant.md",
     "proyectos/Fangio_CRM/MVP.md",
+    "proyectos/Fangio_CRM/Roadmap_Backend.md",
+    "proyectos/Fangio_CRM/Keys.md",
+    "proyectos/Fangio_CRM/keys.txt",
+    "proyectos/Fangio_CRM/prompt.txt",
+    "proyectos/Fangio_CRM/k",
+    "proyectos/Fangio_CRM/carpeta sin título",
     "proyectos/Fangio_CRM",
     "Prompt_Maestro.md",
     "infra/Prompt_Maestro.md",
     "infra/Roadmap.md",
-    "proyectos/Fangio_CRM/Fangio_CRM.md",
     "Roadmap.md",
     "Fangio_CRM.md",
     "proyectos/Trebol/Trebol.md",
@@ -206,19 +216,10 @@
     "infra/System_Map.md",
     "contexto-claude/Rules_n8n.md",
     "contexto-claude/Engineering_Manifesto.md",
-    "proyectos/Trebol/Workflow_v4_Reference.md",
-    "infra/VPS_Architecture.md",
-    "contexto-claude/Architecture_Index.md",
     "proyectos/Trebol/conversaciones",
     "proyectos/Trebol/bugs",
-    "proyectos/Trebol/SheetsToMongo_RAG_Inventario.md",
-    "proyectos/Trebol/Pipeline_v4.md",
     "proyectos/Trebol",
-    "infra/n8n_Gotchas.md",
     "infra",
-    "contexto-claude",
-    "Claude_Context",
-    "Claude_Agents",
-    "research"
+    "contexto-claude"
   ]
 }

@@ -35,5 +35,16 @@ Para cargar la aplicación en su estado actual, sigue estos pasos:
 - **Comunicación Limpia:** Eliminación de ruido visual y botones innecesarios.
 - **Automatización de Canal:** Sufijo `(WPP)` añadido automáticamente a los nombres de contacto.
 
+### ✅ Fase 1 Completada: Analíticas y Setup WA Zero-Touch (Abril 2026)
+- **Dashboard Enterprise:** Gráficos con `recharts` visualizando conversiones, rendimiento por canal y crecimiento de leads. Solucionado el "flicker" de animaciones en React.
+- **WhatsApp Modal:** Migrado el QR a un layout tipo *Glassmorphism* emergente (modal_blur). 
+- **Aprovisionamiento Automático:** La API de Evolution se crea silenciosamente en segundo plano usando webhooks asíncronos cuando un nuevo tenant se registra, mejorando radicalmente el UX.
+- **Dominio Principal:** Redirección 301 forzada a nivel de servidor de `*.vercel.app` para utilizar únicamente la marca `fangiocrm.com`.
+
+### ✅ Fase 2 Completada: Despliegue de Infraestructura Multitenant (N8N)
+- **Topología Aislada:** Separación total de "Trebol" creando el contenedor `fangiocrm-infra`.
+- **Motor Multitenant Stateless:** n8n configurado como enrutador lógico central (Webhook Maestro) que delega la memoria y persistencia a MongoDB y Redis, habilitando la escala paralela para 100+ concesionarias.
+- **Proxy Traefik & SSL:** Desactivación de puertos expuestos e integración de Let's Encrypt mediante Cloudflare DNS-Only.
+
 ---
 *Nota: Esta es la documentación estratégica en Kairos Brain. El código fuente vive fuera de esta bóveda.*
