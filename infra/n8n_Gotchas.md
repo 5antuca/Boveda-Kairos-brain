@@ -141,6 +141,23 @@ Snapshots del estado del VPS:
 
 ---
 
+## ⚠️ AI Agent (toolsAgent) — "Could not get parameter: text" (2026-04-15)
+
+**Síntoma**: `Error: Could not get parameter — parameterName: text` al ejecutar el AI Agent.
+
+**Causa**: el modo `toolsAgent` busca un campo `text` en el input para saber cuál es el mensaje del usuario. Cuando el nodo anterior es un Code node (no un Chat Trigger), no hay campo `text` en el JSON — el agent no sabe qué mensaje procesar.
+
+**Fix**: agregar en los parámetros del AI Agent node:
+```json
+"promptType": "define",
+"text": "={{ $('Normalizar Payload').item.json.textoCompleto }}"
+```
+Esto le dice explícitamente al agent qué campo usar como mensaje entrante. En la UI: AI Agent → pestaña Parameters → "Prompt" → seleccionar "Define below" → pegar la expresión.
+
+**Dónde nos pasó**: FangioBot v2 Sprint 6, AI Agent recibe datos de `Construir Prompt Block` (Code node). 2026-04-15.
+
+---
+
 ## Links
 
 - [[Pipeline_v4]]
