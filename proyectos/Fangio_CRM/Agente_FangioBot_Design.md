@@ -179,8 +179,8 @@ Para que el prompt sea personalizable en lo superficial pero irrompible en lo fu
 | State machine | Regex sobre texto del bot (rompe con acentos) | Redis state key explícita (determinístico) |
 | Mensajes perdidos | ❌ O6: mensajes durante processing descartados | ✅ Queue FIFO Redis: ningún mensaje se pierde |
 | CRM | Google Sheets (5-10s delay, race conditions) | MongoDB directo + API FangioCRM (instantáneo) |
-| Intermediario WA | Chatwoot + Evolution | Evolution directo (menos latencia) |
 | Datos del lead en dashboard | ❌ Solo Sheets externo | ✅ Aparece en tiempo real en FangioCRM |
+| Interfaz de Usuario (UX/UI) | ❌ Básica / Custom | ✅ **@chatscope UI Kit** (Professional Standard) |
 | Observabilidad | Drift detector Postgres (F3) | Mantener + agregar log de estado Redis en cada turno |
 
 ---

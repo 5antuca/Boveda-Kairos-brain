@@ -141,6 +141,22 @@ Todo funcionando en producción.
 
 ---
 
+## Fase 7 — Profesionalización del Inbox & UX
+
+### Objetivo
+Llevar la interfaz de chat a un nivel de producción profesional, eliminando parpadeos y asegurando una UX impecable.
+
+### Tareas
+- [x] Migración a UI Kit profesional (`@chatscope/chat-ui-kit-react`)
+- [x] Refactorización de `MessageWindow` y `ConversationList` para estabilidad
+- [x] Sistema de polling dual optimizado (Leads 5s / Chat Activo 5s)
+- [x] Persistencia de Bot Toggle con protección contra sobreescritura de polling
+- [x] Optimización de legibilidad y Dark Mode (Contraste, Overflows, Ellipsis)
+- [x] Implementación de envío de mensajes con actualización optimista (UI inmediata)
+- [x] Eliminación de ruido visual (Remover call buttons y avatars innecesarios)
+
+---
+
 ## Variables de Entorno `.env.local`
 
 ```env
