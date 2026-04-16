@@ -32,6 +32,35 @@
 
 ---
 
+## Bug Fix — Conversión de pesos + links MercadoLibre (2026-04-16)
+
+### Root cause identificado
+Dos bugs encadenados en el nodo `Inyectar Conversión Pesos` de Trebol v4:
+
+1. **Bug A (crítico)**: Pattern 3 `(\d{7,})` capturaba el ID del listing de ML (`MLA-1694594131`) como un monto de ~1.694 millones de pesos → el LLM recibía presupuesto falso de U$S 1.2M → mostraba autos populares/caros, ignorando los baratos. Afecta a todos los leads que llegan por ML.
+
+2. **Bug B (menor)**: Se usaba `value_sell` (tasa de venta del blue, la más alta) para convertir pesos a USD. Con tasa sell 1410: 7M pesos = 4.965 USD → auto a U$S 5.000 excluido. Con mid-rate 1400: 7M = 5.000 USD → incluido.
+
+### Fix aplicado (2026-04-16, TEST)
+- Agregar `mensajeSinUrls = mensaje.replace(/https?:\/\/[^\s]+/gi, '')` antes de los patterns
+- Aplicar patterns sobre `mensajeSinUrls` en vez de `mensaje`
+- Cambiar dolarBlue: `value_sell` → `(value_sell + value_buy) / 2`
+
+**Verificado:**
+- Link ML `MLA-1694594131` → sin conversión (antes: `$1694.6M ≈ U$S 1.212.156`)
+- "7 millones" a tasa 1400 → `U$S 5.000` exacto (antes: `U$S 4.965` con sell 1410)
+- "U$S 5000" sin pesos → sin conversión (correcto, sin regresión)
+
+Ver postmortem completo: `proyectos/Trebol/bugs/2026-04-16-conversion-pesos-ml-ids.md`
+
+### Estado deploy
+- [x] Fix en `workflows/trebol_v4_test.json` — nodo `Inyectar Conversión Pesos`
+- [ ] Importar a n8n test y validar con conversación real (link ML + monto pesos)
+- [ ] Deploy a PROD `wf4ts1WKcpOaE90A__FkD` (hotfix, no requiere spec)
+- [ ] Limpiar memoria post-deploy: `bash scripts/clear-chat-memory.sh 5491150635028`
+
+---
+
 ## Bot de Ventas — trebol22
 
 ### ✅ Completado (TEST + PROD)
