@@ -49,6 +49,22 @@ Ver [[Preferencias_Arquitectura#Memorias duras]] → `feedback_switch_node_stric
 - Pedidos: `gid=2004343376`
 - Inventario PROD: docId=`1QBxyYP5eOhdjWnkmUzYv-H1RdPxo0L68G8aJD8qA_Fw`, tabs: Vehiculos=0, Nautico=253929510, Motos=509017185, Camiones=1980478262, Maquinaria=409148329
 
+## ⛔ NUNCA deployar a prod en caliente (2026-04-16)
+
+**Regla**: Todo cambio va primero a test. El usuario promueve a prod manualmente, fuera del horario de atención (L-V 9-18, Sáb 9-13).
+
+**Por qué**: Dos veces en el mismo día un hot deploy a prod (PUT workflow + `docker restart trebol-prod-n8n trebol-prod-n8n-worker`) causó Mode C en Evolution API — el socket de WhatsApp quedó roto y fue necesario re-escanear QR con el bot caído para clientes reales.
+
+**Mecanismo probable**: el restart de n8n causa un burst de actividad en el pipeline (Chatwoot reintenta webhooks encolados) que stresea la conexión Baileys → WA server cierra el socket → reconexión falla con `bad-request` en `fetchProps` → Mode C.
+
+**Flujo correcto**:
+1. Aplicar el fix en `trebol_v4_test.json` + deployar a test
+2. Validar que funciona en test
+3. Avisar al usuario qué cambió y que el JSON de test está listo
+4. El usuario decide cuándo promoverlo a prod (fuera de horario)
+
+---
+
 ## Deploy workflow — script y flujo
 
 Script: `scripts/deploy-workflow-test.sh`
