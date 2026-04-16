@@ -20,8 +20,23 @@
               "icon": "lucide-file",
               "title": "Agente_FangioBot_Design"
             }
+          },
+          {
+            "id": "ca358aabfa59b6a8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "conflict-files-obsidian-git.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "conflict-files-obsidian-git"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -74,7 +89,8 @@
               "title": "Marcadores"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -180,18 +196,27 @@
       "daily-notes:Abrir la nota de hoy": false,
       "templates:Insertar plantilla": false,
       "command-palette:Abrir paleta de comandos": false,
-      "bases:Crear nueva base": false
+      "bases:Crear nueva base": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "0c64062070f3eba7",
+  "active": "ca358aabfa59b6a8",
   "lastOpenFiles": [
+    "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
+    "conflict-files-obsidian-git.md",
+    "proyectos/Trebol/bugs/2026-04-16-conversion-pesos-ml-ids.md",
+    "proyectos/Trebol/bugs/2026-04-15 Evolution API Zombie WhatsApp.md",
+    "proyectos/Fangio_CRM/code/models_Lead_fields.ts",
+    "proyectos/Fangio_CRM/code/env_vars.md",
+    "proyectos/Fangio_CRM/code/api_webhook_evolution_route.ts",
+    "proyectos/Fangio_CRM/code/api_leads_bot_patch_route.ts",
+    "proyectos/Fangio_CRM/code",
     "proyectos/Fangio_CRM/FangioBot_v2_Architecture.md",
     "proyectos/Fangio_CRM/FangioBot_Sprint6_Estado.md",
     "infra/Docker_Networking_Gotchas.md",
     "contexto-claude/Sincronizacion_Repos.md",
     "proyectos/Fangio_CRM/Fangio_CRM.md",
     "proyectos/Fangio_CRM/FangioBot_Blueprint.md",
-    "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
     "proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant.md",
     "proyectos/Fangio_CRM/MVP.md",
     "proyectos/Fangio_CRM/Roadmap_Backend.md",
@@ -212,14 +237,6 @@
     "proyectos/Trebol/bugs/2026-04-12 Handoff Blando Jeep Compass.md",
     "proyectos/Trebol/conversaciones/Malas.md",
     "proyectos/Trebol/conversaciones/Buenas.md",
-    "proyectos/Trebol.md",
-    "proyectos/Trebol/Trebol_Prod_Architecture.md",
-    "proyectos/Queen_CRM/Queen_CRM.md",
-    "proyectos/Trebol/Testing_Harness.md",
-    "proyectos/Trebol/conversaciones",
-    "proyectos/Trebol/bugs",
-    "proyectos/Trebol",
-    "infra",
-    "contexto-claude"
+    "proyectos/Trebol/conversaciones"
   ]
 }
