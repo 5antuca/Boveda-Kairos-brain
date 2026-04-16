@@ -133,10 +133,29 @@ Si pasa a `unhealthy`, chequear conexión con Chatwoot y reiniciar **solo Evolut
 - Fix automático: `POST /instance/restart/{instance}` (API endpoint, más liviano que restart del container). **NO usar docker restart para Mode B** — queda degradado (aprendido 2026-04-01).
 - **Bug histórico (fixed 2026-04-14)**: el script contaba grupos como "1:1 sano" y no detectaba este modo cuando el grupo interno seguía flujo. Ahora filtra `@g.us` explícitamente.
 
-**Mode C — Baileys init queries fail** *(descubierto 2026-04-14)*
+**Mode C — Baileys init queries fail** *(descubierto 2026-04-14, procedimiento completo 2026-04-16)*
 - Síntoma: post-restart/reconexión, el log tira `unexpected error in 'init queries'` con `bad-request` en `executeInitQueries` (fetchProps). El socket llega a `state=open` y arranca `CONNECTED TO WHATSAPP`, pero nunca recibe `messages.upsert` reales.
 - Causa: WhatsApp server rechaza las queries iniciales del socket. Auth state parcialmente corrupto o device kickeado del lado server.
-- Fix automático: **NINGUNO**. Restartear no arregla nada — el socket vuelve a fallar en las mismas queries. Requiere **re-scan manual del QR** desde el celular de la concesionaria via `https://trebol.evo.kairosaisolutions.com/manager/instance/{uuid}/dashboard`.
+- Fix automático: **NINGUNO**. Restartear no arregla nada — el socket vuelve a fallar en las mismas queries.
+- **Procedimiento manual completo** (aprendido 2026-04-16):
+  1. **Identificar la instance UUID**: `curl .../instance/connectionState/trebolfinal` → inspeccionar logs para el UUID de la instancia (ej. `f34f4be7-6775-4e04-9ce5-eb1334e87d25`)
+  2. **Borrar sesión de Redis DB 1** — donde `CACHE_REDIS_SAVE_INSTANCES=true` persiste el auth state:
+     ```bash
+     REDIS_PASS=$(docker exec trebol-prod-evolution-api printenv REDIS_PASSWORD)
+     # Borrar session de la instancia
+     docker exec trebol-prod-redis redis-cli -a "$REDIS_PASS" -n 1 DEL "evolution:instance:{UUID}"
+     # Borrar todas las keys de Baileys (sender-keys, sessions, etc.)
+     docker exec trebol-prod-redis redis-cli -a "$REDIS_PASS" -n 1 KEYS "evolution:baileys:*" | \
+       xargs docker exec -i trebol-prod-redis redis-cli -a "$REDIS_PASS" -n 1 DEL
+     ```
+  3. **Actualizar estado en Postgres** (Evolution API DB):
+     ```sql
+     UPDATE "Instance" SET "connectionStatus"='close', "ownerJid"=NULL WHERE "name"='trebolfinal';
+     ```
+  4. **Reiniciar container**: `docker restart trebol-prod-evolution-api`
+  5. **Generar nuevo QR**: `POST /instance/connect/trebolfinal`
+  6. **Escanear QR** desde `https://trebol.evo.kairosaisolutions.com/manager` → instancia `trebolfinal` → Conectar
+- **Por qué el simple restart no alcanza**: con `CACHE_REDIS_SAVE_INSTANCES=true`, el auth state vive en Redis DB 1. Al reiniciar, Evolution carga los mismos credentials corruptos y reproduce el mismo Mode C. Hay que limpiar Redis primero.
 - Guard: si el health check detecta zombie (Mode A/B) **y** init queries fallando en la misma ventana, **salta el auto-restart** y alerta `zombie_needs_qr` pidiendo intervención humana. Evita restart loops.
 
 **Secondary signal**: además de contar mensajes, el script chequea ejecuciones del workflow prod (`wf4ts1WKcpOaE90A__FkD`) en `execution_entity` de Postgres. Si hay ejecuciones, el webhook está vivo y el silencio de mensajes puede ser real (horas muertas, domingos). Solo dispara auto-restart si `DIRECT_MSG_COUNT=0` **y** `EXEC_COUNT=0`.

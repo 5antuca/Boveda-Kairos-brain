@@ -88,7 +88,7 @@ Está en el script `deploy-workflow-test.sh` hardcoded. Issue pendiente: sacarla
 |---|---|---|
 | Trebol v3 Test | `wynjYf9n43hLdZaB` (75 nodos) | test |
 | Trebol v4 Test | `chkkStDHenGFhwE7` (149 nodos) | test |
-| Trebol v4 Prod | `wf4ts1WKcpOaE90A__FkD` (139 nodos) | prod (NO tocar sin pedido) |
+| Trebol v4 Prod | `wf4ts1WKcpOaE90A__FkD` (149 nodos) | prod (NO tocar sin pedido) |
 | SheetsToMongo v2 PROD | `4atsII1pbYHYtOFVYzaVa` | prod |
 | AlertasVendedores Test | `GyW7SjZluIdZyAYt_9LIO` | test |
 | MV Autos Test | `YdLoz4fjuGlMS1gn-2rU_` | test |
@@ -185,6 +185,34 @@ Luego `docker compose up -d n8n n8n-worker`.
 **Fix**: usar `openAiFunctionsAgent` en su lugar. Es el equivalente funcional para modelos OpenAI — usa function calling nativo, maneja tools estructuradas con la misma confiabilidad.
 
 En el JSON: `"agent": "openAiFunctionsAgent"`. En la UI: AI Agent → Agent → seleccionar "OpenAI Functions Agent".
+
+---
+
+## ⚠️ `.item` vs `.first()` — Code nodes rompen el pairedItem tracking (2026-04-16)
+
+**Síntoma**: `NodeOperationError: Paired item data for item from node 'Init Loop' is unavailable. Ensure 'Init Loop' is providing the required output.` en cualquier nodo Redis (u otro) que esté **después** de un Code node en el pipeline.
+
+**Causa**: Los Code nodes (`n8n-nodes-base.code`) NO emiten `pairedItem` data en sus outputs a menos que el código lo setee explícitamente. Cuando un nodo downstream usa `$('NodoAnterior').item` y hay un Code node en el medio de la cadena, n8n no puede trazar a qué item input corresponde el item actual, y tira el error.
+
+El accessor `.item` requiere cadena de pairedItem intacta desde el nodo referenciado hasta el nodo actual. Un solo Code node sin pairedItem rompe esa cadena para todos los nodos que siguen.
+
+**Fix**: reemplazar `.item` por `.first()` en cualquier nodo que esté aguas abajo de un Code node:
+
+```
+// ❌ Falla si hay un Code node entre Edit Fields y este nodo
+$('Edit Fields').item.json.chat_id
+
+// ✓ Correcto — no requiere pairedItem tracking
+$('Edit Fields').first().json.chat_id
+```
+
+`.first()` es semánticamente equivalente cuando el nodo referenciado siempre produce exactamente 1 item (como Edit Fields en el pipeline Trebol, que recibe 1 webhook = 1 conversación).
+
+**Dónde nos pasó**: Todos los nodos Redis después de `Init Loop` (Code node) en `trebol_v4_test.json` y `wf4ts1WKcpOaE90A__FkD`. Afectó a: `Redis1`, `Redis GET Loop`, `Redis LLEN Check`, `Redis DEL processing`, `Redis LLEN Check Auto`, `Redis DEL processing Auto` — 35 referencias en prod, 17 en test.
+
+**Cuándo falló**: Las ejecuciones que llegaban antes del loop (filtraban por bot_status=off, etc.) nunca llegaban a los nodos afectados → parecía que andaba. Los primeros mensajes reales que atravesaron el pipeline completo (después de una reconexión de WhatsApp) expusieron el bug.
+
+**Regla**: en cualquier nodo que siga a un Code node, **siempre usar `.first()` o `.all()[0]`** en lugar de `.item` para referencias a nodos anteriores al Code node.
 
 ---
 
