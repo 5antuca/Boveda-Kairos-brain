@@ -69,7 +69,7 @@ bot-service/
 | Fase | Descripción | Estado |
 |---|---|---|
 | **0 — Esqueleto** | FastAPI + Docker + Langfuse + webhook receiver | ✅ 2026-04-16 — `trebol-test-bot` Up (healthy) |
-| **1 — Agent core** | LangGraph graph + 3 tools (MongoDB, Sheets, cuotas) | ⬜ pendiente |
+| **1 — Agent core** | LangGraph graph + 3 tools (MongoDB, Sheets, cuotas) | ✅ 2026-04-16 — agent responde con inventario real, Langfuse traza |
 | **2 — Estado y debounce** | Redis debounce + clasificador regex + guardias LangGraph | ⬜ pendiente |
 | **3 — CRM e integración n8n** | POST a n8n para Sheets write + alertas | ⬜ pendiente |
 | **4 — Multi-tenant config** | YAML por cliente, client_id en Redis + Langfuse | ⬜ pendiente |
@@ -87,6 +87,15 @@ bot-service/
 | Clasificador | Python regex (determinístico) | LLM — la lógica de routing no debe ser probabilística |
 | Guardias | Nodos LangGraph con state | Code nodes n8n — difíciles de extender |
 | CRM write | POST a n8n webhook | Python directo a Sheets — n8n ya tiene la lógica |
+
+## Notas técnicas Fase 1
+
+- **MongoDB pre-filter no soportado**: el `vector_index` de Atlas no tiene `PRECIO_AL_CONTADO` indexado como filtro. El filtro de presupuesto se hace en Python post-search (recupera k=16, filtra, recorta a 8).
+- **PRECIO_AL_CONTADO es string**: el campo viene como `"USD  9.000"` — helper `_parse_precio()` en tools.py normaliza a float.
+- **Langfuse callback**: se pasa via `config["callbacks"]` a `graph.ainvoke()`. Cada run aparece en us.cloud.langfuse.com con `session_id=trebol:{chat_id}`, `user_id={phone}`.
+- **Sin historial aún**: Fase 1 no tiene memoria de conversación. Cada mensaje = contexto fresco. Fase 2 agrega `RedisChatMessageHistory`.
+- **Chatwoot client**: `send_message()` usa `api_access_token` header + POST a `/api/v1/accounts/{id}/conversations/{conv_id}/messages`.
+- **System prompt path**: `bot-service/configs/prompts/trebol.txt` — copia de `prompts/trebol_v4_system_prompt.txt`. Editable sin rebuild.
 
 ## Convenciones Redis (bot)
 
