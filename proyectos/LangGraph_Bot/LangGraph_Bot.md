@@ -71,7 +71,7 @@ bot-service/
 | **0 — Esqueleto** | FastAPI + Docker + Langfuse + webhook receiver | ✅ 2026-04-16 — `trebol-test-bot` Up (healthy) |
 | **1 — Agent core** | LangGraph graph + 3 tools (MongoDB, Sheets, cuotas) | ✅ 2026-04-16 — agent responde con inventario real, Langfuse traza |
 | **2 — Estado y debounce** | Redis debounce + historial de conversación | ✅ 2026-04-16 — asyncio task cancellation, RedisChatMessageHistory propio, 0 race conditions |
-| **3 — CRM e integración n8n** | POST a n8n para Sheets write + alertas | ⬜ pendiente |
+| **3 — CRM e integración n8n** | Google Sheets write directo (Python) + AlertasVendedores webhook | ✅ 2026-04-16 — extracción LLM structured output, CRM append/update, alertas fire-and-forget |
 | **4 — Multi-tenant config** | YAML por cliente, client_id en Redis + Langfuse | ⬜ pendiente |
 | **5 — Validación en test** | Regresiones con conversaciones malas documentadas | ⬜ pendiente |
 | **6 — Cutover** | Cambiar webhook Chatwoot test → bot, luego prod | ⬜ pendiente |
