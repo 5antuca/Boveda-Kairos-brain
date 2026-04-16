@@ -19,6 +19,7 @@ Cada entrada apunta al postmortem en `results/bad-conv-*.md` del repo principal.
 | 2026-04-16 | Santi (filtro RAG multi-turno) | postFilter solo activo en turno con monto; en turno "dale" no había CTX → RAG sin filtro → Onix 17.5k + Ka 16.8k + Sandero 18.2k para budget 7.1k | fix test 2026-04-16 | `results/bad-conv-20260416-v4-santi-filtro-rag-multiturn.md` |
 | 2026-04-16 | guardiaUso T2 msg_count=0 | T1 guardia no guarda en n8n_chat_histories → T2 msg_count=0 → esPrimerMensaje=true → saludo duplicado "¡Hola!" | pendiente | `results/bad-conv-20260416-v4-guardia-uso-msg-count.md` |
 | 2026-04-16 | postFilterPipeline + topK=8 → 0 resultados | topK=8 limita candidatos vectoriales antes de filter de precio; todos caros → filter elimina todo → "no tenemos opciones" incorrecto | fix bak25 (topK=30), fix definitivo pendiente | `results/bad-conv-20260416-v4-postfilter-topk-zero-results.md` |
+| 2026-04-16 | Santiago (DS3 cuotas) — PROD | 4 bugs: sin Hola en primer turno ML link · calcular_cuotas sin precio_contado · "no stock" falso negativo RAG (re-query genérica) · llm_drift_events table missing en prod | fixes prompt + SQL prod (2026-04-16) | `results/bad-conv-20260416-v4-santiago-ds3-cuotas.md` |
 
 ## Clasificación por clase de bug
 
