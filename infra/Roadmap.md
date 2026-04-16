@@ -32,6 +32,28 @@
 
 ---
 
+## Bug Fix — Filtro presupuesto post-RAG + GPT-4.1-mini drift (2026-04-16 sesión 2)
+
+### Root cause sistémico identificado
+**GPT-4.1-mini no puede confiarse para aplicar reglas de precio o decidir cuándo buscar.** Incluso con prohibiciones explícitas en el system prompt, el modelo las ignora cuando tiene un intent opuesto fuerte (ej: "busco un auto"). La arquitectura correcta es mover todas las decisiones de precio y flujo al nivel determinístico (Code nodes, MongoDB pipelines, guardias).
+
+### Bugs corregidos (2026-04-16)
+- [x] `postFilterPipeline` devolvía JS array en lugar de JSON string → `NodeOperationError: No JSON string provided`. Fix: `return ""` / `return JSON.stringify([...])`
+- [x] `esPosibleNombre` regex: `\1` backreference se serializaba como `\x01` (byte SOH) en JSON → nunca matcheaba. Fix: usar `\1` explícito en Python string
+- [x] `guardiaUsoActiva` — nueva guardia determinística: cuando hay presupuesto + nombre pero no uso → pregunta "¿Para qué lo vas a usar?" antes de buscar, bypaseando el AI Agent
+
+### Bugs pendientes (2026-04-16)
+- [ ] **Bug D** — `msg_count=0` en T2 post-guardia: cuando T1 pasa por guardia, el T2 siguiente tiene `esPrimerMensaje=true` → saludo duplicado "¡Hola!". Investigar `Guardia Save Chat` (continueOnFail, timing relativo a Check Primer Mensaje)
+- [ ] **Option B** — Filtro post-RAG en Code node: segunda capa de filtrado de precio DESPUÉS de que el RAG devuelve resultados, ANTES de que el AI Agent los vea. Determinístico, no depende del LLM. Ver spec: `specs/2026-04-16-filtro-presupuesto-post-rag.md`
+
+### Estado deploy
+- [x] Fixes A/B/C en `workflows/trebol_v4_test.json`
+- [ ] Fix Bug D (Guardia Save Chat + msg_count)
+- [ ] Implementar Option B (post-RAG filter)
+- [ ] Deploy a PROD (bloqueado hasta test aprobado)
+
+---
+
 ## Bug Fix — Conversión de pesos + links MercadoLibre (2026-04-16)
 
 ### Root cause identificado
