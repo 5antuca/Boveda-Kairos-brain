@@ -30,3 +30,11 @@
 - **URL Segura:** https://n8n.fangiocrm.com
 - **Usuario Basic Auth:** `santiagogerstner14@gmail.com`
 - **Password Basic Auth:** `Santiswag1*`
+
+## Vercel
+- **Token:** `vcp_61UyOFmFDDrk3bZpWh0tw3Qcq0jSH6427evy6quUbJmhFc0Ukb2pv1sR`
+- Uso: `npx vercel --token $TOKEN` o `VERCEL_TOKEN=...` en CI
+
+## Webhook Secret (n8n ↔ FangioCRM)
+- **EVOLUTION_WEBHOOK_SECRET:** `a071e80e99427ab7dd7cfab3dfa0850cbcc47baada637493`
+- Compartido entre: n8n worker env + FangioCRM Vercel env
