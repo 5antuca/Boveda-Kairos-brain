@@ -1,68 +1,104 @@
 ---
 tags: [fangiobot, sprint6, estado, sesion]
 fecha: 2026-04-15
-estado: EN PROGRESO — Extractor fix pusheado, pendiente test
+estado: ✅ COMPLETADO — Pipeline end-to-end funcionando
 ---
 
-# FangioBot Sprint 6 — Estado de sesión 2026-04-15
+# FangioBot Sprint 6 — Estado final 2026-04-15
 
-## Qué se hizo en esta sesión
+## ✅ Pipeline end-to-end funciona
 
-### Infra resuelta
-- ✅ Tenant `el-trebol` en MongoDB Atlas — operativo, `/api/agent/context?instance=el-trebol` devuelve 200
-- ✅ Sesión Evolution API conectada (`connectionStatus: open`, número `5491123809397`)
-- ✅ Webhook Evolution → n8n: `http://fangiocrm-n8n-master:5678/webhook/fangiobot-master` (URL interna Docker, resuelve NAT hairpinning)
-- ✅ Workflow activo en n8n (`1cldlRu3k1Js_jn0uUNGD`, `FangioBot Master v1`)
+El bot recibe mensajes de WhatsApp via Evolution API, los procesa con el pipeline v2, y responde al usuario en WhatsApp.
 
-### Bugs encontrados y resueltos
+**Validado:** mensaje "hola" → bot responde "¡Hola! ¿En qué te puedo ayudar hoy? 😊" en WhatsApp.
+
+---
+
+## Bugs encontrados y resueltos (sesión completa)
+
+### Sesión anterior (contexto comprimido)
 - ✅ `Normalizar Payload`: leía `$input.first().json` en vez de `.json.body || .json` → fijo
-- ✅ `Construir Estado Comprimido`: 4 branches paralelos sin Merge → eliminados (rediseño)
+- ✅ `Construir Estado Comprimido`: 4 branches paralelos sin Merge → eliminados (rediseño v2)
 - ✅ `Extractor LLM Nano`: `method: POST` faltaba → n8n hacía GET → 400 error → fijo
+- ✅ `AI Agent`: `toolsAgent` no existe en n8n 2.2.4 → usar `openAiFunctionsAgent`
+- ✅ `AI Agent`: faltaba `promptType: define` + `text` expression → fijo
+- ✅ `Enviar Mensaje Evolution`: `$env` bloqueado → `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` → fijo
+- ✅ NAT hairpinning: Evolution → n8n usaba URL pública → URL interna Docker fijo
 
-### Rediseño v2 implementado
-- ✅ 47 nodos → 33 nodos
-- ✅ 4 Redis keys paralelas → 1 key `{chat_id}:lead` (JSON unificado)
-- ✅ Sin guardias, sin router, sin switch, sin regex
-- ✅ Pipeline: Lock → Redis GET Lead → GET Tenant → Extractor Nano → Merge Lead → Construir Prompt Block → AI Agent → Guardar Contexto → (Redis SET Lead | IF Bot Off | Enviar | POST Lead)
+### Esta sesión (continuación)
+- ✅ **Processing lock stuck**: lock sin TTL → si execution falla, queda pegado para siempre → fix: TTL 120s en `Redis SET Processing Lock`
+- ✅ **Bull queue "Missing key"**: n8n 2.2.4 bug — Bull job key expira antes que el worker reporte → fix: `QUEUE_BULL_SETTINGS_LOCK_DURATION=600000` (10 min)
+- ✅ **EVOLUTION_URL NAT hairpin**: `Enviar Mensaje Evolution` hacía HTTP al URL público desde el worker → timeout → fix: `EVOLUTION_URL=http://trebol-test-evolution-api:8080` + worker en red `traefik_public`
+- ✅ **`docker restart` no aplica env vars**: hay que usar `docker compose up -d` para recrear el container con nuevas variables
+- ✅ **`Enviar Mensaje Evolution`: method GET**: faltaba `"method": "POST"` en el nodo → `404 Cannot GET /message/sendText/el-trebol` → fijo
+- ✅ **`POST Lead a FangioCRM`: JSON inválido**: body malformado + endpoint no existe → desconectado (pendiente spec separada)
+- ✅ **`Tool: opciones_financiacion`: referencia rota**: `$('Preparar System Prompt')` → `$('Construir Prompt Block')` → fijo
+- ✅ **DEL Processing Lock**: solo conectado desde `Enviar Mensaje Evolution` → si falla, lock queda pegado → fix: conectado desde todos los nodos terminales
 
-## Estado al cerrar la sesión
+---
 
-**Último error visto**: Extractor LLM Nano → 400 GET en vez de POST → FIJADO con `method: POST` en el JSON.
+## Estado del workflow al cerrar
 
-**Pendiente de validar** (próxima sesión):
-1. Mandar WhatsApp al número `5491123809397` y verificar que el pipeline completo pase sin errores
-2. Nodo más probable que falle siguiente: `Merge Lead` — verificar que `$('Redis GET Lead').item.json?.value` sea null o JSON válido en primer turno
-3. Verificar que `Construir Prompt Block` genere el `systemPrompt` correctamente
-4. Verificar que `AI Agent` reciba el systemPrompt y responda
-5. Verificar que `Guardar Contexto` guarde el lead en Redis y que `respuesta_final` llegue a `Enviar Mensaje Evolution`
+**Archivo local:** `/root/apps/fangiocrm-infra/fangiobot-master.json`  
+**Workflow ID:** `1cldlRu3k1Js_jn0uUNGD` (`FangioBot Master v1`)  
+**Nodos:** 33  
+**Estado:** activo, pipeline funcional end-to-end
 
-## Credenciales y accesos activos
-
-- **n8n API Key**: JWT vigente hasta 2026-05-11 (ver Keys.md)
-- **n8n URL**: https://n8n.fangiocrm.com
-- **Workflow ID**: `1cldlRu3k1Js_jn0uUNGD`
-- **Evolution instance**: `el-trebol` en `test-trebol.evo.kairosaisolutions.com`
-- **API Key Evolution**: en `trebol-test-evolution-api` container env (`AUTHENTICATION_API_KEY`)
-- **JSON local**: `/root/apps/fangiocrm-infra/fangiobot-master.json`
-
-## Para retomar en próxima sesión
-
+### docker-compose.yml cambios activos
+```yaml
+n8n-worker:
+  environment:
+    - QUEUE_BULL_SETTINGS_LOCK_DURATION=600000
+    - QUEUE_BULL_SETTINGS_LOCK_RENEW_TIME=60000
+    - QUEUE_BULL_SETTINGS_STALLED_INTERVAL=300000
+    - EVOLUTION_URL=http://trebol-test-evolution-api:8080
+    - OPENAI_API_KEY=${OPENAI_API_KEY}
+    - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+  networks:
+    - default
+    - traefik_public
 ```
-/prime-v4  ← carga contexto Trebol (no aplica acá, usar prime genérico)
-```
 
-Leer:
-1. Este archivo
-2. [[FangioBot_v2_Architecture]] — diseño completo
-3. [[Docker_Networking_Gotchas]] — NAT hairpinning ya resuelto
+---
 
-Comando para ver logs en tiempo real mientras llega un WhatsApp:
+## Próximo sprint: Chat Monitor en FangioCRM
+
+Spec creada: `specs/2026-04-15-fangiocrm-chat-evolution-integration.md`
+
+Resumen de lo que hay que construir:
+1. `POST /api/webhook/evolution` en FangioCRM — recibe mensajes de n8n, guarda en MongoDB
+2. Adaptar `PATCH /api/leads/[id]/bot` — llama webhook n8n al toglear
+3. Nuevo workflow n8n `FangioBot BotToggle` — recibe de FangioCRM, setea Redis
+4. Dos nodos nuevos en FangioBot Master: `Forward Mensaje` + `Forward Respuesta`
+
+La UI `/chats` ya existe y consume los endpoints de leads/messages. Solo faltan los datos reales llegando vía Evolution API.
+
+---
+
+## Comandos útiles
+
 ```bash
+# Ver logs en tiempo real
 docker logs fangiocrm-n8n-worker-1 -f --since 1m
-```
 
-Para verificar el lead guardado en Redis después de un turno:
-```bash
-docker exec 77b6b9f76861_fangiocrm-n8n-redis redis-cli -a 551ea4589d1f62e86de01e9d2d44f9af1f7c9bd252bcf945138082e79d8267dc GET "el-trebol:549XXXXXXXXX:lead"
+# Limpiar estado Redis de un número (para re-testear)
+docker exec 77b6b9f76861_fangiocrm-n8n-redis redis-cli KEYS "*el-trebol*" | xargs redis-cli DEL
+
+# Verificar lead en Redis
+docker exec 77b6b9f76861_fangiocrm-n8n-redis redis-cli GET "el-trebol:5491150635028:lead"
+
+# Aplicar cambios de docker-compose (NO usar docker restart para env vars)
+cd /root/apps/fangiocrm-infra && docker compose up -d n8n-worker
+
+# Deploy workflow
+python3 -c "
+import json
+with open('fangiobot-master.json') as f: wf = json.load(f)
+payload = {'name': wf['name'], 'nodes': wf['nodes'], 'connections': wf['connections'], 'settings': wf.get('settings', {}), 'staticData': None}
+with open('/tmp/deploy.json', 'w') as f: json.dump(payload, f)
+"
+curl -sS -X PUT "https://n8n.fangiocrm.com/api/v1/workflows/1cldlRu3k1Js_jn0uUNGD" \
+  -H "X-N8N-API-KEY: <api-key>" \
+  -H "Content-Type: application/json" \
+  -d @/tmp/deploy.json
 ```
-(reemplazar `549XXXXXXXXX` con el número de quien mandó el mensaje)
