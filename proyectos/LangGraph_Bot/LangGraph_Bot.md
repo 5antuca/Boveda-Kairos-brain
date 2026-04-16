@@ -1,0 +1,113 @@
+---
+tags: [proyecto, langgraph, python, migración, bot, whatsapp]
+fecha_inicio: 2026-04-16
+estado: en_curso
+---
+
+# LangGraph Bot — Proyecto de Migración
+
+Migración del bot de WhatsApp de El Trébol (actualmente en n8n) a un servicio Python con LangGraph. El servicio está diseñado para ser multi-tenant desde el día 1: la misma codebase sirve a Trébol (config propia) y a futuro a Fangio CRM y otros clientes.
+
+## Por qué LangGraph
+
+- **Observabilidad**: Langfuse (self-hosted / cloud free tier) traza cada turno completo — qué recibió el LLM, qué tools llamó, qué devolvió. Hoy requiere parsear flatted JSON de Postgres.
+- **Debugging con IA**: Claude y Cursor leen Python directamente. El JSON de 149 nodos de n8n no.
+- **System prompt externo**: cambiar el prompt = editar un `.txt`. Sin workflow redeploy, sin downtime de WhatsApp.
+- **Guardias como nodos**: el state machine de permuta/anticipo mapea 1:1 con nodos LangGraph.
+- **Multi-tenant por diseño**: config YAML por cliente, `client_id` en todas las keys Redis y traces.
+
+## Arquitectura
+
+```
+WhatsApp → Evolution API → Chatwoot → POST /webhook/chatwoot
+                                              ↓
+                              [trebol-bot] FastAPI + LangGraph   ← Python 3.12, Docker
+                                              ├── LangGraph Agent
+                                              │     ├── Tool: buscar_inventario (MongoDB Atlas)
+                                              │     ├── Tool: calcular_cuotas (Python)
+                                              │     └── Tool: opciones_financiacion (Sheets)
+                                              ├── Redis (debounce + RedisChatMessageHistory)
+                                              ├── Langfuse (observabilidad, cloud free tier)
+                                              └── POST → n8n (CRM write + alertas)
+                                              ↓
+                              Chatwoot → Evolution → WhatsApp
+
+n8n sigue manejando:
+  SheetsToMongo | AlertasVendedores | CRM Sheets write | Error Handler
+```
+
+## Repo
+
+```
+bot-service/
+  trebol_bot/
+    main.py                ← FastAPI entry point
+    config.py              ← Settings (pydantic-settings, env vars)
+    webhook/
+      chatwoot.py          ← Payload models + event handler
+    agent/
+      graph.py             ← LangGraph graph (Fase 1+)
+      tools.py             ← buscar_inventario, calcular_cuotas, opciones_financiacion
+      prompts.py           ← System prompt loader desde configs/
+      classifier.py        ← Clasificador determinístico (regex, Fase 2)
+    memory/
+      redis_client.py      ← Conexión Redis + debounce
+      chat_history.py      ← RedisChatMessageHistory wrapper (Fase 2)
+    integrations/
+      chatwoot_client.py   ← Enviar mensajes a Chatwoot
+      mongodb_client.py    ← MongoDB Atlas connection (Fase 1)
+      sheets_client.py     ← Google Sheets read/write (Fase 1)
+  configs/
+    trebol.yaml            ← Config Trébol (persona, prompt path, mongo collection, sheets IDs)
+  Dockerfile
+  requirements.txt
+  .env.example
+```
+
+## Roadmap
+
+| Fase | Descripción | Estado |
+|---|---|---|
+| **0 — Esqueleto** | FastAPI + Docker + Langfuse + webhook receiver | ✅ 2026-04-16 — `trebol-test-bot` Up (healthy) |
+| **1 — Agent core** | LangGraph graph + 3 tools (MongoDB, Sheets, cuotas) | ⬜ pendiente |
+| **2 — Estado y debounce** | Redis debounce + clasificador regex + guardias LangGraph | ⬜ pendiente |
+| **3 — CRM e integración n8n** | POST a n8n para Sheets write + alertas | ⬜ pendiente |
+| **4 — Multi-tenant config** | YAML por cliente, client_id en Redis + Langfuse | ⬜ pendiente |
+| **5 — Validación en test** | Regresiones con conversaciones malas documentadas | ⬜ pendiente |
+| **6 — Cutover** | Cambiar webhook Chatwoot test → bot, luego prod | ⬜ pendiente |
+
+## Decisiones técnicas
+
+| Decisión | Elección | Alternativa descartada |
+|---|---|---|
+| Framework | LangGraph (sobre LangChain) | LangChain sin graph — no tiene state management |
+| Lenguaje | Python 3.12 | Node.js — ecosistema LangChain es mejor en Python |
+| Observabilidad | Langfuse Cloud free tier | LangSmith (pago) / Langfuse self-hosted (más infra) |
+| Memoria | RedisChatMessageHistory (Redis existente) | Postgres — Redis ya está en el stack |
+| Clasificador | Python regex (determinístico) | LLM — la lógica de routing no debe ser probabilística |
+| Guardias | Nodos LangGraph con state | Code nodes n8n — difíciles de extender |
+| CRM write | POST a n8n webhook | Python directo a Sheets — n8n ya tiene la lógica |
+
+## Convenciones Redis (bot)
+
+Namespace separado del n8n para no colisionar:
+
+```
+bot:{client_id}:{phone}:buffer        ← debounce (LPUSH/LRANGE)
+bot:{client_id}:{phone}:processing    ← lock procesamiento (SET EX 120)
+bot:{client_id}:{phone}:history       ← RedisChatMessageHistory key
+bot:{client_id}:{phone}:ficha         ← JSON {vehiculo, contado, anticipo_min}
+```
+
+## Dominios (test)
+
+- Bot service: `test-trebol.bot.kairosaisolutions.com`
+- n8n (sin cambios): `test-trebol.n8n.kairosaisolutions.com`
+
+## Links
+
+- [[Trebol]] — cliente principal
+- [[Fangio_CRM]] — segundo cliente futuro
+- [[Pipeline_v4]] — arquitectura n8n actual (referencia para la migración)
+- [[n8n_Gotchas]] — gotchas del stack actual que desaparecen con Python
+- Repo reference: `langgraph-sales-agent` (yerdaulet-damir) — patrón de referencia para multi-tenant
