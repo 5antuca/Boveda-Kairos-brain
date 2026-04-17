@@ -75,7 +75,10 @@ bot-service/
 | **4 — Multi-tenant config** | YAML por cliente, ContextVar en tools, config limpia | ✅ 2026-04-17 — agregar cliente = solo YAML + prompt, sin cambios de código |
 | **5 — Validación en test** | Regresiones con conversaciones malas documentadas | ✅ 2026-04-17 — 23/23 checks pasan. Harness: `scripts/test_bot.sh`. 7 scenarios: hilux, tiago, budget_filter, financiacion, cuotas, multi_turn, no_stock |
 | **6 — Cutover test** | Webhook Chatwoot test → bot, observabilidad Langfuse completa | ✅ 2026-04-17 — Webhook ID 1 apunta a bot. Inbox filter (inbox_id=2). Traces Langfuse anidan: agent_run + tool_calls + response_sent + crm_extraction |
-| **7 — Cutover prod** | Cambiar webhook Chatwoot prod → bot | ⬜ pendiente (manual) |
+| **7 — CRM state + fotos + saludo** | Persistir estado CRM en Redis + envío de imágenes + saludo inicial determinístico | ✅ 2026-04-17 — ver [[#Fase 7 — CRM state, Fotos y Saludo]] |
+| **8 — Observabilidad profunda** | session_id canónico, metadata/tags, captura de errores, normalize_phone | ✅ 2026-04-17 — ver [[Observabilidad_Langfuse]] |
+| **9 — Sheets fix (cols M → A)** | `values().update()` con rango explícito en vez de `append()` | ✅ 2026-04-17 — fix en `sheets_client.py` |
+| **10 — Cutover prod** | Cambiar webhook Chatwoot prod → bot | ⬜ pendiente (manual) |
 
 ## Decisiones técnicas
 
