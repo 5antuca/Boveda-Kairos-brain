@@ -22,6 +22,8 @@ Cada entrada apunta al postmortem en `results/bad-conv-*.md` del repo principal.
 | 2026-04-16 | Santiago (DS3 cuotas) — PROD | 4 bugs: sin Hola en primer turno ML link · calcular_cuotas sin precio_contado · "no stock" falso negativo RAG (re-query genérica) · llm_drift_events table missing en prod | fixes prompt + SQL prod (2026-04-16) | `results/bad-conv-20260416-v4-santiago-ds3-cuotas.md` |
 | 2026-04-17 | DS3 anticipo loop | Anticipo insuficiente se repite 3 veces: (1) O6 doble ejecución en paralelo, (2) "ok dale" → AI regenera mismo mensaje en vez de confirmar handoff | fix test 2026-04-17 | `bugs/bad-conv-20260417-v4-ds3-anticipo-loop.md` |
 | 2026-04-17 | C4 Picasso buffer×15 + RAG vacío | Webhook responseMode lastNode → Chatwoot reintenta 15 veces → buffer ×15 → AI llama buscar_inventario con {} → "no hay stock" falso + pregunta nombre después de darlo | fix webhook responseMode 2026-04-17 | `bugs/bad-conv-20260417-v4-c4picasso-buffer-rag.md` |
+| 2026-04-17 | Ford ranger buffer×15 (real cause) | `Get row(s) in sheet2` sin filtro efectivo devuelve 15 filas (CRM con dups por appends sin matching) → pipeline corre 15× → 15 LPUSH al buffer | fix append→appendOrUpdate + Limit First CRM Row 2026-04-17 | (trazado inline en sesión, no postmortem separado) |
+| 2026-04-17 | Passat ML vehiculo sobrescrito | LLM mostró Captiva/Tracker en drift (3 runs AI Agent en exec combinado) → Extraer Datos CRM los tomó como `auto_interes` del cliente → pisó "Volkswagen Passat" del ML link de T1 | DIAGNOSED — fix Fix1+Fix2 pendiente | `bugs/bad-conv-20260417-v4-passat-ml-vehiculo-sobrescrito.md` |
 
 ## Clasificación por clase de bug
 
