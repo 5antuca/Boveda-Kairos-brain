@@ -1,0 +1,20 @@
+model_list:
+  - model_name: claude-sonnet-4-6
+    litellm_params:
+      model: ollama/gemma-plus
+      api_base: http://localhost:11434
+  - model_name: "claude-sonnet-4-6[1m]"
+    litellm_params:
+      model: ollama/gemma-plus
+      api_base: http://localhost:11434
+  - model_name: claude-3-5-sonnet-20241022
+    litellm_params:
+      model: ollama/gemma-plus
+      api_base: http://localhost:11434
+  - model_name: claude-3-haiku-20240307
+    litellm_params:
+      model: ollama/gemma-plus
+      api_base: http://localhost:11434
+
+litellm_settings:
+  drop_params: true

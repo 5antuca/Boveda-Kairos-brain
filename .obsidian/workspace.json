@@ -187,6 +187,8 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "litellm.log",
+    "litellm_config.yaml",
     "Modelfile",
     "CLAUDE.md",
     "proyectos/Trebol/decisiones/SESSION-SUMMARY-2026-04-17.md",
@@ -215,8 +217,6 @@
     "proyectos/Fangio_CRM/keys.txt",
     "proyectos/Fangio_CRM/prompt.txt",
     "proyectos/Fangio_CRM/k",
-    "proyectos/Fangio_CRM/carpeta sin título",
-    "proyectos/Fangio_CRM",
     "Prompt_Maestro.md",
     "infra/Prompt_Maestro.md",
     "infra/Roadmap.md",
