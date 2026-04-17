@@ -12,25 +12,25 @@ Redis keys activas:
 !`docker exec trebol-test-redis redis-cli -a 551ea4589d1f62e86de01e9d2d44f9af1f7c9bd252bcf945138082e79d8267dc --no-auth-warning KEYS "v3:*" 2>/dev/null || echo "(redis no disponible)"`
 
 MOC del vault Obsidian:
-!`cat Kairos_Brain/Bienvenido.md`
+!`cat Bienvenido.md`
 
 Pipeline v4 (resumen Obsidian):
-!`cat Kairos_Brain/proyectos/Trebol/Pipeline_v4.md`
+!`cat proyectos/Trebol/Pipeline_v4.md`
 
 Workflow v4 — referencia técnica completa:
-!`cat Kairos_Brain/proyectos/Trebol/Workflow_v4_Reference.md`
+!`cat proyectos/Trebol/Workflow_v4_Reference.md`
 
 Otros workflows del cliente Trebol:
-!`cat Kairos_Brain/proyectos/Trebol/Trebol_Prod_Architecture.md`
+!`cat proyectos/Trebol/Trebol_Prod_Architecture.md`
 
 Roadmap activo:
-!`cat Kairos_Brain/infra/Roadmap.md`
+!`cat infra/Roadmap.md`
 
 Conversaciones malas (índice postmortems):
-!`cat Kairos_Brain/proyectos/Trebol/conversaciones/Malas.md`
+!`cat proyectos/Trebol/conversaciones/Malas.md`
 
 Conversaciones buenas (golden set):
-!`cat Kairos_Brain/proyectos/Trebol/conversaciones/Buenas.md`
+!`cat proyectos/Trebol/conversaciones/Buenas.md`
 
 Resumí el estado actual:
 - Workflow v4 (ID: chkkStDHenGFhwE7, 149 nodos post Fase 5) y MV Autos (ID: YdLoz4fjuGlMS1gn-2rU_)

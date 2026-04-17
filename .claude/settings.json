@@ -16,7 +16,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "python3 /root/kairos-infrastructure/.claude/hooks/context_bundle_builder.py"
+                        "command": "python3 ./.claude/hooks/context_bundle_builder.py"
                     }
                 ]
             }
