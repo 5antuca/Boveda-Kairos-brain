@@ -112,10 +112,34 @@ TRACE: whatsapp_turn
 ```
 
 - **URL**: https://us.cloud.langfuse.com
-- **Buscar por sesión**: `session_id = trebol:{chat_id}` (el chat_id es el ID de conversación de Chatwoot)
-- **Buscar por usuario**: `user_id = {phone}` (ej: `5491150635028`)
-- **Tags**: `["trebol"]` para conversaciones reales, `["trebol", "test"]` para el harness
+- **Buscar por sesión**: Sessions → `session_id = trebol:{chat_id}` (el chat_id es el ID de conversación de Chatwoot, visible en la URL de Chatwoot)
+- **Buscar por usuario**: `user_id = {phone}@s.whatsapp.net` (ej: `5491150635028@s.whatsapp.net`)
+- **Tags**: `["trebol"]` para conversaciones reales, `["trebol", "test"]` para el harness `/test/message`
+- **Tokens**: en cada `GENERATION ChatOpenAI` dentro del trace — `in=X out=Y total=Z`
 - **Fuente**: `observability.py` (singleton client), `chatwoot.py` (trace padre), `graph.py` (LangGraph handler), `crm.py` (span CRM)
+
+## Ciclo de debug
+
+```
+1. Respuesta mala en WhatsApp
+   ↓
+2. Langfuse → Sessions → trebol:{chat_id}
+   Ver: qué recibió el LLM (system prompt + historial + mensaje)
+        qué tool llamó y con qué args
+        qué devolvió la tool
+        qué respondió el LLM final
+   ↓
+3. Identificar causa:
+   ├── Prompt mal → editar configs/prompts/trebol.txt → docker restart trebol-test-bot (NO rebuild)
+   ├── Tool mal   → editar agent/tools.py → docker compose build + up
+   └── Flujo mal  → editar agent/graph.py → docker compose build + up
+   ↓
+4. bash scripts/test_bot.sh [scenario] para verificar regresión
+```
+
+**Hairpin NAT**: todos los containers del stack deben tener `extra_hosts` para que los dominios
+`*.kairosaisolutions.com` resuelvan a `172.18.0.100` (Traefik) en vez de la IP pública del VPS.
+Sin esto, los containers no pueden comunicarse entre sí por dominio.
 
 ## Notas técnicas Fase 1
 
