@@ -54,6 +54,14 @@ Filosofía: **determinístico con inyección de IA**, NO IA autónoma descontrol
 - [[Roadmap]] — fases activas (F1/F2/F3/F5), bugs abiertos, deploy a prod pendiente
 
 ## 🚦 Estado actual
+
+### Bot Python (LangGraph) — `trebol-test-bot`
+- **Fase 6** — ✅ Deployada. Chatwoot test webhook apunta al bot Python. Langfuse observabilidad activa.
+- **Fase 7** — ⏳ Código listo, pendiente `docker compose build` para activar CRM state injection.
+  - Ver [[SESSION-SUMMARY-2026-04-17]] para detalle completo y comandos de rebuild.
+- Regresión: `scripts/test_bot.sh` — 23/23 checks pasan
+
+### Bot n8n (Trebol v4)
 - **Fase 5 handoff duro** — implementada en TEST, pendiente smoke test (Jeep Compass scenario en 5491150635028)
 - **Bugs O6 / Bug B / Bug E** — abiertos, ver [[Roadmap]]
 - **Deploy a prod F1+F2+F3+F5** — bloqueado hasta validar smoke test
