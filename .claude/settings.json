@@ -1,0 +1,25 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(*)",
+            "Read(*)",
+            "Write(*)",
+            "Edit(*)",
+            "MultiEdit(*)"
+        ],
+        "deny": []
+    },
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "*",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "python3 /root/kairos-infrastructure/.claude/hooks/context_bundle_builder.py"
+                    }
+                ]
+            }
+        ]
+    }
+}

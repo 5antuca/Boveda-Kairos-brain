@@ -1,0 +1,76 @@
+# Kairos Infrastructure — Claude Context
+
+Sistema multiagente de automatización para agencias digitales corriendo en VPS Linux con Docker.
+1 cliente activo (El Trébol Automotores) con bot WhatsApp en producción. Foco actual: optimizar bot Trebol v4 en test.
+
+## Visión — Paperclip como orquestador
+Objetivo a futuro: integrar [Paperclip](https://github.com/paperclipai/paperclip) (Node.js, port 3100) como plano de control de agentes especializados (WhatsApp, Instagram, Meta Ads, Debugger, Supervisor). Multi-company con aislamiento de datos, audit log, budgets por agente, approval flows humanos. Obsidian solo como editor humano; agentes consultan MongoDB Atlas o Qdrant directo.
+
+### Roadmap Paperclip (NO ejecutar sin confirmación)
+0. Actualizar docs con la visión nueva ← HECHO
+1. Paperclip en test — Container Docker, DB propia en Postgres test, Traefik route
+2. Primer org-chart: El Trébol — Agentes WhatsApp Bot + Alertas como agents, adapter HTTP → n8n
+3. Approval flows — Alertas y derivaciones como tickets con aprobación humana
+4. Segundo cliente via Paperclip — Onboarding parametrizado, validar aislamiento
+5. Nuevos canales — Instagram bot como agente en org-chart del cliente
+
+## Cómo trabajar en este proyecto
+1. **Revisá lo que existe antes de proponer.** No asumas la estructura — explorá archivos y preguntá si algo no está claro.
+2. **Ofrecé opciones con tradeoffs.** Si hay que agregar un servicio, preguntá si va en el stack del cliente o compartido, si va en test primero, si rompe algo.
+3. **Nunca modifiques archivos que afecten prod sin confirmación explícita.**
+4. **Secrets no van al código.** Variable nueva → `.env.example` y mencionarlo. En n8n `$env`, en Docker `.env`.
+
+## Tooling
+- **Automation:** n8n (Queue Mode: Main + Worker + Redis)
+- **Infra:** VPS Ubuntu 24.04 · 16GB RAM · 4 CPUs · Docker Compose · Traefik
+- **DB:** PostgreSQL (pgvector) · MongoDB Atlas (vector search) · Redis
+- **Apps:** Evolution API · Chatwoot · Google Sheets (CRM/inventory)
+- **AI:** GPT-4.1-mini (OpenAI API)
+
+## Key Commands
+- `/new-spec` — Crear spec para un cambio significativo
+- `/deploy` — Ejecutar deploy de spec aprobada
+- `/diagnose` — Investigar problema en prod
+- `/prime-architecture` — Análisis arquitectónico
+- `/prime-debug` — Root cause analysis
+- `/prime-workflow` — Optimización de workflows
+- `docker logs [container]` — Ver logs
+- `./scripts/deploy-workflow.sh` — Deploy de workflow (leer antes de ejecutar)
+- `bash scripts/clear-chat-memory.sh 5491150635028 test` — Post-deploy obligatorio
+
+## Project Structure
+- `workflows/` — n8n JSON exports
+- `Kairos_Brain/` — OBSIDIAN VAULT (Contexto unificado, docs, reglas, roadmap, memoria)
+- `scripts/` — Deploy y utilidades
+- `specs/` — Specs activas (`YYYY-MM-DD-nombre.md`) + `templates/`
+
+## Session Start (OBLIGATORIO)
+Leer SIEMPRE al inicio navegando la bóveda Obsidian (`Kairos_Brain/`):
+1. `Kairos_Brain/Bienvenido.md` (Mapa de contenido principal)
+2. `Kairos_Brain/Instrucciones Generales.md` (Reglas, Manifesto y SDD)
+3. `Kairos_Brain/infra/Roadmap.md` y fichas en `Kairos_Brain/proyectos/`
+4. Para Trebol v4: usar `/prime-v4` que carga Pipeline_v4, Workflow_v4_Reference, Roadmap, Malas/Buenas
+
+## Bóveda en repo separado
+`Kairos_Brain/` es un **nested checkout** del repo `git@github.com:5antuca/Boveda-Kairos-brain.git` (ignorado en `.gitignore` del repo principal). Cualquier edit al vault tiene que commitearse Y pushearse desde adentro de `Kairos_Brain/`, NO desde `kairos-infrastructure`. Usar `scripts/sync-vault.sh` para empujar ambos repos al mismo tiempo. Ver `Kairos_Brain/contexto-claude/Sincronizacion_Repos.md` para el flujo completo.
+
+## Spec-Driven Development (SDD)
+Flujo: `SPEC → PLAN → EJECUCIÓN → REVIEW → DOC`
+
+**Requiere spec:** nuevo workflow · cambio en system prompt · nueva integración · cambio de arquitectura · nuevo cliente
+**No requiere spec:** hotfix urgente · cambio de .env simple · restart · debugging
+
+## Development Rules
+1. **Verify First** — Nunca asumir estado; explorar `Kairos_Brain/` y `ls` el proyecto
+2. **No secrets hardcodeados** — `$env` en n8n, `.env` en Docker
+3. **Small diffs** — Cambios pequeños y dirigidos; sub-workflows para complejidad
+4. **Act as:** Senior Platform Engineer (Docker + n8n + IA)
+
+## Documentation Rule (OBLIGATORIO)
+Ante cualquier cambio en: workflow · .env · container · DB · servicio · dominio/SSL · credencial n8n · system prompt → actualizar ANTES de cerrar la tarea:
+1. `README.md` — Documentación general del VPS
+2. Notas y fichas correspondientes en `Kairos_Brain/` (ej. roadmap, arquitectura o proyectos)
+
+Leer ambos antes de editar. Nunca sobrescribir — siempre append/edit de la sección relevante.
+
+
