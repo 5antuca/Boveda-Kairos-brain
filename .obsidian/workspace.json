@@ -187,6 +187,8 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "Modelfile.llama3",
+    "Modelfile.strict",
     "litellm.log",
     "litellm_config.yaml",
     "Modelfile",
@@ -215,8 +217,6 @@
     "proyectos/Fangio_CRM/Roadmap_Backend.md",
     "proyectos/Fangio_CRM/Keys.md",
     "proyectos/Fangio_CRM/keys.txt",
-    "proyectos/Fangio_CRM/prompt.txt",
-    "proyectos/Fangio_CRM/k",
     "Prompt_Maestro.md",
     "infra/Prompt_Maestro.md",
     "infra/Roadmap.md",

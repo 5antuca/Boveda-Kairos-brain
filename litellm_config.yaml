@@ -1,21 +1,7 @@
 model_list:
-  - model_name: claude-sonnet-4-6
+  - model_name: "*"
     litellm_params:
-      model: ollama/gemma-plus
+      model: ollama/llama3-plus
       api_base: http://localhost:11434
-  - model_name: "claude-sonnet-4-6[1m]"
-    litellm_params:
-      model: ollama/gemma-plus
-      api_base: http://localhost:11434
-  - model_name: claude-3-5-sonnet-20241022
-    litellm_params:
-      model: ollama/gemma-plus
-      api_base: http://localhost:11434
-  - model_name: claude-3-haiku-20240307
-    litellm_params:
-      model: ollama/gemma-plus
-      api_base: http://localhost:11434
-
 litellm_settings:
   drop_params: true
-  set_system_prompt: "You are a professional assistant. Respond ONLY with direct text or code. DO NOT use JSON format for your speech. DO NOT output 'thought' or 'text' keys. Just talk like a human expert."
