@@ -73,8 +73,9 @@ bot-service/
 | **2 — Estado y debounce** | Redis debounce + historial de conversación | ✅ 2026-04-16 — asyncio task cancellation, RedisChatMessageHistory propio, 0 race conditions |
 | **3 — CRM e integración n8n** | Google Sheets write directo (Python) + AlertasVendedores webhook | ✅ 2026-04-16 — extracción LLM structured output, CRM append/update, alertas fire-and-forget |
 | **4 — Multi-tenant config** | YAML por cliente, ContextVar en tools, config limpia | ✅ 2026-04-17 — agregar cliente = solo YAML + prompt, sin cambios de código |
-| **5 — Validación en test** | Regresiones con conversaciones malas documentadas | ⬜ pendiente |
-| **6 — Cutover** | Cambiar webhook Chatwoot test → bot, luego prod | ⬜ pendiente |
+| **5 — Validación en test** | Regresiones con conversaciones malas documentadas | ✅ 2026-04-17 — 23/23 checks pasan. Harness: `scripts/test_bot.sh`. 7 scenarios: hilux, tiago, budget_filter, financiacion, cuotas, multi_turn, no_stock |
+| **6 — Cutover test** | Webhook Chatwoot test → bot, observabilidad Langfuse completa | ✅ 2026-04-17 — Webhook ID 1 apunta a bot. Inbox filter (inbox_id=2). Traces Langfuse anidan: agent_run + tool_calls + response_sent + crm_extraction |
+| **7 — Cutover prod** | Cambiar webhook Chatwoot prod → bot | ⬜ pendiente (manual) |
 
 ## Decisiones técnicas
 
@@ -87,6 +88,34 @@ bot-service/
 | Clasificador | Python regex (determinístico) | LLM — la lógica de routing no debe ser probabilística |
 | Guardias | Nodos LangGraph con state | Code nodes n8n — difíciles de extender |
 | CRM write | POST a n8n webhook | Python directo a Sheets — n8n ya tiene la lógica |
+
+## Observabilidad — Langfuse (Fase 6)
+
+Cada mensaje de WhatsApp genera un **trace** padre en Langfuse con esta estructura:
+
+```
+TRACE: whatsapp_turn
+  session_id: trebol:{chat_id}
+  user_id: {phone}
+  input: {message, history_turns}
+  │
+  ├── SPAN: agent_run  ← auto-instrumentado por CallbackHandler (anidado en el trace padre)
+  │     ├── agent_node → LLM call #1 (system prompt + historial + mensaje)
+  │     ├── tool_node  → buscar_inventario_autos({query, budget}) → [autos]
+  │     └── agent_node → LLM call #2 (con resultados de tool)
+  │
+  ├── SPAN: response_sent
+  │     output: preview de la respuesta enviada a Chatwoot
+  │
+  └── SPAN: crm_extraction  ← async, aparece ~1s después
+        output: {nombre, vehiculo_interes, estado, tipo_alerta, ...}
+```
+
+- **URL**: https://us.cloud.langfuse.com
+- **Buscar por sesión**: `session_id = trebol:{chat_id}` (el chat_id es el ID de conversación de Chatwoot)
+- **Buscar por usuario**: `user_id = {phone}` (ej: `5491150635028`)
+- **Tags**: `["trebol"]` para conversaciones reales, `["trebol", "test"]` para el harness
+- **Fuente**: `observability.py` (singleton client), `chatwoot.py` (trace padre), `graph.py` (LangGraph handler), `crm.py` (span CRM)
 
 ## Notas técnicas Fase 1
 
@@ -112,6 +141,15 @@ bot:{client_id}:{phone}:ficha         ← JSON {vehiculo, contado, anticipo_min}
 
 - Bot service: `test-trebol.bot.kairosaisolutions.com`
 - n8n (sin cambios): `test-trebol.n8n.kairosaisolutions.com`
+
+## Chatwoot Webhooks (test)
+
+| ID | URL actual | Subscripción | Estado |
+|---|---|---|---|
+| 1 | `https://test-trebol.bot.kairosaisolutions.com/webhook/chatwoot` | `message_created` | ✅ apunta al bot LangGraph |
+| 2 | `https://test-trebol.n8n.kairosaisolutions.com/webhook/feedback-conversacion` | `conversation_updated` | mantiene n8n (CRM feedback) |
+
+Filtro de inbox: el bot solo procesa `inbox_id=2` ("TrebolWhatsApp"). Los mensajes de otros inboxes (ej. MV Autos) son ignorados silenciosamente.
 
 ## Links
 
