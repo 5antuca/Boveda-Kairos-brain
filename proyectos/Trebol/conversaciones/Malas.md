@@ -20,6 +20,7 @@ Cada entrada apunta al postmortem en `results/bad-conv-*.md` del repo principal.
 | 2026-04-16 | guardiaUso T2 msg_count=0 | T1 guardia no guarda en n8n_chat_histories → T2 msg_count=0 → esPrimerMensaje=true → saludo duplicado "¡Hola!" | pendiente | `results/bad-conv-20260416-v4-guardia-uso-msg-count.md` |
 | 2026-04-16 | postFilterPipeline + topK=8 → 0 resultados | topK=8 limita candidatos vectoriales antes de filter de precio; todos caros → filter elimina todo → "no tenemos opciones" incorrecto | fix bak25 (topK=30), fix definitivo pendiente | `results/bad-conv-20260416-v4-postfilter-topk-zero-results.md` |
 | 2026-04-16 | Santiago (DS3 cuotas) — PROD | 4 bugs: sin Hola en primer turno ML link · calcular_cuotas sin precio_contado · "no stock" falso negativo RAG (re-query genérica) · llm_drift_events table missing en prod | fixes prompt + SQL prod (2026-04-16) | `results/bad-conv-20260416-v4-santiago-ds3-cuotas.md` |
+| 2026-04-17 | DS3 anticipo loop | Anticipo insuficiente se repite 3 veces: (1) O6 doble ejecución en paralelo, (2) "ok dale" → AI regenera mismo mensaje en vez de confirmar handoff | fix test 2026-04-17 | `bugs/bad-conv-20260417-v4-ds3-anticipo-loop.md` |
 
 ## Clasificación por clase de bug
 
