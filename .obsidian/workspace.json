@@ -187,6 +187,10 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "proyectos/Trebol/bugs/bad-conv-20260417-v4-passat-ml-vehiculo-sobrescrito.md",
+    "proyectos/Trebol/bugs/bad-conv-20260417-v4-ds3-cuotas-sin-anticipo.md",
+    "proyectos/Trebol/bugs/bad-conv-20260417-v4-ds3-anticipo-loop.md",
+    "proyectos/Trebol/bugs/bad-conv-20260417-v4-c4picasso-buffer-rag.md",
     "Modelfile.llama3",
     "Modelfile.strict",
     "litellm.log",
@@ -216,12 +220,8 @@
     "proyectos/Fangio_CRM/MVP.md",
     "proyectos/Fangio_CRM/Roadmap_Backend.md",
     "proyectos/Fangio_CRM/Keys.md",
-    "proyectos/Fangio_CRM/keys.txt",
     "Prompt_Maestro.md",
     "infra/Prompt_Maestro.md",
-    "infra/Roadmap.md",
-    "Roadmap.md",
-    "Fangio_CRM.md",
-    "proyectos/Trebol/Trebol.md"
+    "infra/Roadmap.md"
   ]
 }
