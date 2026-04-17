@@ -115,6 +115,7 @@ bot:{client_id}:{phone}:ficha         ← JSON {vehiculo, contado, anticipo_min}
 
 ## Links
 
+- [[Onboarding_Nuevo_Cliente]] — guía paso a paso para agregar Fangio CRM (u otro cliente)
 - [[Trebol]] — cliente principal
 - [[Fangio_CRM]] — segundo cliente futuro
 - [[Pipeline_v4]] — arquitectura n8n actual (referencia para la migración)
