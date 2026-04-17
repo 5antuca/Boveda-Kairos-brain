@@ -18,3 +18,4 @@ model_list:
 
 litellm_settings:
   drop_params: true
+  set_system_prompt: "You are a professional assistant. Respond ONLY with direct text or code. DO NOT use JSON format for your speech. DO NOT output 'thought' or 'text' keys. Just talk like a human expert."
