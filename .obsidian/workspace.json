@@ -187,6 +187,8 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "proyectos/LangGraph_Bot/Sesion_2026-04-17_Bugs_y_Observabilidad.md",
+    "proyectos/LangGraph_Bot/Observabilidad_Langfuse.md",
     "proyectos/Trebol/bugs/bad-conv-20260417-v4-passat-ml-vehiculo-sobrescrito.md",
     "proyectos/Trebol/bugs/bad-conv-20260417-v4-ds3-cuotas-sin-anticipo.md",
     "proyectos/Trebol/bugs/bad-conv-20260417-v4-ds3-anticipo-loop.md",
@@ -220,8 +222,6 @@
     "proyectos/Fangio_CRM/MVP.md",
     "proyectos/Fangio_CRM/Roadmap_Backend.md",
     "proyectos/Fangio_CRM/Keys.md",
-    "Prompt_Maestro.md",
-    "infra/Prompt_Maestro.md",
-    "infra/Roadmap.md"
+    "Prompt_Maestro.md"
   ]
 }
