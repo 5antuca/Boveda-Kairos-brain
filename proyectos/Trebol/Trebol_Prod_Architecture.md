@@ -3,33 +3,38 @@
 Cliente: El Trébol Automotores (Benavídez, Buenos Aires)
 Infra VPS/Docker → ver `VPSarchitecture.md` | Workflow principal → ver `trebol_workflow.md`
 
+> ⚠️ **Desde 2026-04-18** el cerebro del bot dejó de ser n8n y pasó a ser el bot Python LangGraph (`trebol-prod-bot`). Ver [[Prod_Deploy]]. Los workflows n8n listados abajo para **Trebol22cuotas** quedan como referencia/rollback — hoy están `active=false`.
+
 ## Inventario de Workflows
 
-| Workflow | ID prod | Nodos | Función |
-|----------|---------|-------|---------|
-| **Trebol22cuotas** | `wf4ts1WKcpOaE90A__FkD` | 152 | Cerebro principal (detalle en `trebol_workflow.md`) |
-| **Tool Simulador Cuotas** | `wdw-IwuR1VGR0_DAjSxGI` | 5 | Sub-workflow: cuotas 3/6/12 meses |
-| **SheetsToMongo v2** | `4atsII1pbYHYtOFVYzaVa` | 19 | Sync Sheets→MongoDB con embeddings, cron 4x/día |
-| **AlertasVendedores** | `4JLhwQIiYGHMYfdIRBoMO` | 8 | Dispatcher de alertas a grupo WhatsApp |
-| **Error Handler** | `u9skDIVyI2OnHieM` | 7 | Handler de errores global |
-| **Cleanup Chat Histories** | `RQp92tU6W7ZM9Wr5` | 3 | Limpieza historiales Postgres |
+| Workflow | ID prod | Estado | Función |
+|----------|---------|--------|---------|
+| **Trebol v4 (ex Trebol22cuotas)** | `wf4ts1WKcpOaE90A__FkD` | ⬛ desactivado 2026-04-18 (reemplazado por bot Python) | Cerebro principal legacy |
+| **Tool Simulador Cuotas** | `wdw-IwuR1VGR0_DAjSxGI` | 🟢 activo | Sub-workflow: cuotas 3/6/12 meses (usado por el bot) |
+| **SheetsToMongo v2** | `4atsII1pbYHYtOFVYzaVa` | 🟢 activo | Sync Sheets→MongoDB con embeddings, cron 4x/día |
+| **AlertasVendedores** | `4JLhwQIiYGHMYfdIRBoMO` | 🟢 activo | Dispatcher alertas a grupo WhatsApp (recibe POST del bot) |
+| **Error Handler** | `u9skDIVyI2OnHieM` | 🟢 activo | Handler de errores global |
+| **Cleanup Chat Histories** | `RQp92tU6W7ZM9Wr5` | 🟢 activo | Limpieza historiales Postgres |
 
 Test: **AsistenteInterno** (suite 4+1 workflows, gestión inventario via WhatsApp grupal).
 
-## Flujo de Datos
+## Flujo de Datos (prod 2026-04-18+)
 
 ```
-WhatsApp → Evolution API → Chatwoot → Webhook → Trebol22cuotas (n8n)
-  ├── Redis (debounce + lock)
-  ├── Clasificador → Guardias / AI Agent (GPT-4.1-mini)
-  │     ├── buscar_inventario_autos (MongoDB vector search)
-  │     ├── OPCIONES DE FINANCIACION (Google Sheets)
-  │     └── calcular_cuotas (sub-workflow)
-  ├── Respuesta → Chatwoot → WhatsApp
-  ├── Extraer Datos CRM → Google Sheets
-  └── Alertas → AlertasVendedores → WhatsApp grupo
+WhatsApp → Evolution API (trebolfinal) → Chatwoot (account 4, inbox 5)
+  ↓  (webhook message_created)
+trebol-prod-bot (Python LangGraph)
+  ├── Redis (debounce + RedisChatMessageHistory)
+  ├── LangGraph Agent (GPT-4.1-mini)
+  │     ├── Tool: buscar_inventario_autos (MongoDB vector search)
+  │     ├── Tool: opciones_financiacion (Sheets)
+  │     └── Tool: calcular_cuotas (Python nativo)
+  ├── Respuesta → Chatwoot API (3 burbujas + N fotos)
+  ├── CRM Sheets write directo (Google Sheets API, columna rango A:N)
+  ├── Alertas → POST $N8N_INTERNAL_URL/webhook/alertas-vendedores → AlertasVendedores → WhatsApp grupo
+  └── Observabilidad → Langfuse cloud (tags: env:prod, trebol-prod)
 
-SheetsToMongo v2 (cron 4x/día):
+SheetsToMongo v2 (cron 4x/día, sin cambios):
   Google Sheets inventario → Embeddings OpenAI → MongoDB Atlas
 ```
 

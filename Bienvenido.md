@@ -15,7 +15,7 @@ Cualquier LLM que opere bajo este usuario debe entender este archivo como la rut
 - 🧠 **Contexto para Claude (`contexto-claude/`):** [[Architecture_Index]] | [[Engineering_Manifesto]] | [[Rules_n8n]] | [[Preferencias_Arquitectura]] | [[Scripts_y_Herramientas]] | [[Comandos_Agentes_Skills]] (índice de `.claude/`) | [[Sincronizacion_Repos]] (regla dual-push)
 - 🏗️ **Infra compartida (`infra/`):** [[VPS_Architecture]] | [[VPS_Stack]] | [[System_Map]] | [[n8n_Gotchas]] | [[Redis_Postgres_Debug]] | [[Chatwoot_Evolution_Quirks]] | [[Docker_Networking_Gotchas]]
 - 🚀 **Proyectos Activos (`proyectos/`):**
-  - [[LangGraph_Bot]] — **Bot Trébol en Python/LangGraph** (Fases 0-9 ✅ · cutover test activo · prod pendiente) · [[Operar_Bot|runbook apagar/prender]] · [[Observabilidad_Langfuse]] · [[Sesion_2026-04-17_Bugs_y_Observabilidad|sesión 2026-04-17]]
+  - [[LangGraph_Bot]] — **Bot Trébol en Python/LangGraph** (Fases 0-10 ✅ · cutover test + PROD activos) · [[Prod_Deploy|deploy prod 2026-04-18]] · [[Operar_Bot|runbook apagar/prender]] · [[Observabilidad_Langfuse]] · [[Sesion_2026-04-17_Bugs_y_Observabilidad|sesión 2026-04-17]]
   - [[Trebol]] — El Trébol Automotores (dashboard del proyecto en `proyectos/Trebol/Trebol.md`)
   - [[Fangio_CRM]] — CRM de Ventas automotor · Bot: [[FangioBot_v2_Architecture]] (diseño activo) · [[FangioBot_Blueprint]] (v1 descartada)
     - Workflows: [[Workflow_v4_Reference]] (test v4) · [[Trebol_Prod_Architecture]] (prod) · [[Pipeline_v4]] · [[SheetsToMongo_RAG_Inventario]]
@@ -27,5 +27,5 @@ Cualquier LLM que opere bajo este usuario debe entender este archivo como la rut
 - 📥 **Inbox (`inbox/`):** captura rápida sin clasificar (volcado de memoria, postmortems sueltos, ideas crudas)
 
 ## 📊 Estado Actual
-- **Foco:** Bot Python (LangGraph) tomó el webhook Chatwoot test (2026-04-17). Plan: completar features + cutover prod.
-- **Pendiente test→prod:** bundle de 10 fixes n8n (ver [[Sesion_2026-04-17_Bugs_y_Observabilidad#Prod]]). Prod sigue en n8n mientras.
+- **Foco:** Bot Python en PROD desde 2026-04-18. Workflow n8n `Trebol v4 Test` (prod) desactivado. AlertasVendedores + Tool Simulador Cuotas siguen activos en n8n.
+- **Siguiente:** monitoreo post-cutover · posibles regresiones · backlog de fotos (ya funciona, pero afinar).

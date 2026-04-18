@@ -78,7 +78,7 @@ bot-service/
 | **7 — CRM state + fotos + saludo** | Persistir estado CRM en Redis + envío de imágenes + saludo inicial determinístico | ✅ 2026-04-17 — ver [[#Fase 7 — CRM state, Fotos y Saludo]] |
 | **8 — Observabilidad profunda** | session_id canónico, metadata/tags, captura de errores, normalize_phone | ✅ 2026-04-17 — ver [[Observabilidad_Langfuse]] |
 | **9 — Sheets fix (cols M → A)** | `values().update()` con rango explícito en vez de `append()` | ✅ 2026-04-17 — fix en `sheets_client.py` |
-| **10 — Cutover prod** | Cambiar webhook Chatwoot prod → bot | ⬜ pendiente (manual) |
+| **10 — Cutover prod** | Cambiar webhook Chatwoot prod → bot + DNS + Traefik + extra_hosts | ✅ 2026-04-18 — ver [[Prod_Deploy]] |
 
 ## Decisiones técnicas
 

@@ -1,5 +1,27 @@
 # Roadmap y Mejoras Activas - Kairos-infra
 
+## 🚀 Cutover bot Python a PROD (2026-04-18) ✅
+
+Fase final de la migración bot n8n → Python LangGraph. `trebol-prod-bot` procesa todos los mensajes del inbox `trebolllllllll` (account 4, inbox 5). El workflow n8n `Trebol v4 Test` (ID `wf4ts1WKcpOaE90A__FkD`) quedó desactivado.
+
+- [x] Config `configs/trebol-prod.yaml` (`client_id=trebol-prod`, inbox 5, sheets prod)
+- [x] Service `trebol-prod-bot` en `environments/production/trebol/docker-compose.yml`
+- [x] DNS `trebol.bot.kairosaisolutions.com` → 46.62.235.162 (Hetzner)
+- [x] Traefik + Let's Encrypt SSL válido
+- [x] `extra_hosts` en 5 containers (n8n, worker, chatwoot-web, sidekiq, evolution) apuntando a `172.18.0.100` — fix NXDOMAIN cache Ruby
+- [x] Webhook Chatwoot ID 2 → `https://trebol.bot.kairosaisolutions.com/webhook/chatwoot`
+- [x] Workflow n8n viejo desactivado en Postgres
+- [x] Langfuse emitiendo traces con tags `env:prod`, `trebol-prod`, session `{phone}`
+- [x] Incidente Hugo Benitez (conv 368) resuelto y respuesta enviada via Evolution
+- [x] Documentación: [[Prod_Deploy]], [[Operar_Bot]] actualizado, [[Trebol_Prod_Architecture]] actualizado
+
+**Pendiente post-cutover**:
+- Monitoreo continuo los primeros días (logs bot + Langfuse + CRM Sheets)
+- Revisar alertas que lleguen al grupo `Alertas Trebol` (`120363404968281666@g.us`)
+- Evaluar si se elimina el workflow viejo de n8n después de 1-2 semanas estables
+
+---
+
 ## 🧠 Context Engineering — Bóveda Obsidian (2026-04-13)
 
 **Objetivo**: unificar todo el contexto en la bóveda Obsidian `Kairos_Brain/`. `.claude/context/` queda deprecado. La bóveda es portable, RAG-friendly, editable desde Obsidian/cualquier IA.

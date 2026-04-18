@@ -8,6 +8,8 @@ estado: vigente
 
 Cómo apagar, prender, silenciar y reactivar el bot Python (trebol-test-bot / trebol-prod-bot), y cómo manejar las alertas y su anti-duplicación.
 
+> Detalles exclusivos de prod (IDs Chatwoot, WhatsApp group, extra_hosts, rollback): ver [[Prod_Deploy]].
+
 ## Arquitectura del handoff (quién decide que el bot se apague)
 
 Hay **4 niveles** para controlar el bot:
