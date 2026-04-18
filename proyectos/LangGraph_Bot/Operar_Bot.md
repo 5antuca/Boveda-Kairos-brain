@@ -10,13 +10,33 @@ Cómo apagar, prender, silenciar y reactivar el bot Python (trebol-test-bot / tr
 
 ## Arquitectura del handoff (quién decide que el bot se apague)
 
-Hay **3 niveles** para controlar el bot:
+Hay **4 niveles** para controlar el bot:
 
 1. **Global** (container): `docker stop trebol-test-bot` — apaga todo, deja al servicio muerto. Solo para mantenimiento / emergencia.
 2. **Por conversación** (Chatwoot): toggle `bot: off` en `custom_attributes` de la conversación desde la UI de Chatwoot.
 3. **Por teléfono** (Redis flag): `bot:{client_id}:{phone}:bot_off` con TTL. Es el método manual recomendado.
+4. **Auto-ignore conversaciones pre-existentes**: si el bot nunca respondió a un teléfono (sin history en Redis) Y la conversación Chatwoot ya tiene mensajes previos al actual (ej: un humano la estaba manejando), el bot ignora el mensaje.
 
-El webhook handler chequea los niveles 2 y 3 antes de procesar (en ese orden). Si cualquiera dispara → ignora el mensaje.
+El webhook handler chequea los 4 niveles antes de procesar. Si cualquiera dispara → ignora el mensaje.
+
+### Sobre el nivel 4 (conversaciones pre-existentes)
+
+Caso de uso: apagaste el bot (docker stop o bot-off global), el vendedor estuvo hablando con un cliente manualmente. Luego reactivás el bot. Sin este check, el bot respondería al próximo mensaje del cliente — interfiriendo con el vendedor.
+
+Regla: `conversation.messages_count > 1` + no hay history del bot para ese teléfono → skip. Log: `conversation_preexistent_skipped`.
+
+El bot sí responde cuando:
+- Es el primer mensaje de una conversación nueva (count=1)
+- El bot ya había respondido antes a ese teléfono (existe history en Redis)
+
+Cómo forzar que el bot retome una conversación que ya ignoró:
+```bash
+# El bot detecta history para decidir responder. Si limpiaste memoria y ya
+# le habías respondido antes, o querés que arranque en una conversación vieja,
+# podés "sembrar" history fake (hack de emergencia — raro necesitarlo):
+docker exec trebol-test-redis redis-cli -a "<pwd>" --no-auth-warning \
+  RPUSH "bot:trebol:<phone>:history" '{"type":"ai","content":"seed"}'
+```
 
 ## Apagar el bot para un cliente específico
 
