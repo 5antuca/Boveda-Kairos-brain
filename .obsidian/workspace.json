@@ -183,6 +183,9 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "proyectos/Trebol/bugs/bad-conv-20260417-v4py-s10-json-crudo-debounce-confusion-anticipo.md",
+    "proyectos/Trebol/bugs/bad-conv-20260417-v4py-passat-presupuesto-insuficiente-hola-duplicado.md",
+    "proyectos/LangGraph_Bot/Operar_Bot.md",
     "proyectos/Trebol/decisiones/SESSION-SUMMARY-2026-04-17.md",
     "proyectos/LangGraph_Bot/LangGraph_Bot.md",
     "Sin título 2.canvas",
@@ -218,8 +221,6 @@
     "infra/Docker_Networking_Gotchas.md",
     "contexto-claude/Sincronizacion_Repos.md",
     "proyectos/Fangio_CRM/Fangio_CRM.md",
-    "proyectos/Fangio_CRM/FangioBot_Blueprint.md",
-    "proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant.md",
-    "proyectos/Fangio_CRM/MVP.md"
+    "proyectos/Fangio_CRM/FangioBot_Blueprint.md"
   ]
 }
