@@ -15,7 +15,7 @@ Cualquier LLM que opere bajo este usuario debe entender este archivo como la rut
 - 🧠 **Contexto para Claude (`contexto-claude/`):** [[Architecture_Index]] | [[Engineering_Manifesto]] | [[Rules_n8n]] | [[Preferencias_Arquitectura]] | [[Scripts_y_Herramientas]] | [[Comandos_Agentes_Skills]] (índice de `.claude/`) | [[Sincronizacion_Repos]] (regla dual-push)
 - 🏗️ **Infra compartida (`infra/`):** [[VPS_Architecture]] | [[VPS_Stack]] | [[System_Map]] | [[n8n_Gotchas]] | [[Redis_Postgres_Debug]] | [[Chatwoot_Evolution_Quirks]] | [[Docker_Networking_Gotchas]]
 - 🚀 **Proyectos Activos (`proyectos/`):**
-  - [[LangGraph_Bot]] — **Bot Trébol en Python/LangGraph** (Fases 0-9 ✅ · cutover test activo · prod pendiente) · [[Observabilidad_Langfuse]] · [[Sesion_2026-04-17_Bugs_y_Observabilidad|sesión 2026-04-17]]
+  - [[LangGraph_Bot]] — **Bot Trébol en Python/LangGraph** (Fases 0-9 ✅ · cutover test activo · prod pendiente) · [[Operar_Bot|runbook apagar/prender]] · [[Observabilidad_Langfuse]] · [[Sesion_2026-04-17_Bugs_y_Observabilidad|sesión 2026-04-17]]
   - [[Trebol]] — El Trébol Automotores (dashboard del proyecto en `proyectos/Trebol/Trebol.md`)
   - [[Fangio_CRM]] — CRM de Ventas automotor · Bot: [[FangioBot_v2_Architecture]] (diseño activo) · [[FangioBot_Blueprint]] (v1 descartada)
     - Workflows: [[Workflow_v4_Reference]] (test v4) · [[Trebol_Prod_Architecture]] (prod) · [[Pipeline_v4]] · [[SheetsToMongo_RAG_Inventario]]
