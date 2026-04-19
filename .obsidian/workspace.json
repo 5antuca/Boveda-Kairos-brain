@@ -183,6 +183,9 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "proyectos/LangGraph_Bot/Prod_Deploy.md",
+    "proyectos/LangGraph_Bot/OpenAI_Quota_Fallback.md",
+    "infra/VPS_Snapshots_y_Recovery.md",
     "proyectos/Trebol/bugs/bad-conv-20260417-v4py-s10-json-crudo-debounce-confusion-anticipo.md",
     "proyectos/Trebol/bugs/bad-conv-20260417-v4py-passat-presupuesto-insuficiente-hola-duplicado.md",
     "proyectos/LangGraph_Bot/Operar_Bot.md",
@@ -218,9 +221,6 @@
     "proyectos/Fangio_CRM/code",
     "proyectos/Fangio_CRM/FangioBot_v2_Architecture.md",
     "proyectos/Fangio_CRM/FangioBot_Sprint6_Estado.md",
-    "infra/Docker_Networking_Gotchas.md",
-    "contexto-claude/Sincronizacion_Repos.md",
-    "proyectos/Fangio_CRM/Fangio_CRM.md",
-    "proyectos/Fangio_CRM/FangioBot_Blueprint.md"
+    "infra/Docker_Networking_Gotchas.md"
   ]
 }
