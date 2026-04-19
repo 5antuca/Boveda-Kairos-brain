@@ -183,6 +183,7 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "contexto-claude/Subir_Imagenes_Claude.md",
     "proyectos/LangGraph_Bot/Prod_Deploy.md",
     "proyectos/LangGraph_Bot/OpenAI_Quota_Fallback.md",
     "infra/VPS_Snapshots_y_Recovery.md",
@@ -220,7 +221,6 @@
     "proyectos/Fangio_CRM/code/api_leads_bot_patch_route.ts",
     "proyectos/Fangio_CRM/code",
     "proyectos/Fangio_CRM/FangioBot_v2_Architecture.md",
-    "proyectos/Fangio_CRM/FangioBot_Sprint6_Estado.md",
-    "infra/Docker_Networking_Gotchas.md"
+    "proyectos/Fangio_CRM/FangioBot_Sprint6_Estado.md"
   ]
 }
