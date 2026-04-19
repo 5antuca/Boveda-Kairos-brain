@@ -180,6 +180,10 @@ Filtro de inbox: el bot solo procesa `inbox_id=2` ("TrebolWhatsApp"). Los mensaj
 
 ## Links
 
+- [[Operar_Bot]] — runbook (apagar/prender, bot-off, alertas)
+- [[OpenAI_Quota_Fallback]] — alerta + recovery ante 429 de OpenAI (2026-04-19)
+- [[Observabilidad_Langfuse]] — debugging con traces
+- [[Prod_Deploy]] — detalles del cutover prod (2026-04-18)
 - [[Onboarding_Nuevo_Cliente]] — guía paso a paso para agregar Fangio CRM (u otro cliente)
 - [[Trebol]] — cliente principal
 - [[Fangio_CRM]] — segundo cliente futuro

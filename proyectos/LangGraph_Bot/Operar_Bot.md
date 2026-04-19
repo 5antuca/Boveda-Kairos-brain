@@ -109,12 +109,17 @@ En ambos casos se setea `bot:{client_id}:{phone}:bot_off` con TTL 72h, razón = 
 Fuente única: webhook n8n `{N8N_INTERNAL_URL}/webhook/alertas-vendedores`, workflow `AlertasVendedores` (ID test: `GyW7SjZluIdZyAYt_9LIO`).
 
 Tipos de alerta:
-| Tipo | Disparado por | Payload mínimo |
-|---|---|---|
-| `lead_caliente` | `estado=caliente` + `alerta_enviada=no` | tel, mensaje, url |
-| `pedido` | `estado=pedido` | nombre, vehiculo, presupuesto |
-| `papeles` | LLM marca `tipo_alerta=papeles` | tel, mensaje, url |
-| `foto` | Cliente envía foto (webhook detecta attachment file_type=image) | nombre, tel, url |
+| Tipo | Disparado por | Payload mínimo | Dedup |
+|---|---|---|---|
+| `lead_caliente` | `estado=caliente` + `alerta_enviada=no` | tel, mensaje, url | Sheets `ALERTA_ENVIADA` |
+| `pedido` | `estado=pedido` | nombre, vehiculo, presupuesto | Sheets `ALERTA_ENVIADA` |
+| `papeles` | LLM marca `tipo_alerta=papeles` | tel, mensaje, url | Sheets `ALERTA_ENVIADA` |
+| `foto` | Cliente envía foto (webhook detecta attachment file_type=image) | nombre, tel, url | Redis flag 30 min (`bot:{cid}:{phone}:alerta_foto`) |
+| `bot_off` | CRM extraction → handoff | tel, motivo, url | — |
+| `openai_quota` | `openai.RateLimitError` en el grafo | tel, motivo=code | Redis flag permanente (`bot:{cid}:openai_quota_alert_sent`) |
+| `openai_quota_recovered` | Próximo turno OK después de un quota agotado | (sin payload) | Auto-borrado del flag quota |
+
+Detalle operacional de `openai_quota` / `openai_quota_recovered` (cuándo y cómo llegan, cómo recargar, cómo resetear manualmente): [[OpenAI_Quota_Fallback]].
 
 ### Anti-duplicado: columna ALERTA_ENVIADA del CRM Sheets
 
@@ -162,5 +167,6 @@ Limpia:
 ## Links
 
 - [[LangGraph_Bot]] — overview del proyecto
+- [[OpenAI_Quota_Fallback]] — qué hace el bot cuando OpenAI tira 429
 - [[Observabilidad_Langfuse]] — debugging con traces
 - [[Sesion_2026-04-17_Bugs_y_Observabilidad]] — postmortem bugs resueltos
