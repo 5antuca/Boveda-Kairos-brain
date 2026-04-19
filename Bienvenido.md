@@ -12,7 +12,7 @@ Cualquier LLM que opere bajo este usuario debe entender este archivo como la rut
 
 - 👤 **Identidad y Configuración:** [[sobre-mi]] | [[Instrucciones Generales]] | [[Prompt_Maestro]]
 - 🗺️ **Roadmap activo:** [[Roadmap]]
-- 🧠 **Contexto para Claude (`contexto-claude/`):** [[Architecture_Index]] | [[Engineering_Manifesto]] | [[Rules_n8n]] | [[Preferencias_Arquitectura]] | [[Scripts_y_Herramientas]] | [[Comandos_Agentes_Skills]] (índice de `.claude/`) | [[Sincronizacion_Repos]] (regla dual-push)
+- 🧠 **Contexto para Claude (`contexto-claude/`):** [[Architecture_Index]] | [[Engineering_Manifesto]] | [[Rules_n8n]] | [[Preferencias_Arquitectura]] | [[Scripts_y_Herramientas]] | [[Comandos_Agentes_Skills]] (índice de `.claude/`) | [[Sincronizacion_Repos]] (regla dual-push) | [[Subir_Imagenes_Claude]] (scp de screenshots)
 - 🏗️ **Infra compartida (`infra/`):** [[VPS_Architecture]] | [[VPS_Stack]] | [[System_Map]] | [[VPS_Snapshots_y_Recovery]] | [[n8n_Gotchas]] | [[Redis_Postgres_Debug]] | [[Chatwoot_Evolution_Quirks]] | [[Docker_Networking_Gotchas]]
 - 🚀 **Proyectos Activos (`proyectos/`):**
   - [[LangGraph_Bot]] — **Bot Trébol en Python/LangGraph** (Fases 0-10 ✅ · cutover test + PROD activos) · [[Prod_Deploy|deploy prod 2026-04-18]] · [[Operar_Bot|runbook apagar/prender]] · [[OpenAI_Quota_Fallback|alerta OpenAI 429]] · [[Observabilidad_Langfuse]] · [[Sesion_2026-04-17_Bugs_y_Observabilidad|sesión 2026-04-17]]
