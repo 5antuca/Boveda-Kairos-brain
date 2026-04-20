@@ -22,6 +22,43 @@ Fase final de la migración bot n8n → Python LangGraph. `trebol-prod-bot` proc
 
 ---
 
+## 🔜 Backlog Trebol — Features futuras (agregadas 2026-04-20)
+
+Propuestas derivadas de incidentes reales en prod. Sin spec todavía — requieren `/new-spec` antes de implementar.
+
+### Vision en imágenes de autos (prioridad media)
+**Problema observado**: clientes mandan fotos de autos (propios para permuta, del stock para preguntar, o capturas de ML/redes) sin texto o con texto mínimo. El bot hoy solo cuenta `imagenes_recibidas` y las ignora a nivel contenido. Casos:
+- *Bruno (conv 225, 2026-03-26)*: mandó fotos de autos del stock + "está disponible?" — bot se confundió y asumió permuta con un Peugeot que había mostrado previamente como opción de compra.
+- *Balada F250 Roja (conv 383, 2026-04-20)*: respondió a estado de WhatsApp y mandó 2 fotos — bot asumió permuta sin confirmar.
+
+**Implementación propuesta**:
+- Pasar `data_url`/`file_url` de los attachments image directamente al LLM como `content = [{"type":"text","text":...}, {"type":"image_url","image_url":{"url":...}}]`.
+- GPT-4.1-mini ya tiene capacidad multimodal; costo marginal aceptable (~0.0001 USD por imagen).
+- Usos: (a) leer texto embebido en la imagen (ficha de auto con marca/modelo/año), (b) reconocer tipo de vehículo para confirmar intent, (c) evitar asumir permuta cuando la imagen es claramente de stock/ML.
+
+**Trabajo estimado**:
+- `webhook/chatwoot.py`: cambiar descarte de attachments image por recolección de URLs.
+- `agent/graph.py`: construir `HumanMessage` multimodal; ajustar invocación de `ChatOpenAI` si hiciera falta.
+- Guardrail: limitar N imágenes por turno (p. ej. 3) para evitar blow-up de tokens.
+- Test: dataset pequeño de fotos de autos del trebol con expected `marca_modelo` para verificar extracción.
+
+### Reconocer vehículo al responder a estados de WhatsApp (prioridad baja)
+**Problema observado**: clientes responden a estados del Trebol (stories de WhatsApp con fotos de autos publicados) con "qué precio tiene esa?" o solo un emoji. El bot recibe únicamente el mensaje del cliente sin contexto del estado al que respondió. Ejemplo: *Balada F250 Roja* respondió "❤️" al estado y después "qué precio tiene esa?" — el bot saludó genérico y propuso Peugeots random.
+
+**Por qué no es trivial**:
+- Chatwoot **no propaga** el `contextInfo.quotedMessage` de Baileys al webhook — descarta el estado citado.
+- El raw event de Evolution (`messages.upsert`) sí tiene `contextInfo.quotedMessage` con la imagen/video/caption del estado original, más `contextInfo.remoteJid == "status@broadcast"` como marcador.
+- Requiere capturar ese metadata antes o en paralelo a Chatwoot.
+
+**Opciones de implementación** (de más simple a más completa):
+1. **Detección + pregunta aclaratoria**: si el texto es ambiguo ("esa", "ese", "cuánto sale") sin referencia previa en historia → bot pregunta "¿Me pasás marca y modelo? No puedo ver el estado/foto al que respondiste." (Cubre 60% del caso sin cambios de infra.)
+2. **Evolution webhook secundario** al bot Python: configurar un webhook extra de Evolution (`messages.upsert`) directo al bot. Parsear `contextInfo.quotedMessage` + guardar mapping `{chat_id, last_status_quoted}` en Redis (TTL 10min). Cuando llegue el evento por Chatwoot, si había status reciente → inyectar como contexto. (Cubre ~95% pero duplica pipeline.)
+3. **Base de estados indexada**: cuando el Trebol publica un estado, loggear el vehículo (marca+modelo+ID inventario). Cuando el cliente responde, el bot ya sabe a cuál se refiere. Requiere flujo operativo con el cliente humano (el Trebol) — no puramente técnico.
+
+**Recomendación**: arrancar por la opción 1 (dura 5min, resuelve la mayoría de casos). Las opciones 2 y 3 quedan para cuando el volumen de "reply to status" sea medible y moleste a los vendedores.
+
+---
+
 ## 🧠 Context Engineering — Bóveda Obsidian (2026-04-13)
 
 **Objetivo**: unificar todo el contexto en la bóveda Obsidian `Kairos_Brain/`. `.claude/context/` queda deprecado. La bóveda es portable, RAG-friendly, editable desde Obsidian/cualquier IA.
