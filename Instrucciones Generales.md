@@ -37,3 +37,4 @@ Estas son las reglas inquebrantables de comportamiento y estilo para cualquier I
 ## 🧠 Solución Integral
 12. **Sin parches:** Buscá la raíz del problema ("root cause"). Si una base de datos se cuelga y provoca que n8n falle por timeout, la solución no es incrementar el timeout en n8n, sino arreglar el pooling en Pgbouncer o meter índices en Postgres.
 13. En n8n, agregá sistemáticamente nodos *Wait* o *Retry* al conectarte a APIs externas conflictivas (OpenAI, Google Sheets) para evitar la rotura del flujo.
+  - Si no encuentras una definición clara en los archivos cargados, PREGUNTA antes de inventar código o documentación.
