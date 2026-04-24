@@ -3,16 +3,16 @@
 Sistema multiagente de automatización para agencias digitales corriendo en VPS Linux con Docker.
 1 cliente activo (El Trébol Automotores) con bot WhatsApp en producción. Foco actual: optimizar bot Trebol v4 en test.
 
-## Visión — Paperclip como orquestador
-Objetivo a futuro: integrar [Paperclip](https://github.com/paperclipai/paperclip) (Node.js, port 3100) como plano de control de agentes especializados (WhatsApp, Instagram, Meta Ads, Debugger, Supervisor). Multi-company con aislamiento de datos, audit log, budgets por agente, approval flows humanos. Obsidian solo como editor humano; agentes consultan MongoDB Atlas o Qdrant directo.
+## Visión — Claude Code como Builder y LangGraph como Orquestador
+Objetivo a futuro: usar Claude Code como tu **Swarm Architect (Builder)** para construir un plano de control de agentes especializados en **LangGraph (Python)**. Multi-company con aislamiento de datos, audit log, budgets por agente, approval flows humanos. Obsidian es la fuente de verdad (Vault); los agentes leen de allí y consultan bases como MongoDB Atlas o Qdrant directo.
 
-### Roadmap Paperclip (NO ejecutar sin confirmación)
-0. Actualizar docs con la visión nueva ← HECHO
-1. Paperclip en test — Container Docker, DB propia en Postgres test, Traefik route
-2. Primer org-chart: El Trébol — Agentes WhatsApp Bot + Alertas como agents, adapter HTTP → n8n
-3. Approval flows — Alertas y derivaciones como tickets con aprobación humana
-4. Segundo cliente via Paperclip — Onboarding parametrizado, validar aislamiento
-5. Nuevos canales — Instagram bot como agente en org-chart del cliente
+### Roadmap Swarm Architecture (NO ejecutar sin confirmación)
+0. Actualizar docs con la visión de LangGraph como motor de producción ← HECHO
+1. LangGraph en test — Entorno Python, contenedor Docker, endpoints FastAPI / webhooks.
+2. Primer enjambre: El Trébol — Ruteador inteligente en LangGraph, nodos n8n como herramientas de I/O puro, bots de WhatsApp delegando cognitivamente a LangGraph.
+3. Approval flows — Human-in-the-loop nativo en LangGraph para tickets y derivaciones.
+4. Segundo cliente — Onboarding parametrizado, validar aislamiento en LangGraph.
+5. Nuevos canales — Instagram bot ruteado por el mismo enjambre cognitivo.
 
 ## Cómo trabajar en este proyecto
 1. **Revisá lo que existe antes de proponer.** No asumas la estructura — explorá archivos y preguntá si algo no está claro.
