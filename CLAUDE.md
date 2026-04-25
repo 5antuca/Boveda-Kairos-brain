@@ -34,6 +34,7 @@ Objetivo a futuro: usar Claude Code como tu **Swarm Architect (Builder)** para c
 - `/prime-architecture` — Análisis arquitectónico
 - `/prime-debug` — Root cause analysis
 - `/prime-workflow` — Optimización de workflows
+- `/ingest [source]` — Procesar nueva fuente hacia la Wiki (Karpathy pattern)
 - `docker logs [container]` — Ver logs
 - `./scripts/deploy-workflow.sh` — Deploy de workflow (leer antes de ejecutar)
 - `bash scripts/clear-chat-memory.sh 5491150635028 test` — Post-deploy obligatorio
@@ -53,6 +54,15 @@ Leer SIEMPRE al inicio navegando la bóveda Obsidian (`Kairos_Brain/`):
 
 ## Bóveda en repo separado
 `Kairos_Brain/` es un **nested checkout** del repo `git@github.com:5antuca/Boveda-Kairos-brain.git` (ignorado en `.gitignore` del repo principal). Cualquier edit al vault tiene que commitearse Y pushearse desde adentro de `Kairos_Brain/`, NO desde `kairos-infrastructure`. Usar `scripts/sync-vault.sh` para empujar ambos repos al mismo tiempo. Ver `Kairos_Brain/contexto-claude/Sincronizacion_Repos.md` para el flujo completo.
+
+## LLM Wiki Operations (Karpathy Pattern)
+1. **Ingest**: Cuando el usuario deja un archivo en `raw/` o pide procesar una fuente:
+   - Leer la fuente, destilar aprendizajes clave.
+   - Actualizar/Crear páginas en las carpetas de la Wiki (`infra/`, `proyectos/`, `personas/`).
+   - Actualizar `index.md` con el nuevo contenido.
+   - Registrar la operación en `log.md` (formato: `## [YYYY-MM-DD] ingest | Título`).
+2. **Query**: Al responder preguntas, consultar primero `index.md` para localizar páginas relevantes en la Wiki. Si una respuesta es compleja y valiosa, ofrecer guardarla como una nueva página de la Wiki.
+3. **Lint**: Periódicamente (o al inicio de sesión), revisar la Wiki buscando: contradicciones entre páginas, links rotos, u "orphan pages".
 
 ## Spec-Driven Development (SDD)
 Flujo: `SPEC → PLAN → EJECUCIÓN → REVIEW → DOC`
