@@ -11,10 +11,14 @@
             "id": "0c64062070f3eba7",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Vista gráfica"
+              "type": "markdown",
+              "state": {
+                "file": "Bienvenido.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Bienvenido"
             }
           }
         ]
@@ -70,8 +74,7 @@
               "title": "Marcadores"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -183,6 +186,8 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "contexto-claude/Comandos_Agentes_Skills.md",
+    "proyectos/Trebol/Trebol.md",
     "Instrucciones",
     "contexto-claude/Subir_Imagenes_Claude.md",
     "proyectos/LangGraph_Bot/Prod_Deploy.md",
@@ -194,7 +199,6 @@
     "proyectos/Trebol/decisiones/SESSION-SUMMARY-2026-04-17.md",
     "proyectos/LangGraph_Bot/LangGraph_Bot.md",
     "Sin título 2.canvas",
-    "proyectos/Trebol/Trebol.md",
     "Sin título 1.canvas",
     "Sin título.canvas",
     "infra/n8n_Gotchas.md",
@@ -220,7 +224,6 @@
     "proyectos/Fangio_CRM/code/env_vars.md",
     "proyectos/Fangio_CRM/code/api_webhook_evolution_route.ts",
     "proyectos/Fangio_CRM/code/api_leads_bot_patch_route.ts",
-    "proyectos/Fangio_CRM/code",
     "proyectos/Fangio_CRM/FangioBot_v2_Architecture.md"
   ]
 }
