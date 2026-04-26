@@ -16,6 +16,33 @@ Pipeline que mantiene sincronizado el inventario de vehículos desde Google Shee
 - **Docs fuente**: Google Sheets inventario (docId en `$env.SHEETS_INVENTARIO_DOC_ID`)
 - **Destino**: MongoDB Atlas collection `$env.MONGO_COLLECTION` con vector search index
 
+## ⚠️ Estado de las colecciones MongoDB (audit 2026-04-26)
+
+Tres colecciones coexisten en la base `RAGtrebol`:
+
+| Colección | Docs | TIPOs | Última act. | Estado |
+|---|---:|---|---|---|
+| `propiedades` | 6 | Acuatico, Maquinaria, Moto | reciente | **🔴 ROTA** — bug del sync, faltan los Vehiculos |
+| `propiedades-test` | 59 | Vehiculo, Moto, Camion, Maquinaria, Acuatico | 2026-03-02 | ✅ buena para test |
+| `conversaciones-feedback-test` | 2 | (n/a) | — | otra finalidad |
+
+**Causa de `propiedades` rota** (confirmado por usuario): le borraron al Google Sheet la columna ID que usa el sync para matchear, así que el SheetsToMongo no puede actualizar correctamente y dejó la colección con basura (motos viejas + maquinaria, sin autos).
+
+**Decisión 2026-04-26**: el bot test apunta a `propiedades-test` (`bot-service/configs/trebol.yaml`). PROD sigue con `propiedades` (todavía no se decidió cuándo restaurar el ID en el Sheet).
+
+## Bug conocido — DESC duplicado en docs
+
+Algunos docs tienen el campo `DESC` repetido N veces sin separador:
+```
+"gris, 5 puertas, unico dueño, transmision manual gris, 5 puertas, unico dueño, transmision manualgris, 5 puertas, unico dueño..."
+```
+
+Causa: el sync de Sheets no normaliza el campo cuando la cell tiene texto formato wrap o duplicación accidental.
+
+**Workaround en el bot**: `_dedupe_repeated_text()` en `bot-service/trebol_bot/agent/tools.py` detecta el período mínimo del texto y devuelve solo la primera ocurrencia. Reduce de 200 chars → 28 chars en docs afectados (-86%).
+
+Esto NO arregla la causa raíz, solo el rendering en las fichas que el bot le pasa al LLM. Para arreglar de verdad hay que limpiar el campo en la fuente (Sheet) o agregar un dedupe en el Code node de SheetsToMongo.
+
 ## Tabs sincronizados (5 tipos)
 
 | Tab | gid | TIPO metadata |

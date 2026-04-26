@@ -79,6 +79,7 @@ bot-service/
 | **8 — Observabilidad profunda** | session_id canónico, metadata/tags, captura de errores, normalize_phone | ✅ 2026-04-17 — ver [[Observabilidad_Langfuse]] |
 | **9 — Sheets fix (cols M → A)** | `values().update()` con rango explícito en vez de `append()` | ✅ 2026-04-17 — fix en `sheets_client.py` |
 | **10 — Cutover prod** | Cambiar webhook Chatwoot prod → bot + DNS + Traefik + extra_hosts | ✅ 2026-04-18 — ver [[Prod_Deploy]] |
+| **11 — Supreme Sales Swarm F1 + LLM migration + Token optimization** | Profiler psicográfico, migración cognitivo a Groq, prompt comprimido 8K→3.5K, CRM extractor guard | ✅ 2026-04-26 (test) — ver [[Sesion_2026-04-25_Sales_Swarm_y_LLM_Migration]] |
 
 ## Decisiones técnicas
 
@@ -91,6 +92,8 @@ bot-service/
 | Clasificador | Python regex (determinístico) | LLM — la lógica de routing no debe ser probabilística |
 | Guardias | Nodos LangGraph con state | Code nodes n8n — difíciles de extender |
 | CRM write | POST a n8n webhook | Python directo a Sheets — n8n ya tiene la lógica |
+| LLM cognitivo (2026-04-26) | Groq Llama 3.3 70B | Gemini 2.5 Flash (free tier 250 RPD muy bajo) · OpenAI (key del cliente) |
+| Provider Profiler (2026-04-26) | Groq Llama 3.1 8B Instant | Mismo 70B (cuota separada conviene para classification) |
 
 ## Observabilidad — Langfuse (Fase 6)
 
@@ -185,8 +188,12 @@ Filtro de inbox: el bot solo procesa `inbox_id=2` ("TrebolWhatsApp"). Los mensaj
 - [[Observabilidad_Langfuse]] — debugging con traces
 - [[Prod_Deploy]] — detalles del cutover prod (2026-04-18)
 - [[Onboarding_Nuevo_Cliente]] — guía paso a paso para agregar Fangio CRM (u otro cliente)
-- [[Trebol]] — cliente principal
-- [[Fangio_CRM]] — segundo cliente futuro
-- [[Pipeline_v4]] — arquitectura n8n actual (referencia para la migración)
-- [[n8n_Gotchas]] — gotchas del stack actual que desaparecen con Python
+- [[Supreme_Sales_Swarm]] — F1 (Profiler) deployed test, F2-F6 pendientes
+- [[LLM_Providers]] — strategy Gemini/Groq/OpenAI
+- [[Token_Optimization]] — métricas y técnicas de compresión
+- [[Sesion_2026-04-25_Sales_Swarm_y_LLM_Migration]] — sesión 2026-04-25/26
+- [[../Trebol|Trebol]] — cliente principal
+- [[../Fangio_CRM|Fangio_CRM]] — segundo cliente futuro
+- [[../Trebol/Pipeline_v4|Pipeline_v4]] — arquitectura n8n previa (referencia histórica)
+- [[../../infra/n8n_Gotchas|n8n_Gotchas]] — gotchas del stack
 - Repo reference: `langgraph-sales-agent` (yerdaulet-damir) — patrón de referencia para multi-tenant
