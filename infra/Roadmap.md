@@ -1,5 +1,20 @@
 # Roadmap y Mejoras Activas - Kairos-infra
 
+## ⏸ Trebol PROD en pausa (2026-04-26)
+
+Cliente El Trébol Automotores se dio de baja. Stack PROD apagado en frío sin destruir nada — los 9 containers `trebol-prod-*` están en `Exited`, los volúmenes intactos. Sin reescaneo de QR (no se ejecutó `DELETE /instance/logout`).
+
+- **No se modifica el Sheets de prod** (n8n down)
+- **No se envían alertas a vendedores** (n8n down)
+- **No se procesan mensajes de WhatsApp** (Evolution down)
+- Reactivar = `cd environments/production/trebol && docker compose up -d`
+- Antes de reactivar: definir `LLM_PROVIDER=openai` en `environments/production/trebol/.env` (prod nunca lo tuvo seteado y el factory default era `groq` sin key — bug latente)
+- Riesgo al reactivar: Evolution puede caer en "ghost mode C" tras semanas offline → re-scan QR manual
+
+Toda la sección posterior aplica a la **arquitectura existente**, queda como referencia para una eventual reactivación o para el cliente nuevo que se monte sobre la misma plantilla.
+
+---
+
 ## 🚀 Cutover bot Python a PROD (2026-04-18) ✅
 
 Fase final de la migración bot n8n → Python LangGraph. `trebol-prod-bot` procesa todos los mensajes del inbox `trebolllllllll` (account 4, inbox 5). El workflow n8n `Trebol v4 Test` (ID `wf4ts1WKcpOaE90A__FkD`) quedó desactivado.
