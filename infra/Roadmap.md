@@ -1,5 +1,20 @@
 # Roadmap y Mejoras Activas - Kairos-infra
 
+## 🎯 Bot Behavior — Metodología por capas (2026-04-27)
+
+Decisión post-iteración: dejar de modificar el system prompt por casos edge ("micro-fixes" reactivos) y pasar a un enfoque por capas:
+
+1. **Principios de conversación** (3-5, inmutables)
+2. **System prompt limpio** que los implementa (~1500 palabras max)
+3. **Few-shot examples** curados (5-10 conversaciones ideales inline)
+4. **Eval suite** ampliado (~50 escenarios) corriendo antes de cada deploy
+
+Estado: Fase 1 (definir principios) en curso con el usuario. Spec completa en [[../proyectos/LangGraph_Bot/Bot_Behavior_Methodology]]. Aplica también a la migración multi-tenant FangioCRM ([[../proyectos/Fangio_CRM/Bot_LangGraph_Migration]]).
+
+Bloquea: nuevas iteraciones de comportamiento del bot hasta que estén los principios + reescritura del prompt + eval suite. Los fixes deployados durante la sesión 2026-04-27 (saludo recíproco, max 2-3 fichas, filtro semántico por segmento, frase canónica vs derivación parcial, mapeo utilitario→pickup, default "no hay" si no hay match real) quedan vigentes hasta que se reescriba el prompt limpio.
+
+---
+
 ## ⏸ Trebol PROD en pausa (2026-04-26)
 
 Cliente El Trébol Automotores se dio de baja. Stack PROD apagado en frío sin destruir nada — los 9 containers `trebol-prod-*` están en `Exited`, los volúmenes intactos. Sin reescaneo de QR (no se ejecutó `DELETE /instance/logout`).

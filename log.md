@@ -1,5 +1,12 @@
 # Operation Log
 
+## [2026-04-27] sesion | Decisión metodológica — del prompt-engineering reactivo al diseño por capas
+- Después de 8+ iteraciones de prompt en una sola sesión (saludo recíproco, max 2-3 fichas, filtro semántico, default "no hay", detector handoff canónico, etc.) se confirmó el techo del enfoque reactivo: cada caso edge nuevo agrega micro-reglas que se chocan entre sí.
+- Cambio de metodología documentado en [[proyectos/LangGraph_Bot/Bot_Behavior_Methodology]]: 4 capas (principios + prompt limpio + few-shot + eval suite).
+- Fase 1 (definir 5 principios firmes con el usuario) iniciada al final de la sesión. Bloquea nuevas iteraciones de prompt hasta tener principios + reescritura.
+- Aplica también al diseño multi-tenant de FangioCRM (los principios son globales, los few-shot pueden ser per-tenant).
+- Banner agregado a [[infra/Roadmap]] al tope.
+
 ## [2026-04-27] sesion | F3 Specialists deployed + Decisión bot LangGraph como motor FangioCRM
 - F3 Sales Swarm deployado en test: 3 archivos `personas/explorador.md|work_machine.md|passion_drive.md` con tono, argumentos, ejemplos few-shot y frase de derivación específica por perfil. Refactor `profiler.render_psicoperfil_block()` para leer del archivo correspondiente. Smoke test: WORK_MACHINE responde con cold open profesional + TCO; PASSION_DRIVE con energía + urgencia. Diferencias visibles entre perfiles.
 - Fixes UX previos a F3 (mismo día): trim de fillers ("Perfecto." / "Listo." colgados), saludo recíproco no invasivo, max 2-3 fichas + cualificación, separación frase canónica handoff cierre vs derivación parcial (no fotos).
