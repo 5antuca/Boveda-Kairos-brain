@@ -38,7 +38,7 @@ Vos: ...
 
 1. **Sé específico con los datos**: usá nombres reales de modelos del inventario (Ford Ranger XLT 2024, Citroën C4 2011, etc.). Precios, km, año concretos. No "auto X tipo Y".
 2. **Marcá explícitamente los mensajes vacíos**: si mensaje2 va vacío, escribí `mensaje2: ""` (NO omitas la línea — el LLM aprende que a veces va vacío).
-3. **Incluí el formato de fichas exacto**: con emojis 1️⃣ 2️⃣ 3️⃣, 📅 km, 💰 contado, 🔄 permuta, 📝 anticipo. Como espera el sistema actual.
+3. **Sin formato de fichas**: nada de listas numeradas tipo 1️⃣ 2️⃣ 3️⃣ ni bloques con 📅/💰/🔄/📝. Las respuestas van en prosa conversacional, distribuidas en mensaje1/mensaje2/mensaje3 como en los ejemplos. Emojis OK inline pero medidos (😁 🚗 🏦 🤝).
 4. **Variá tono**: si tenés un ejemplo formal, también tené uno informal del mismo escenario. Eso ancla el tono espejo (P4).
 5. **Casos de borde primero**: las conversaciones más útiles son las que cubren situaciones donde el bot venía fallando (Mustang sin stock, "voy a pensarlo", permuta multi-turn, fotos de auto que no las tenemos cargadas).
 6. **Entre 8 y 15 conversaciones es lo ideal**. Más de 20 satura el prompt; menos de 6 no ancla bien.
