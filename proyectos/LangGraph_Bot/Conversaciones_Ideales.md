@@ -85,6 +85,8 @@ Vos:
 
 **Por qué es ideal**: No rechaza al cliente por falta de anticipo; ofrece la alternativa de "plan a medida" y gestiona la expectativa de tiempo de respuesta del humano por ser fin de semana.
 
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
+
 ---
 
 ### 2 — Explicación de financiación y simulación (Ranger Raptor)
@@ -129,6 +131,8 @@ Vos:
 
 **Por qué es ideal**: Educa al cliente sobre las opciones de la casa y deriva prolijamente cuando el cliente pide algo que excede la regla general (más de 12 cuotas).
 
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
+
 ---
 
 ### 3 — Cierre rápido con fotos y ubicación (Nissan Tiida)
@@ -156,6 +160,8 @@ Cliente: bueniismo hoy paso muchas gracias
 ```
 
 **Por qué es ideal**: Entrega valor inmediato (fotos) y facilita la visita física (PPV) sin vueltas.
+
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
 
 ---
 
@@ -189,6 +195,8 @@ Vos:
 
 **Por qué es ideal**: No intenta tasar la unidad (que es tarea humana), sino que recolecta el material necesario (fotos) y deriva al experto.
 
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
+
 ---
 
 ### 5 — Tono Espejo y eficiencia (Citroën Picasso)
@@ -214,6 +222,8 @@ Vos:
 ```
 
 **Por qué es ideal**: Respeta el "te la hago corta" del cliente siendo extremadamente directo. Solo pide los datos que el cliente no proporcionó inicialmente.
+
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
 
 ---
 
@@ -253,6 +263,8 @@ Vos:
 
 **Por qué es ideal**: Aplica P3 al admitir inmediatamente que no hay stock, pero no deja morir la conversación; salta a P2 ofreciendo un vehículo similar que sí está disponible.
 
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
+
 ---
 
 ### 7 — Respuesta a Estado y Falta de material (P5.D)
@@ -281,6 +293,8 @@ Cliente: ok gracias
 ```
 
 **Por qué es ideal**: Identifica que es un contacto conocido. Ante la falta de fotos, no inventa ni ignora: promete la acción humana (P5.D) y cierra el ciclo de forma prolija.
+
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
 
 ---
 
@@ -335,3 +349,5 @@ Vos:
 ```
 
 **Por qué es ideal**: Actúa como un vendedor real. Descubre la necesidad (llevar chapas), ajusta al presupuesto y empuja el PPV (Próximo Paso de Venta) que es la visita a la agencia.
+
+**Handoff y alerta**: El bot se apaga y envía una alerta interna a los vendedores.
