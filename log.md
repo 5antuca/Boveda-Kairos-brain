@@ -1,5 +1,34 @@
 # Operation Log
 
+## [2026-05-01] fix | 4 bugs detectados en testing real con WhatsApp + audio
+Sesión de testing real con audio (cliente + bot) detectó 4 bugs concretos. Todos corregidos en branch `bot-rollback-2026-04-18` (commit pending).
+
+**Bug 1 — En audio mode el bot describía la camioneta en vez de mandarle la foto.**
+- Síntoma: cliente dice por audio "pasame fotos de la 3, estoy manejando" → bot responde con audio narrando la ficha + `image_urls_count: 0`. Los attachments nunca se enviaban.
+- Causa: la nota "MODO AUDIO ACTIVO" inyectada en `agent/graph.py` decía literal *"NADA de URLs"* y *"máximo 2-3 frases en TOTAL"*. El LLM lo interpretaba como "no poblar `fotos_mensajeN`" y se saltaba la tool de fotos. El dispatcher en `chatwoot.py:301-305` ya enviaba imágenes en audio mode — el problema era 100% upstream.
+- Fix: rewrite de la nota separando explícitamente reglas del **texto hablado** (mensaje1/2/3 sin URLs ni precios numéricos) de reglas de **fotos** (`fotos_mensajeN` se siguen poblando con tool igual que en modo texto, las imágenes se mandan como attachment después del audio). Ahora el audio NO reemplaza la foto — la complementa narrando precio contado, anticipo, km, año, versión, motor.
+- Archivo: `agent/graph.py:411-437`.
+
+**Bug 2 — Saludo determinístico con nombre viejo "El Trébol Automotores".**
+- Síntoma: tras la rename a Autos Norte (commit `0f164cf`), en algunos turnos el bot saludaba *"Hablás con Santi de El Trébol Automotores"*. Pasaba cuando el LLM arrancaba con algo distinto a "Hola/Buenas/etc." (ej: "¡Buenísimo!" después de hacer match en inventario).
+- Causa: `graph.py:576` tenía hardcodeado el texto canónico del saludo enforcement. La rename actualizó el prompt y el `trebol.yaml` (`nombre_agencia: Autos Norte`) pero no este fallback. Mismo hardcode en `chatwoot.py:457` (handoff de audio fallido) y `crm.py:61` (prompt de extracción).
+- Fix: leer dinámicamente `client_cfg.nombre_agencia` en los 3 puntos. Sacado el hardcode literal del prompt de extracción CRM ("Santi, asesor de la agencia"). Así no se vuelve a romper la próxima vez que se rename.
+- Archivos: `agent/graph.py:575-581`, `webhook/chatwoot.py:456`, `agent/crm.py:61`.
+
+**Bug 3 — Bot saltaba a financiación sin mostrar el auto cuando el request era OPEN-ENDED.**
+- Síntoma: cliente dice por audio *"ando buscando algún Mercedes viejo, algún deportivo, tengo 15k"* → bot responde *"¡Buenísimo! Con U$S 15.000 de anticipo podés financiar el Mercedes Benz 220/D 1971..."* + opciones de financiación. NO mostró ficha ni preguntó interés.
+- Causa: el prompt tenía bloque "VEHÍCULO ESPECÍFICO + PRESUPUESTO — 3 CASOS" que aplica fórmula textual fija (`"¡Buenísimo! Con U$S X de anticipo podés sacar el [vehículo] financiado..."`) cuando el cliente menciona un monto y hay match en inventario. Pero NO distinguía entre request **específico** (marca+modelo concretos, link de ML, "el N°2") vs **open-ended** (indefinido — "algún X", solo TIPO sin marca). Si la tool devolvía un único Mercedes con "Mercedes" como query, el LLM lo trataba como si el cliente hubiera elegido ese auto puntualmente.
+- Fix: regla nueva ANTES de los CASOS 1/2/3 con definición de open-ended vs específico, prohibición explícita de aplicar CASOS aunque haya un único match si el request fue open-ended, y ejemplo concreto del caso real.
+- Archivo: `configs/prompts/trebol.txt` antes del bloque "VEHÍCULO ESPECÍFICO + PRESUPUESTO".
+
+**Bug 4 — Bot disparaba "no tenemos fotos" sin que el cliente haya pedido fotos.**
+- Síntoma: cliente dice *"ando buscando algún auto de los 90/2000, tengo 20k, busco un Mercedes o algo parecido con lindos interiores, ¿tienen stock?"* → bot responde *"No tenemos fotos cargadas del Mercedes Benz 220/D 1971, ya le aviso a administración para que te las envíe"*. Saltó el ficha entero y disparó la frase canónica de handoff por foto faltante.
+- Causa: el prompt tenía la regla *"FOTOS_DISPONIBLES: no → responder 'No tenemos fotos cargadas...'"* sin precondición explícita de que el cliente hubiera pedido fotos. Apenas la tool devolvía `FOTOS_DISPONIBLES: no`, el LLM disparaba la frase reflexivamente.
+- Fix: precondición obligatoria explícita ("SOLO si el cliente PIDIÓ fotos en turno actual o anterior"). Si no pidió fotos → ignorar el campo y mostrar la ficha normal. Ejemplo negativo y positivo agregados.
+- Archivo: `configs/prompts/trebol.txt` debajo de la regla `FOTOS_DISPONIBLES: no`.
+
+**Estado**: bot rebuildeado + restarteado, healthy. Memoria `5491150635028` limpia. Validación end-to-end en WhatsApp pendiente del usuario.
+
 ## [2026-05-01] feature | Vision Classifier — clasificación de imágenes WhatsApp (gpt-4.1-mini)
 - Cuando el cliente adjunta una o más imágenes, ahora un LLM multimodal (`gpt-4.1-mini`, una sola call con todas las URLs) describe lo que ve (marca/modelo/año, source `screenshot|raw_photo|otro`, descripcion corta). El output se inyecta como marker rico al `content` del agent principal — antes era solo `[cliente envió N fotos]` sin contexto.
 - **Decisión clave**: el vision LLM **NO infiere intención** (compra vs venta/permuta). Solo describe la imagen. La intención la decide el agent principal con todo el contexto de conversación (texto del cliente + historial + descripción visual). Esto evita inconsistencias entre lo que dice el clasificador y lo que el agent ya sabe del turno anterior.
