@@ -7,6 +7,8 @@ prioridad: máxima — todo el resto del comportamiento del bot deriva de acá
 
 # Principios canónicos del bot de ventas — El Trébol / FangioCRM
 
+> ⚠️ **HAY UNA ITERACIÓN POSTERIOR**: ver [[Bot_Principios_Iteracion_2026-05-01]] que reformuló P4 (emojis incentivados) y P5 (3 modos: puerta abierta / **invitación a venir** / handoff). El presente doc se mantiene como referencia histórica de la **constitución v1** (2026-04-27). Para operación actual del bot, manda la iteración 2026-05-01.
+
 > Esta es la **constitución** del comportamiento del bot. Todo el system prompt, los few-shot examples y el eval suite implementan estos principios. Si algo del comportamiento del bot contradice un principio, el bug está en la implementación, no en el principio.
 
 ---

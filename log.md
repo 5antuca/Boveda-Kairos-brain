@@ -1,5 +1,15 @@
 # Operation Log
 
+## [2026-05-01] sesion | Iteración de principios v2 — emojis incentivados + invitación a venir + cierre comercial activo
+- Tras dos sesiones de testing real con WhatsApp (2026-04-30 y 2026-05-01), el usuario detectó que el bot sonaba a "robot de soporte" y no a vendedor de salón.
+- Aplicando la meta-regla del canónico ("modificar = reformular íntegro"), se reformularon **P4** (tono espejo + emojis humanizadores) y **P5** (cierre con 3 modos en vez de 2).
+- Modo **5.B "Invitación a venir"** nuevo: empuje al físico (visita a la agencia) cuando hay interés concreto en UN auto sin cierre fuerte. Llena el gap entre puerta abierta (5.A) y handoff con frase canónica (5.C).
+- Reglas nuevas: P2 extendido para fotos no cargadas → derivación parcial cálida ("ya le pido a los chicos que te las saquen 📸"); CASOS ESPECIALES nuevo "PRESUPUESTO DADO" para que el bot haga la cuenta inmediatamente y no repregunte.
+- Guard determinístico anti re-saludo agregado en `bot-service/trebol_bot/agent/graph.py` post-LLM: si NO es primer turno y el LLM saluda igual ("Hola, hablás con Santi..."), strip por código.
+- También se aplicó en sesión previa el mismo día: filtro de segmento determinístico en `tools.py` (Corolla → urbano, Hilux → pickup) con reorder + nota interna al LLM cuando todos los resultados son cross-segmento, y `_ensure_question_last` en `_parse_agent_response` para que la pregunta quede al final.
+- Doc nuevo: [[proyectos/LangGraph_Bot/Bot_Principios_Iteracion_2026-05-01]]. Banner agregado al canónico v1 ([[proyectos/LangGraph_Bot/Bot_Principios_Canonicos]]) apuntando a la iteración. **No se sobreescribió el v1** — queda como referencia histórica.
+- Pendientes (open questions del doc): few-shot examples para anclar 5.B, eval suite con escenarios nuevos, alerta admin automática cuando bot promete fotos no cargadas.
+
 ## [2026-04-27] sesion | Decisión metodológica — del prompt-engineering reactivo al diseño por capas
 - Después de 8+ iteraciones de prompt en una sola sesión (saludo recíproco, max 2-3 fichas, filtro semántico, default "no hay", detector handoff canónico, etc.) se confirmó el techo del enfoque reactivo: cada caso edge nuevo agrega micro-reglas que se chocan entre sí.
 - Cambio de metodología documentado en [[proyectos/LangGraph_Bot/Bot_Behavior_Methodology]]: 4 capas (principios + prompt limpio + few-shot + eval suite).
