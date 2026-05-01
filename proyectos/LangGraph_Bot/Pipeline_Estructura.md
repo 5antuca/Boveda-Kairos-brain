@@ -31,7 +31,8 @@ base_commit: 7f1e5c2 (2026-04-18 16:00 UTC)
 | Inventario | MongoDB Atlas Vector Search (colección `propiedades-test`) |
 | Observabilidad | Langfuse (traces + spans anidados via CallbackHandler) |
 | I/O canal | **Entrada**: webhook Chatwoot · **Salida**: Chatwoot API → Evolution API → WhatsApp |
-| Audio | Whisper (`integrations/audio_transcribe.py`) |
+| Audio in | Whisper (`integrations/audio_transcribe.py`) — transcribe audio del cliente |
+| Audio out | ElevenLabs TTS (`integrations/tts_elevenlabs.py`) — responde con audio cuando flag `audio_mode` activo. Ver [[Audio_Mode_Roadmap]] |
 | CRM externo | Google Sheets (gid=0, doc `11UPoPNzKcGdSuqieFtWHP9ETQNOJUxyUpQJ24kuApCc`) |
 | Alertas | n8n webhook (`integrations/alertas_client.py`) |
 
@@ -205,6 +206,7 @@ Las tools leen `client_id` del `ContextVar current_client_id` (seteado en `graph
 | `bot:{client_id}:{phone}:bot_off` | 72h | Flag de handoff — bloquea mensajes hasta expirar | `bot_off.set_bot_off` |
 | `bot:{client_id}:{phone}:photos_sent` | 7d | Set de URLs de fotos ya enviadas (dedup) | `chatwoot.py post-LLM` |
 | `bot:{client_id}:{phone}:alerta_foto` | 30min | Dedup de alertas de "cliente envió foto" | `chatwoot.py incoming photos` |
+| `bot:{client_id}:{phone}:audio_mode` | 15min | Flag de modo audio (cliente dijo "manejando" / "no puedo escribir") — bot responde con TTS hasta TTL o frase OFF | `memory/audio_mode.py` |
 
 **Limpieza manual**: `bash scripts/clear-chat-memory.sh <phone>` — borra todas las keys `bot:*:{phone}:*` + history Postgres + row CRM Sheets.
 

@@ -1,5 +1,13 @@
 # Operation Log
 
+## [2026-05-01] feature | Audio Mode (ElevenLabs TTS) — feature básica funcional, bugs documentados
+- Integración ElevenLabs TTS para que el bot responda con audio cuando el cliente dice que no puede leer/escribir (manejando, en moto, caminando, etc.).
+- Archivos nuevos: `bot-service/trebol_bot/integrations/tts_elevenlabs.py`, `bot-service/trebol_bot/memory/audio_mode.py`. Modificados: `config.py`, `chatwoot_client.py` (+`send_audio_bytes`), `webhook/chatwoot.py` (regex triggers + ramificación pre-send), `agent/graph.py` (inyección nota MODO AUDIO al prompt), `docker-compose.yml` (3 env vars), `.env.example`.
+- Decisiones: trigger SOLO por frase explícita del cliente (no por mandar audio); desactivación SOLO por frase OFF o TTL natural 15min (no por mensaje largo); audio único por turno; fallback silencioso a texto si TTS falla.
+- **Bug bloqueante pendiente**: el LLM responde con formato lista/ficha en modo audio, lo que hace que TTS lea "U dólar S" en vez de "dólares" y separadores `|` literalmente. Documentado en [[proyectos/LangGraph_Bot/Audio_Mode_Roadmap]] con 4 opciones de fix y recomendación (Opción B normalizador determinístico + Opción A refuerzo de prompt).
+- Otro pendiente: la voice_id elegida (`MjtZn5tagxL1RO6w9ER5`) come palabras en español. Probar Antoni (`ErXwobaYiN019PkySvjV`) o upgrade a plan Starter ($5) para acceso a voice library.
+- Status: feature funciona end-to-end pero calidad de audio aún no es production-ready. Commit del feature pendiente — sigue como WIP en branch `bot-rollback-2026-04-18`.
+
 ## [2026-05-01] rollback | Vuelta al bot del 18-abril como base limpia para FangioCRM
 - Tras dos sesiones de testing real (2026-04-30 y 2026-05-01) con principios canónicos v1+v2, el usuario decidió rollbackear al estado del 18-abril (commit `7f1e5c2`, cutover prod LangGraph). Razón: la iteración del Sales Swarm + multi-LLM + principios canónicos había agregado complejidad sin convertir respuestas mejores en testing real con WhatsApp.
 - **Branch operativa nueva**: `bot-rollback-2026-04-18` (pusheada a origin). main intacto con WIP preservado en `db9055d` (snapshot pre-rollback).
