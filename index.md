@@ -17,6 +17,7 @@
 - [[proyectos/LangGraph_Bot/Operar_Bot|Operar_Bot]] - Runbook operativo.
 - [[proyectos/LangGraph_Bot/Prod_Deploy|Prod_Deploy]] - Cutover prod 2026-04-18.
 - [[proyectos/LangGraph_Bot/Onboarding_Nuevo_Cliente|Onboarding_Nuevo_Cliente]] - Agregar nuevo cliente.
+- [[proyectos/LangGraph_Bot/Vision_Classifier|Vision_Classifier]] - 🆕 Clasificación de imágenes WhatsApp con gpt-4.1-mini (separación OCR / decisión de intent).
 
 ### Trébol (cliente)
 - [[proyectos/Trebol/Trebol|Trebol]] - Cliente principal.

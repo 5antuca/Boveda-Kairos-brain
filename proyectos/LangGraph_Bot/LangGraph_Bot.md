@@ -27,6 +27,7 @@ Para detalles técnicos completos, leer **[[Pipeline_Estructura]]** — es la fu
 - [[Onboarding_Nuevo_Cliente]] — checklist para sumar un tenant.
 - [[Prod_Deploy]] — proceso de deploy a producción.
 - [[Conversaciones_Ideales]] — few-shot ejemplos de tono (referencia, no auto-aplicado).
+- [[Vision_Classifier]] — clasificación de imágenes WhatsApp con gpt-4.1-mini (separación OCR visual / decisión de intent).
 
 ## Documentos archivados (histórico)
 

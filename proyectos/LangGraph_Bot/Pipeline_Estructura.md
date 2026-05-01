@@ -250,8 +250,9 @@ Orden de gates (descarta silenciosamente — sin loggear como error):
 
 **Pre-procesamiento** (sobre content):
 - Audio → Whisper transcribe → reemplaza content.
-- Foto → marca `[cliente envió N fotos]` + dispara alerta `tipo_alerta=foto` (con dedup 30min).
+- Foto → vision classifier (`gpt-4.1-mini` multimodal) describe lo que se ve (marca, modelo, año, source: screenshot/raw_photo) → marker rico inyectado al content. Detalles en [[Vision_Classifier]]. Alerta `tipo_alerta=foto` se dispara igual (con dedup 30min).
 - Si solo audio sin transcribir → handoff directo a admin (frase fija + bot_off + alerta).
+- Si vision classifier falla → handoff directo a admin (mensaje fijo + bot_off + alerta `lead_caliente`).
 
 Si pasa todos los gates → `DebounceManager.on_message(callback=_process_and_send)`.
 

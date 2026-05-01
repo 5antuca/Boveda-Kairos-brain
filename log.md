@@ -1,5 +1,17 @@
 # Operation Log
 
+## [2026-05-01] feature | Vision Classifier — clasificación de imágenes WhatsApp (gpt-4.1-mini)
+- Cuando el cliente adjunta una o más imágenes, ahora un LLM multimodal (`gpt-4.1-mini`, una sola call con todas las URLs) describe lo que ve (marca/modelo/año, source `screenshot|raw_photo|otro`, descripcion corta). El output se inyecta como marker rico al `content` del agent principal — antes era solo `[cliente envió N fotos]` sin contexto.
+- **Decisión clave**: el vision LLM **NO infiere intención** (compra vs venta/permuta). Solo describe la imagen. La intención la decide el agent principal con todo el contexto de conversación (texto del cliente + historial + descripción visual). Esto evita inconsistencias entre lo que dice el clasificador y lo que el agent ya sabe del turno anterior.
+- **Archivos nuevos**: `bot-service/trebol_bot/integrations/vision_classifier.py` (`classify_images()` + `build_vision_marker()`).
+- **Archivos modificados**: `bot-service/trebol_bot/webhook/chatwoot.py` (recolecta `data_url`s en el loop de attachments + llama vision + inyecta marker; si falla → handoff directo a admin con mensaje fijo + bot_off + alerta `lead_caliente`); `bot-service/configs/prompts/trebol.txt` (nueva sección `[FOTOS RECIBIDAS DEL CLIENTE]` con 5 reglas de interpretación; default cuando no hay texto + raw_photo + contexto poco claro → preguntar *"¿Este es un auto que querés vender o uno que viste y te interesa?"*).
+- **Fallback ante error de OpenAI Vision**: handoff directo a admin con frase fija *"Recibimos las fotos, ya las ve administración..."* + `set_bot_off(reason="vision_classifier_failed")` + alerta `lead_caliente`. Decisión consciente: preferimos derivar a admin que dejar al agent improvisar.
+- **Alerta `tipo_alerta=foto`**: se mantiene igual (con dedup Redis 30min). El vision no la condiciona — vendedor recibe alerta aunque la imagen sea un DNI o un meme.
+- **Modelo**: `gpt-4.1-mini` con `detail=low`, `temperature=0`, `response_format=json_object`. No agrega env vars nuevas — reusa `OPENAI_API_KEY`.
+- Container `trebol-test-bot` rebuild + healthy. Regresión `test_bot.sh all` pasa 22-23/23 (T3 flaky por phrasing del LLM, no determinístico, ya existía antes del cambio).
+- Página canónica nueva: [[proyectos/LangGraph_Bot/Vision_Classifier]]. Pipeline_Estructura §8 actualizado para reflejar el nuevo pre-procesamiento de fotos.
+- **Validación end-to-end pendiente del usuario**: 5 casos manuales con WhatsApp real (screenshot ML + texto compra; foto cruda sin texto; foto + texto permuta; imagen no-vehículo; forzar fallo de vision).
+
 ## [2026-05-01] feature | Audio Mode (ElevenLabs TTS) — feature básica funcional, bugs documentados
 - Integración ElevenLabs TTS para que el bot responda con audio cuando el cliente dice que no puede leer/escribir (manejando, en moto, caminando, etc.).
 - Archivos nuevos: `bot-service/trebol_bot/integrations/tts_elevenlabs.py`, `bot-service/trebol_bot/memory/audio_mode.py`. Modificados: `config.py`, `chatwoot_client.py` (+`send_audio_bytes`), `webhook/chatwoot.py` (regex triggers + ramificación pre-send), `agent/graph.py` (inyección nota MODO AUDIO al prompt), `docker-compose.yml` (3 env vars), `.env.example`.
