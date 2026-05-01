@@ -1,5 +1,16 @@
 # Operation Log
 
+## [2026-05-01] rollback | Vuelta al bot del 18-abril como base limpia para FangioCRM
+- Tras dos sesiones de testing real (2026-04-30 y 2026-05-01) con principios canónicos v1+v2, el usuario decidió rollbackear al estado del 18-abril (commit `7f1e5c2`, cutover prod LangGraph). Razón: la iteración del Sales Swarm + multi-LLM + principios canónicos había agregado complejidad sin convertir respuestas mejores en testing real con WhatsApp.
+- **Branch operativa nueva**: `bot-rollback-2026-04-18` (pusheada a origin). main intacto con WIP preservado en `db9055d` (snapshot pre-rollback).
+- **Patches sobre la base del 18-abril**:
+  - `5d8f1a7` — `mongo_collection: propiedades-test` (no se revierte el inventario porque la colección `propiedades` quedó rota el 26-04).
+  - `0f164cf` — identidad cambia a "Autos Norte" + ubicación ficticia "Av. Maipú 2380, Olivos" + reescritura CHARLA INICIAL para NO pedir presupuesto al inicio (orden estricto: modelo → estado → uso → presupuesto último recurso).
+- **Identidad**: este agente pasa a ser explícitamente "el motor de respuestas de FangioCRM". Trebol queda como tenant de test/referencia.
+- **Limpieza del roadmap previo**: archivados a `_archivado/` los docs de Sales Swarm, principios canónicos v1/v2, multi-LLM (Groq/Gemini), Token Optimization, OpenAI quota fallback, sesiones 17-abril y 25-abril. También archivado `Fangio_CRM/Bot_LangGraph_Migration.md` (spec multi-tenant basado en el bot v2). Conservados con README explicativo.
+- **Doc canónica nueva**: [[proyectos/LangGraph_Bot/Pipeline_Estructura]] — fuente de verdad técnica del agente actual (pipeline end-to-end, state, tools, memoria Redis, estructura archivos, comandos). Reescrita [[proyectos/LangGraph_Bot/LangGraph_Bot]] como índice del proyecto.
+- **Próximo paso**: usuario va a definir roadmap de mejoras desde este punto.
+
 ## [2026-05-01] sesion | Iteración de principios v2 — emojis incentivados + invitación a venir + cierre comercial activo
 - Tras dos sesiones de testing real con WhatsApp (2026-04-30 y 2026-05-01), el usuario detectó que el bot sonaba a "robot de soporte" y no a vendedor de salón.
 - Aplicando la meta-regla del canónico ("modificar = reformular íntegro"), se reformularon **P4** (tono espejo + emojis humanizadores) y **P5** (cierre con 3 modos en vez de 2).
