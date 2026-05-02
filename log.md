@@ -1,5 +1,75 @@
 # Operation Log
 
+## [2026-05-01] fix | 4 bugs detectados en testing real con WhatsApp + audio
+Sesión de testing real con audio (cliente + bot) detectó 4 bugs concretos. Todos corregidos en branch `bot-rollback-2026-04-18` (commit pending).
+
+**Bug 1 — En audio mode el bot describía la camioneta en vez de mandarle la foto.**
+- Síntoma: cliente dice por audio "pasame fotos de la 3, estoy manejando" → bot responde con audio narrando la ficha + `image_urls_count: 0`. Los attachments nunca se enviaban.
+- Causa: la nota "MODO AUDIO ACTIVO" inyectada en `agent/graph.py` decía literal *"NADA de URLs"* y *"máximo 2-3 frases en TOTAL"*. El LLM lo interpretaba como "no poblar `fotos_mensajeN`" y se saltaba la tool de fotos. El dispatcher en `chatwoot.py:301-305` ya enviaba imágenes en audio mode — el problema era 100% upstream.
+- Fix: rewrite de la nota separando explícitamente reglas del **texto hablado** (mensaje1/2/3 sin URLs ni precios numéricos) de reglas de **fotos** (`fotos_mensajeN` se siguen poblando con tool igual que en modo texto, las imágenes se mandan como attachment después del audio). Ahora el audio NO reemplaza la foto — la complementa narrando precio contado, anticipo, km, año, versión, motor.
+- Archivo: `agent/graph.py:411-437`.
+
+**Bug 2 — Saludo determinístico con nombre viejo "El Trébol Automotores".**
+- Síntoma: tras la rename a Autos Norte (commit `0f164cf`), en algunos turnos el bot saludaba *"Hablás con Santi de El Trébol Automotores"*. Pasaba cuando el LLM arrancaba con algo distinto a "Hola/Buenas/etc." (ej: "¡Buenísimo!" después de hacer match en inventario).
+- Causa: `graph.py:576` tenía hardcodeado el texto canónico del saludo enforcement. La rename actualizó el prompt y el `trebol.yaml` (`nombre_agencia: Autos Norte`) pero no este fallback. Mismo hardcode en `chatwoot.py:457` (handoff de audio fallido) y `crm.py:61` (prompt de extracción).
+- Fix: leer dinámicamente `client_cfg.nombre_agencia` en los 3 puntos. Sacado el hardcode literal del prompt de extracción CRM ("Santi, asesor de la agencia"). Así no se vuelve a romper la próxima vez que se rename.
+- Archivos: `agent/graph.py:575-581`, `webhook/chatwoot.py:456`, `agent/crm.py:61`.
+
+**Bug 3 — Bot saltaba a financiación sin mostrar el auto cuando el request era OPEN-ENDED.**
+- Síntoma: cliente dice por audio *"ando buscando algún Mercedes viejo, algún deportivo, tengo 15k"* → bot responde *"¡Buenísimo! Con U$S 15.000 de anticipo podés financiar el Mercedes Benz 220/D 1971..."* + opciones de financiación. NO mostró ficha ni preguntó interés.
+- Causa: el prompt tenía bloque "VEHÍCULO ESPECÍFICO + PRESUPUESTO — 3 CASOS" que aplica fórmula textual fija (`"¡Buenísimo! Con U$S X de anticipo podés sacar el [vehículo] financiado..."`) cuando el cliente menciona un monto y hay match en inventario. Pero NO distinguía entre request **específico** (marca+modelo concretos, link de ML, "el N°2") vs **open-ended** (indefinido — "algún X", solo TIPO sin marca). Si la tool devolvía un único Mercedes con "Mercedes" como query, el LLM lo trataba como si el cliente hubiera elegido ese auto puntualmente.
+- Fix: regla nueva ANTES de los CASOS 1/2/3 con definición de open-ended vs específico, prohibición explícita de aplicar CASOS aunque haya un único match si el request fue open-ended, y ejemplo concreto del caso real.
+- Archivo: `configs/prompts/trebol.txt` antes del bloque "VEHÍCULO ESPECÍFICO + PRESUPUESTO".
+
+**Bug 4 — Bot disparaba "no tenemos fotos" sin que el cliente haya pedido fotos.**
+- Síntoma: cliente dice *"ando buscando algún auto de los 90/2000, tengo 20k, busco un Mercedes o algo parecido con lindos interiores, ¿tienen stock?"* → bot responde *"No tenemos fotos cargadas del Mercedes Benz 220/D 1971, ya le aviso a administración para que te las envíe"*. Saltó el ficha entero y disparó la frase canónica de handoff por foto faltante.
+- Causa: el prompt tenía la regla *"FOTOS_DISPONIBLES: no → responder 'No tenemos fotos cargadas...'"* sin precondición explícita de que el cliente hubiera pedido fotos. Apenas la tool devolvía `FOTOS_DISPONIBLES: no`, el LLM disparaba la frase reflexivamente.
+- Fix: precondición obligatoria explícita ("SOLO si el cliente PIDIÓ fotos en turno actual o anterior"). Si no pidió fotos → ignorar el campo y mostrar la ficha normal. Ejemplo negativo y positivo agregados.
+- Archivo: `configs/prompts/trebol.txt` debajo de la regla `FOTOS_DISPONIBLES: no`.
+
+**Estado**: bot rebuildeado + restarteado, healthy. Memoria `5491150635028` limpia. Validación end-to-end en WhatsApp pendiente del usuario.
+
+## [2026-05-01] feature | Vision Classifier — clasificación de imágenes WhatsApp (gpt-4.1-mini)
+- Cuando el cliente adjunta una o más imágenes, ahora un LLM multimodal (`gpt-4.1-mini`, una sola call con todas las URLs) describe lo que ve (marca/modelo/año, source `screenshot|raw_photo|otro`, descripcion corta). El output se inyecta como marker rico al `content` del agent principal — antes era solo `[cliente envió N fotos]` sin contexto.
+- **Decisión clave**: el vision LLM **NO infiere intención** (compra vs venta/permuta). Solo describe la imagen. La intención la decide el agent principal con todo el contexto de conversación (texto del cliente + historial + descripción visual). Esto evita inconsistencias entre lo que dice el clasificador y lo que el agent ya sabe del turno anterior.
+- **Archivos nuevos**: `bot-service/trebol_bot/integrations/vision_classifier.py` (`classify_images()` + `build_vision_marker()`).
+- **Archivos modificados**: `bot-service/trebol_bot/webhook/chatwoot.py` (recolecta `data_url`s en el loop de attachments + llama vision + inyecta marker; si falla → handoff directo a admin con mensaje fijo + bot_off + alerta `lead_caliente`); `bot-service/configs/prompts/trebol.txt` (nueva sección `[FOTOS RECIBIDAS DEL CLIENTE]` con 5 reglas de interpretación; default cuando no hay texto + raw_photo + contexto poco claro → preguntar *"¿Este es un auto que querés vender o uno que viste y te interesa?"*).
+- **Fallback ante error de OpenAI Vision**: handoff directo a admin con frase fija *"Recibimos las fotos, ya las ve administración..."* + `set_bot_off(reason="vision_classifier_failed")` + alerta `lead_caliente`. Decisión consciente: preferimos derivar a admin que dejar al agent improvisar.
+- **Alerta `tipo_alerta=foto`**: se mantiene igual (con dedup Redis 30min). El vision no la condiciona — vendedor recibe alerta aunque la imagen sea un DNI o un meme.
+- **Modelo**: `gpt-4.1-mini` con `detail=low`, `temperature=0`, `response_format=json_object`. No agrega env vars nuevas — reusa `OPENAI_API_KEY`.
+- Container `trebol-test-bot` rebuild + healthy. Regresión `test_bot.sh all` pasa 22-23/23 (T3 flaky por phrasing del LLM, no determinístico, ya existía antes del cambio).
+- Página canónica nueva: [[proyectos/LangGraph_Bot/Vision_Classifier]]. Pipeline_Estructura §8 actualizado para reflejar el nuevo pre-procesamiento de fotos.
+- **Validación end-to-end pendiente del usuario**: 5 casos manuales con WhatsApp real (screenshot ML + texto compra; foto cruda sin texto; foto + texto permuta; imagen no-vehículo; forzar fallo de vision).
+
+## [2026-05-01] feature | Audio Mode (ElevenLabs TTS) — feature básica funcional, bugs documentados
+- Integración ElevenLabs TTS para que el bot responda con audio cuando el cliente dice que no puede leer/escribir (manejando, en moto, caminando, etc.).
+- Archivos nuevos: `bot-service/trebol_bot/integrations/tts_elevenlabs.py`, `bot-service/trebol_bot/memory/audio_mode.py`. Modificados: `config.py`, `chatwoot_client.py` (+`send_audio_bytes`), `webhook/chatwoot.py` (regex triggers + ramificación pre-send), `agent/graph.py` (inyección nota MODO AUDIO al prompt), `docker-compose.yml` (3 env vars), `.env.example`.
+- Decisiones: trigger SOLO por frase explícita del cliente (no por mandar audio); desactivación SOLO por frase OFF o TTL natural 15min (no por mensaje largo); audio único por turno; fallback silencioso a texto si TTS falla.
+- **Bug bloqueante pendiente**: el LLM responde con formato lista/ficha en modo audio, lo que hace que TTS lea "U dólar S" en vez de "dólares" y separadores `|` literalmente. Documentado en [[proyectos/LangGraph_Bot/Audio_Mode_Roadmap]] con 4 opciones de fix y recomendación (Opción B normalizador determinístico + Opción A refuerzo de prompt).
+- Otro pendiente: la voice_id elegida (`MjtZn5tagxL1RO6w9ER5`) come palabras en español. Probar Antoni (`ErXwobaYiN019PkySvjV`) o upgrade a plan Starter ($5) para acceso a voice library.
+- Status: feature funciona end-to-end pero calidad de audio aún no es production-ready. Commit del feature pendiente — sigue como WIP en branch `bot-rollback-2026-04-18`.
+
+## [2026-05-01] rollback | Vuelta al bot del 18-abril como base limpia para FangioCRM
+- Tras dos sesiones de testing real (2026-04-30 y 2026-05-01) con principios canónicos v1+v2, el usuario decidió rollbackear al estado del 18-abril (commit `7f1e5c2`, cutover prod LangGraph). Razón: la iteración del Sales Swarm + multi-LLM + principios canónicos había agregado complejidad sin convertir respuestas mejores en testing real con WhatsApp.
+- **Branch operativa nueva**: `bot-rollback-2026-04-18` (pusheada a origin). main intacto con WIP preservado en `db9055d` (snapshot pre-rollback).
+- **Patches sobre la base del 18-abril**:
+  - `5d8f1a7` — `mongo_collection: propiedades-test` (no se revierte el inventario porque la colección `propiedades` quedó rota el 26-04).
+  - `0f164cf` — identidad cambia a "Autos Norte" + ubicación ficticia "Av. Maipú 2380, Olivos" + reescritura CHARLA INICIAL para NO pedir presupuesto al inicio (orden estricto: modelo → estado → uso → presupuesto último recurso).
+- **Identidad**: este agente pasa a ser explícitamente "el motor de respuestas de FangioCRM". Trebol queda como tenant de test/referencia.
+- **Limpieza del roadmap previo**: archivados a `_archivado/` los docs de Sales Swarm, principios canónicos v1/v2, multi-LLM (Groq/Gemini), Token Optimization, OpenAI quota fallback, sesiones 17-abril y 25-abril. También archivado `Fangio_CRM/Bot_LangGraph_Migration.md` (spec multi-tenant basado en el bot v2). Conservados con README explicativo.
+- **Doc canónica nueva**: [[proyectos/LangGraph_Bot/Pipeline_Estructura]] — fuente de verdad técnica del agente actual (pipeline end-to-end, state, tools, memoria Redis, estructura archivos, comandos). Reescrita [[proyectos/LangGraph_Bot/LangGraph_Bot]] como índice del proyecto.
+- **Próximo paso**: usuario va a definir roadmap de mejoras desde este punto.
+
+## [2026-05-01] sesion | Iteración de principios v2 — emojis incentivados + invitación a venir + cierre comercial activo
+- Tras dos sesiones de testing real con WhatsApp (2026-04-30 y 2026-05-01), el usuario detectó que el bot sonaba a "robot de soporte" y no a vendedor de salón.
+- Aplicando la meta-regla del canónico ("modificar = reformular íntegro"), se reformularon **P4** (tono espejo + emojis humanizadores) y **P5** (cierre con 3 modos en vez de 2).
+- Modo **5.B "Invitación a venir"** nuevo: empuje al físico (visita a la agencia) cuando hay interés concreto en UN auto sin cierre fuerte. Llena el gap entre puerta abierta (5.A) y handoff con frase canónica (5.C).
+- Reglas nuevas: P2 extendido para fotos no cargadas → derivación parcial cálida ("ya le pido a los chicos que te las saquen 📸"); CASOS ESPECIALES nuevo "PRESUPUESTO DADO" para que el bot haga la cuenta inmediatamente y no repregunte.
+- Guard determinístico anti re-saludo agregado en `bot-service/trebol_bot/agent/graph.py` post-LLM: si NO es primer turno y el LLM saluda igual ("Hola, hablás con Santi..."), strip por código.
+- También se aplicó en sesión previa el mismo día: filtro de segmento determinístico en `tools.py` (Corolla → urbano, Hilux → pickup) con reorder + nota interna al LLM cuando todos los resultados son cross-segmento, y `_ensure_question_last` en `_parse_agent_response` para que la pregunta quede al final.
+- Doc nuevo: [[proyectos/LangGraph_Bot/Bot_Principios_Iteracion_2026-05-01]]. Banner agregado al canónico v1 ([[proyectos/LangGraph_Bot/Bot_Principios_Canonicos]]) apuntando a la iteración. **No se sobreescribió el v1** — queda como referencia histórica.
+- Pendientes (open questions del doc): few-shot examples para anclar 5.B, eval suite con escenarios nuevos, alerta admin automática cuando bot promete fotos no cargadas.
+
 ## [2026-04-27] sesion | Decisión metodológica — del prompt-engineering reactivo al diseño por capas
 - Después de 8+ iteraciones de prompt en una sola sesión (saludo recíproco, max 2-3 fichas, filtro semántico, default "no hay", detector handoff canónico, etc.) se confirmó el techo del enfoque reactivo: cada caso edge nuevo agrega micro-reglas que se chocan entre sí.
 - Cambio de metodología documentado en [[proyectos/LangGraph_Bot/Bot_Behavior_Methodology]]: 4 capas (principios + prompt limpio + few-shot + eval suite).
