@@ -1,6 +1,7 @@
 ---
 tags: [proyecto, langgraph, fangiocrm, pipeline, estructura, canonico]
 fecha: 2026-05-01
+ultima_actualizacion: 2026-05-02 (clasificador LLM inventario + tool con filtros estructurados)
 estado: vigente — fuente de verdad técnica del agente
 branch: bot-rollback-2026-04-18
 base_commit: 7f1e5c2 (2026-04-18 16:00 UTC)
@@ -187,7 +188,7 @@ def should_continue(state):
 
 | Tool | Args | Devuelve | Lógica clave |
 |---|---|---|---|
-| `buscar_inventario_autos` | `query: str`, `techo_usd: float?`, `tipo_vehiculo: str?` | Fichas formateadas con marca/modelo/año/km/precio/anticipo/fotos | Cascade: 1) match determinístico MARCA+MODELO + año, 2) sin año, 3) marca+modelo, 4) solo marca, 5) vector search. Filtro post por `tipo_vehiculo` y `techo_usd` (solo en vector search). Whitelist de marcas conocidas para no confundir queries genéricas. |
+| `buscar_inventario_autos` | `query: str`, `techo_usd: float?`, `carroceria: str?`, `traccion: str?`, `transmision: str?`, `combustible: str?`, `es_clasico: bool?`, `es_deportivo: bool?`, `segmento: str?` | Fichas formateadas con marca/modelo/año/km/precio/anticipo/fotos | **Estrategia 0** (filtros estructurados): si vino algún param categórico → `find()` Mongo determinístico con esos campos + tokens marca/modelo. Si filtros + 0 results → respuesta explícita "no tenemos X en stock", **NO cae al vector search**. **Estrategia 1** (cascade determinística MARCA+MODELO+año, sin año, marca+modelo, solo marca). **Estrategia 2** (vector search). Whitelist de marcas conocidas. Schema de filtros agregado al doc Mongo por `SheetsToMongo v2 (test)` 2026-05-02 — ver `reference_inventario_clasif_schema.md`. |
 | `calcular_cuotas` | `precio_contado_usd: float`, `anticipo_usd: float` | Plan de cuotas en string | Fórmula Python + dolar blue (cache Bluelytics). |
 | `opciones_financiacion` | — | Texto hardcodeado con bancos + tasa propia | Constante `OPCIONES_TEXTO`. |
 
