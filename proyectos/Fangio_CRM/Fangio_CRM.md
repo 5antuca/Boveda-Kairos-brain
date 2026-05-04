@@ -55,4 +55,15 @@ Para cargar la aplicación en su estado actual, sigue estos pasos:
 - Ver diseño completo: [[FangioBot_v2_Architecture]]
 
 ---
+
+### 🆕 Fase 4 — Stock Ingestion Multi-Tenant + Trebol Bot Embedded (2026-05-04)
+Cambio estratégico mayor: FangioCRM se vuelve la plataforma SaaS principal. Cada concesionaria sube su XLSX de inventario y obtiene un bot WhatsApp configurable.
+
+- **Pipeline de ingesta** XLSX → Mapping UI → Diff incremental → Embeddings → Mongo Atlas Vector Search por tenant. Mejora sobre [[../Trebol/SheetsToMongo_RAG_Inventario|SheetsToMongo v2]] (sin AppScript, fingerprint hash determinístico, audit trail).
+- **Aislamiento estricto**: una colección Mongo por tenant (`inventory_{tenantId}`).
+- **Trebol Bot embebido**: el bot Python (LangGraph) reemplaza el pipeline n8n de FangioBot v2 como motor unificado para todos los tenants. Cada tenant tiene sección de configuración (nombre concesionaria, vendedor del bot, tono, financiación).
+- 📋 **Diseño completo**: [[Roadmap_Stock_Ingestion_v1]] · [[Trebol_Bot_Embedded]]
+- ⏳ Pendiente decisiones D1-D6 antes de Sprint 0.
+
+---
 *Nota: Esta es la documentación estratégica en Kairos Brain. El código fuente vive fuera de esta bóveda.*

@@ -1,5 +1,13 @@
 # Operation Log
 
+## [2026-05-04] design | Roadmap Stock Ingestion v1 + Trebol Bot Embedded en FangioCRM
+Diseño aprobado por santi para que cada concesionaria (tenant) suba su XLSX de inventario a FangioCRM, lo mapee a un schema canónico y se sincronice incremental a su colección Mongo privada con embeddings. En paralelo, Trebol Bot (Python LangGraph) absorbe el rol de motor de respuestas WhatsApp para todos los tenants — cada tenant configura nombre/vendedor/tono/financiación desde la UI. Reemplaza gradualmente el FangioBot v2 (n8n).
+
+- Decisiones cerradas: A) bot embebido, B) colección por tenant, C) diff incremental tipo SheetsToMongo con fingerprint hash determinístico (sin AppScript), D) sin Paperclip.
+- Decisiones abiertas (D1-D6 en el roadmap): runtime workers, Redis aislado, persistencia XLSX, dolar referencia, formatos extra.
+- Sprints planificados: 0-7 (fundaciones → ingesta → bot multi-tenant → cutover Trébol → onboarding 2do tenant).
+- Docs: [[proyectos/Fangio_CRM/Roadmap_Stock_Ingestion_v1]] · [[proyectos/Fangio_CRM/Trebol_Bot_Embedded]] · update en [[proyectos/Fangio_CRM/Fangio_CRM]] e [[index]].
+
 ## [2026-05-01] fix | 4 bugs detectados en testing real con WhatsApp + audio
 Sesión de testing real con audio (cliente + bot) detectó 4 bugs concretos. Todos corregidos en branch `bot-rollback-2026-04-18` (commit pending).
 

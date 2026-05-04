@@ -26,6 +26,14 @@
 - [[proyectos/Trebol/Testing_Harness|Testing_Harness]] - Harness de regresión.
 - [[proyectos/Trebol_Bot|Trebol_Bot]] - Historia de versiones.
 
+### Fangio CRM (SaaS plataforma)
+- [[proyectos/Fangio_CRM/Fangio_CRM|Fangio_CRM]] - Plataforma multi-tenant Next.js + Mongo.
+- [[proyectos/Fangio_CRM/Roadmap_Stock_Ingestion_v1|Roadmap_Stock_Ingestion_v1]] - 🆕 XLSX → Mapping → Diff → Embeddings por tenant (2026-05-04).
+- [[proyectos/Fangio_CRM/Trebol_Bot_Embedded|Trebol_Bot_Embedded]] - 🆕 Trebol Bot como motor unificado de respuestas FangioCRM.
+- [[proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant|Arquitectura_SaaS_Multitenant]] - Topología actual.
+- [[proyectos/Fangio_CRM/FangioBot_v2_Architecture|FangioBot_v2_Architecture]] - Bot n8n actual (a deprecar gradualmente).
+- [[proyectos/Fangio_CRM/Roadmap_Backend|Roadmap_Backend]] - Estado del backend Next.js.
+
 ### Sesiones de trabajo recientes
 - [[proyectos/LangGraph_Bot/Sesion_2026-04-25_Sales_Swarm_y_LLM_Migration|2026-04-25/26 Sales Swarm + LLM migration + Token optimization]]
 - [[proyectos/LangGraph_Bot/Sesion_2026-04-17_Bugs_y_Observabilidad|2026-04-17 Bugs y Observabilidad]]
