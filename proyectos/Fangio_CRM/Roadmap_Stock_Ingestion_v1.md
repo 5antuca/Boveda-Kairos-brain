@@ -1,12 +1,18 @@
 ---
-tags: [fangiocrm, roadmap, ingesta, sheets, embeddings, multitenant, mongodb]
+tags: [fangiocrm, roadmap, ingesta, embeddings, multitenant, mongodb]
 fecha: 2026-05-05
-estado: DISEÑO APROBADO — pendiente implementación
+estado: PIVOT 2 — pendiente URI Mongo de FangioCRM para arrancar
 autor: santi + claude
-relacionado: [[Fangio_CRM]], [[Trebol_Bot_Embedded]], [[SheetsToMongo_RAG_Inventario]]
+relacionado: [[Fangio_CRM]], [[Arquitectura_Datos]], [[Trebol_Bot_Embedded]], [[SheetsToMongo_RAG_Inventario]]
 ---
 
-# Roadmap — Ingesta de Stock por Tenant (Google Sheets live → MongoDB Vector Search)
+# Roadmap — Ingesta de Stock por Tenant (FangioCRM UI → MongoDB Vector Search)
+
+> **PIVOT 2 (2026-05-05, post-investigación del repo FangioCRM)**: el approach Apps Script descrito abajo está **OBSOLETO**. El descubrimiento clave: FangioCRM ya tiene UI funcional de drag-XLSX → grid editable → persistencia en `TenantInventory.gridState` (cluster Mongo `fangiocrm`). No hace falta Apps Script ni Sheets API ni service account de Google.
+>
+> **Plan vigente**: FangioCRM es la fuente de verdad del inventario. Bot Python lee `TenantInventory` del cluster `fangiocrm`, expande `gridState` a docs, normaliza headers, clasifica 8 campos LLM, embede, escribe a `RAGtrebol.propiedades-test`. Trigger live: agregar 3 líneas en `FangioCRM/src/app/api/inventory/route.ts` que llamen webhook al bot post-save.
+>
+> Detalle de la arquitectura nueva en [[Arquitectura_Datos]]. Lo que sigue debajo es el approach Apps Script que se descartó — se mantiene como referencia histórica hasta que reescribamos el roadmap completo en próxima sesión.
 
 Pipeline para que cada concesionaria (tenant) tenga su inventario en un Google Sheet propio y los cambios fluyan **en vivo** al RAG vía Apps Script onEdit instalable. Onboarding sin programadores: el cliente arrastra su XLSX en FangioCRM y el sistema convierte el archivo en un Sheet con trigger ya instalado.
 
