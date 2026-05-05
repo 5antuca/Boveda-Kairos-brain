@@ -1,6 +1,7 @@
 # Proyecto: Gerstner Werks
 
-Taller especializado en la restauración y modificación de Porsche 911 clásicos (tipo Singer) y modelos similares (964, etc.).
+Taller especializado en la **restauración y modificación de autos clásicos**. 
+Su mayor fuente de ingresos proviene de estas restauraciones y trabajos personalizados generales. Además, desarrollan **modificaciones de Porsche 911 clásicos (tipo Singer) y modelos similares (964, etc.)**, aunque esta división aún no es pública y está reservada exclusivamente para clientes muy selectos.
 
 ## Estructura del Proyecto
 
