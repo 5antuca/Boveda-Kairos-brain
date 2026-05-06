@@ -11,11 +11,51 @@ El ecosistema digital de Gerstner Werks se divide en dos componentes principales
 Sitio institucional principal que presenta la marca, los servicios de restauración y el portafolio de proyectos terminados.
 - **Dominio**: [gerstnerwerks.com](https://gerstnerwerks.com/)
 - **Repositorio**: [5antuca/gerstnerwerks5](https://github.com/5antuca/gerstnerwerks5.git)
+- **Código fuente local**: `/Users/5an/Documents/gerstner page/gerstnerwerks5-main/`
 
 ### 2. Gerstner Studio (Configurador 3D)
 Aplicación interactiva de alta fidelidad para la personalización técnica y estética de Porsche 911/964.
 - **Dominio**: [studio.gerstnerwerks.com](https://studio.gerstnerwerks.com/)
 - **Repositorio**: [5antuca/gerstnersinger911](https://github.com/5antuca/gerstnersinger911.git)
+- **Código fuente local**: `/Users/5an/Documents/gerstnersinger911/`
+
+---
+
+## Media: Cloudinary (CDN de imágenes y videos)
+
+Todos los **medios de la landing page** (fotos y videos del portfolio, hero carousel, galería) se alojan en **Cloudinary**. Esto incluye las 27 imágenes y videos del portfolio subidos en Mayo 2026.
+
+### Credenciales de Cloudinary
+
+| Campo | Valor |
+|---|---|
+| **Cloud Name / API Key** | `416726481519382` |
+| **API Secret** | `2npxwTpzqMM3Uy2ukien4gOPkcM` |
+| **URL base de assets** | `https://res.cloudinary.com/[cloud_name]/image/upload/` |
+| **URL base de videos** | `https://res.cloudinary.com/[cloud_name]/video/upload/` |
+
+> ⚠️ Las URLs de Cloudinary tienen el formato:
+> `https://res.cloudinary.com/CLOUD_NAME/image/upload/TRANSFORMACIONES/PUBLIC_ID.ext`
+
+### Por qué no se ven los medios en la web
+
+**El problema está en el `index.html`**: las etiquetas `<img>` y `<video>` referencian los medios con **rutas locales relativas** (e.g. `src="img/galery/foto.webp"`), en lugar de apuntar a las URLs de Cloudinary.
+
+**Para que los 27 medios aparezcan**, hay que reemplazar en el `index.html` todas las rutas locales del carrusel hero y la galería por las URLs de Cloudinary correspondientes. Ejemplo del cambio:
+
+```html
+<!-- ❌ ANTES (ruta local que no funciona en producción si el asset no está en el repo) -->
+<img src="img/galery/rest_gallery/89938_35_11zon.webp">
+
+<!-- ✅ DESPUÉS (URL de Cloudinary) -->
+<img src="https://res.cloudinary.com/CLOUD_NAME/image/upload/v1/gerstnerwerks/89938_35_11zon.webp">
+```
+
+### Cómo obtener las URLs de los 27 assets subidos
+
+1. Ir al **Media Library** de Cloudinary: [console.cloudinary.com](https://console.cloudinary.com/)
+2. Hacer clic en un asset → botón **"Copy URL"** o ver el campo `public_id`
+3. Reemplazar las rutas locales en el `index.html` con esas URLs
 
 ---
 
@@ -33,6 +73,7 @@ Actualmente en **Fase de Refinamiento Visual y UX**.
 - [ ] **Persistencia**: Implementar guardado de configuraciones (Fase 4 - MongoDB/Supabase).
 - [ ] **Escape**: Finalizar la sección de configuración de sistemas de escape.
 - [ ] **Mobile**: Optimizar los targets táctiles de la barra de navegación en resoluciones pequeñas.
+- [ ] **Landing**: Actualizar `index.html` con las URLs de Cloudinary de los 27 medios subidos.
 
 ## Referencias Técnicas
 - Configuración actual en [[Gerstner_Studio/ROADMAP]]
