@@ -186,6 +186,14 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "proyectos/Gerstner_Werks/shuffle_carousel.py",
+    "proyectos/Gerstner_Werks/generate_html.py",
+    "proyectos/Gerstner_Werks/batch_media.json",
+    "proyectos/Gerstner_Werks/get_batch.py",
+    "proyectos/Gerstner_Werks/list_debug.py",
+    "proyectos/Gerstner_Werks/list_recent.py",
+    "proyectos/Gerstner_Werks/found_media.json",
+    "proyectos/Gerstner_Werks/find_cloudinary.py",
     "proyectos/Gerstner_Werks/README.md",
     "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/Token_Optimization.md",
     "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/LLM_Providers.md",
@@ -213,7 +221,6 @@
     "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
     "proyectos/Fangio_CRM/FangioBot_Blueprint.md",
     "Bienvenido.md",
-    "CLAUDE.md",
     "Sin título.canvas",
     "Sin título 2.canvas",
     "Sin título 3.canvas",
@@ -228,13 +235,6 @@
     "proyectos/Gerstner_Werks/landing/assets/providers/braidLogo.png",
     "proyectos/Gerstner_Werks/landing/assets/providers/Spinneybecklogo.png",
     "proyectos/Gerstner_Werks/landing/assets/providers/RGBlogo-removebg-preview.png",
-    "proyectos/Gerstner_Werks/landing/assets/providers",
-    "proyectos/Gerstner_Werks/landing/assets",
-    "proyectos/Gerstner_Werks/landing/images",
-    "proyectos/Gerstner_Werks/landing/img/galery/rest_gallery",
-    "proyectos/Gerstner_Werks/landing/img/galery/racing_gallery",
-    "proyectos/Gerstner_Werks/landing/img/galery/art_gallery",
-    "proyectos/Gerstner_Werks/landing/img/galery",
-    "proyectos/Gerstner_Werks/landing/img"
+    "proyectos/Gerstner_Werks/landing/assets/providers"
   ]
 }
