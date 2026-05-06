@@ -5,43 +5,37 @@
 - [[infra/VPS_Architecture|VPS_Architecture]] - Detalles del servidor y servicios.
 - [[infra/Agent_Swarm_Architecture|Agent_Swarm_Architecture]] - Topología del enjambre LangGraph.
 
-## 🤖 Proyectos (Bots & Agentes)
+## 🤖 Proyectos
 
-### LangGraph Bot (cognitivo Trébol)
-- [[proyectos/LangGraph_Bot/LangGraph_Bot|LangGraph_Bot]] - Proyecto principal, fases 0-11.
-- [[proyectos/LangGraph_Bot/Supreme_Sales_Swarm|Supreme_Sales_Swarm]] - 🆕 Profiler psicográfico + roadmap F2-F6.
-- [[proyectos/LangGraph_Bot/LLM_Providers|LLM_Providers]] - 🆕 Strategy Gemini/Groq/OpenAI.
-- [[proyectos/LangGraph_Bot/Token_Optimization|Token_Optimization]] - 🆕 Métricas y técnicas de compresión.
-- [[proyectos/LangGraph_Bot/OpenAI_Quota_Fallback|OpenAI_Quota_Fallback]] - Runbook de alertas 429.
-- [[proyectos/LangGraph_Bot/Observabilidad_Langfuse|Observabilidad_Langfuse]] - Debugging con traces.
-- [[proyectos/LangGraph_Bot/Operar_Bot|Operar_Bot]] - Runbook operativo.
-- [[proyectos/LangGraph_Bot/Prod_Deploy|Prod_Deploy]] - Cutover prod 2026-04-18.
-- [[proyectos/LangGraph_Bot/Onboarding_Nuevo_Cliente|Onboarding_Nuevo_Cliente]] - Agregar nuevo cliente.
-- [[proyectos/LangGraph_Bot/Vision_Classifier|Vision_Classifier]] - 🆕 Clasificación de imágenes WhatsApp con gpt-4.1-mini (separación OCR / decisión de intent).
+### Fangio CRM (SaaS plataforma + Bot Python)
+> El bot LangGraph (Python) es el motor de IA central de FangioCRM. Antes llamado "Trebol Bot" o "LangGraph Bot", ahora está embebido como agente dentro del SaaS.
 
-### Trébol (cliente)
-- [[proyectos/Trebol/Trebol|Trebol]] - Cliente principal.
-- [[proyectos/Trebol/SheetsToMongo_RAG_Inventario|SheetsToMongo_RAG_Inventario]] - Pipeline inventario + estado de colecciones MongoDB.
-- [[proyectos/Trebol/Pipeline_v4|Pipeline_v4]] - Arquitectura n8n previa (histórica).
-- [[proyectos/Trebol/Testing_Harness|Testing_Harness]] - Harness de regresión.
-- [[proyectos/Trebol_Bot|Trebol_Bot]] - Historia de versiones.
-
-### Fangio CRM (SaaS plataforma)
 - [[proyectos/Fangio_CRM/Fangio_CRM|Fangio_CRM]] - Plataforma multi-tenant Next.js + Mongo.
-- [[proyectos/Fangio_CRM/Roadmap_Stock_Ingestion_v1|Roadmap_Stock_Ingestion_v1]] - 🆕 XLSX → Mapping → Diff → Embeddings por tenant (2026-05-04).
-- [[proyectos/Fangio_CRM/Trebol_Bot_Embedded|Trebol_Bot_Embedded]] - 🆕 Trebol Bot como motor unificado de respuestas FangioCRM.
+- [[proyectos/Fangio_CRM/Roadmap_Stock_Ingestion_v1|Roadmap_Stock_Ingestion_v1]] - 🆕 XLSX → Mapping → Diff → Embeddings por tenant.
+- [[proyectos/Fangio_CRM/Trebol_Bot_Embedded|Trebol_Bot_Embedded]] - Bot Python como motor unificado de respuestas.
+- [[proyectos/Fangio_CRM/Arquitectura_Datos|Arquitectura_Datos]] - Modelo de datos MongoDB.
 - [[proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant|Arquitectura_SaaS_Multitenant]] - Topología actual.
-- [[proyectos/Fangio_CRM/FangioBot_v2_Architecture|FangioBot_v2_Architecture]] - Bot n8n actual (a deprecar gradualmente).
-- [[proyectos/Fangio_CRM/Roadmap_Backend|Roadmap_Backend]] - Estado del backend Next.js.
+- [[proyectos/Fangio_CRM/SheetsToMongo_RAG_Inventario|SheetsToMongo_RAG_Inventario]] - Pipeline inventario Sheets → MongoDB + embeddings RAG.
 
-### Sesiones de trabajo recientes
-- [[proyectos/LangGraph_Bot/Sesion_2026-04-25_Sales_Swarm_y_LLM_Migration|2026-04-25/26 Sales Swarm + LLM migration + Token optimization]]
-- [[proyectos/LangGraph_Bot/Sesion_2026-04-17_Bugs_y_Observabilidad|2026-04-17 Bugs y Observabilidad]]
+#### 🧠 Bot LangGraph (Python) — Motor IA
+- [[proyectos/Fangio_CRM/LangGraph_Bot/LangGraph_Bot|LangGraph_Bot]] - Proyecto principal, fases 0-11.
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Pipeline_Estructura|Pipeline_Estructura]] - Arquitectura actual del pipeline LangGraph.
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Operar_Bot|Operar_Bot]] - Runbook operativo.
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Prod_Deploy|Prod_Deploy]] - Cutover prod 2026-04-18.
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Onboarding_Nuevo_Cliente|Onboarding_Nuevo_Cliente]] - Agregar nuevo cliente/tenant.
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Vision_Classifier|Vision_Classifier]] - Clasificación de imágenes WhatsApp con gpt-4.1-mini.
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Audio_Mode_Roadmap|Audio_Mode_Roadmap]] - Roadmap TTS/Audio (ElevenLabs).
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Observabilidad_Langfuse|Observabilidad_Langfuse]] - Debugging con traces Langfuse.
+- [[proyectos/Fangio_CRM/LangGraph_Bot/Conversaciones_Ideales|Conversaciones_Ideales]] - Golden set de conversaciones de referencia.
 
-## 📄 Fuentes Crudas (Raw)
-- `raw/roadmap_vps_legacy.md` - Backup histórico de tareas (Procesado).
+#### 🗃️ Referencia (FangioBot n8n — deprecando)
+- [[proyectos/Fangio_CRM/FangioBot_v2_Architecture|FangioBot_v2_Architecture]] - Bot n8n (siendo reemplazado por bot Python).
 
-## 🧭 General
+### Gerstner Werks (Landing + Studio)
+- [[proyectos/Gerstner_Werks/README|README]] - Overview del ecosistema Gerstner.
+- [[proyectos/Gerstner_Werks/Gerstner_Studio/ROADMAP|ROADMAP Studio]] - Estado y fases del configurador 3D.
+
+## 📄 General
 - [[Bienvenido]]
 - [[sobre-mi]]
 - [[Instrucciones Generales]]

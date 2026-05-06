@@ -9,7 +9,7 @@ Decisión post-iteración: dejar de modificar el system prompt por casos edge ("
 3. **Few-shot examples** curados (5-10 conversaciones ideales inline)
 4. **Eval suite** ampliado (~50 escenarios) corriendo antes de cada deploy
 
-Estado: Fase 1 (definir principios) en curso con el usuario. Spec completa en [[../proyectos/LangGraph_Bot/Bot_Behavior_Methodology]]. Aplica también a la migración multi-tenant FangioCRM ([[../proyectos/Fangio_CRM/Bot_LangGraph_Migration]]).
+Estado: Fase 1 (definir principios) en curso con el usuario. Spec completa en [[../proyectos/Fangio_CRM/LangGraph_Bot/Bot_Behavior_Methodology]]. Aplica también a la migración multi-tenant FangioCRM ([[../proyectos/Fangio_CRM/Bot_LangGraph_Migration]]).
 
 Bloquea: nuevas iteraciones de comportamiento del bot hasta que estén los principios + reescritura del prompt + eval suite. Los fixes deployados durante la sesión 2026-04-27 (saludo recíproco, max 2-3 fichas, filtro semántico por segmento, frase canónica vs derivación parcial, mapeo utilitario→pickup, default "no hay" si no hay match real) quedan vigentes hasta que se reescriba el prompt limpio.
 

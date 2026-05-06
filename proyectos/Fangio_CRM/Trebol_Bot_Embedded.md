@@ -208,4 +208,4 @@ NUNCA hables de otra concesionaria que no sea {concesionaria_nombre}.
 - [[FangioBot_v2_Architecture]] — bot actual de FangioCRM (a reemplazar)
 - [[../LangGraph_Bot/LangGraph_Bot]] — arquitectura del bot Python actual
 - [[../Trebol/Pipeline_v4]] — pipeline de referencia
-- `Kairos_Brain/proyectos/LangGraph_Bot/Bot_Principios_Canonicos.md` (si existe)
+- `Kairos_Brain/proyectos/Fangio_CRM/LangGraph_Bot/Bot_Principios_Canonicos.md` (si existe)

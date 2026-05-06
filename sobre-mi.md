@@ -18,7 +18,7 @@ Tengo un **Mindset de Ingeniería**:
 Para interactuar conmigo tenés que leer: [[Instrucciones Generales]]
 
 ## Mis Proyectos Principales
-- [[Trebol]] — Infraestructura y bot de WhatsApp para El Trébol Automotores (cliente activo en prod).
+- *(cliente histórico — Trébol Automotores, ex-producción)* — Infraestructura y bot de WhatsApp para El Trébol Automotores (cliente activo en prod).
 
 ---
 📧 *Contacto: santiagogerstner14@gmail.com*

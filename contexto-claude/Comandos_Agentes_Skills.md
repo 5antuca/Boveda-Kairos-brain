@@ -120,4 +120,4 @@ Plantillas usadas por `/new-spec`. Cada template tiene secciones: contexto, prob
 - [[Rules_n8n]] — reglas estrictas de n8n
 - [[Preferencias_Arquitectura]] — cómo trabaja Santi
 - [[Scripts_y_Herramientas]] — scripts del repo
-- [[Trebol]] — dashboard del proyecto Trebol
+- *(cliente histórico — Trébol Automotores, ex-producción)* — dashboard del proyecto Trebol
