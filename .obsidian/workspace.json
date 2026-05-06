@@ -11,14 +11,10 @@
             "id": "0c64062070f3eba7",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "proyectos/Gerstner_Werks/README.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "README"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Vista gráfica"
             }
           }
         ]
@@ -186,6 +182,7 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "proyectos/Gerstner_Werks/README.md",
     "scratch/new_carousel_track.txt",
     "scratch/current_slides.txt",
     "scratch/old_slides_ordered.txt",
@@ -201,13 +198,11 @@
     "proyectos/Gerstner_Werks/landing_temp/images/dashboard.jpg",
     "proyectos/Gerstner_Werks/landing_temp/images/cobra_top.png",
     "proyectos/Gerstner_Werks/landing_temp/images/car_front.jpg",
-    "proyectos/Gerstner_Werks/landing_temp/images",
     "proyectos/Gerstner_Werks/landing_temp/assets/providers/tapiceriamacarlogo.png",
     "proyectos/Gerstner_Werks/landing_temp/assets/providers/solga.png",
     "proyectos/Gerstner_Werks/landing_temp/assets/providers/rodeo.png",
     "proyectos/Gerstner_Werks/landing_temp/assets/providers/neumaticosderossilogo.png",
     "proyectos/Gerstner_Werks/landing_temp/assets/providers/chnbllogo.png",
-    "proyectos/Gerstner_Werks/README.md",
     "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/Token_Optimization.md",
     "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/LLM_Providers.md",
     "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/Supreme_Sales_Swarm.md",
