@@ -57,6 +57,41 @@ Todos los **medios de la landing page** (fotos y videos del portfolio, hero caro
 2. Hacer clic en un asset → botón **"Copy URL"** o ver el campo `public_id`
 3. Reemplazar las rutas locales en el `index.html` con esas URLs
 
+### Deploy de "Proyectos" (Cloudinary API) - Checklist y Troubleshooting
+
+La sección `Proyectos` de la landing se genera en deploy desde la API de Cloudinary (no desde `image/list` público).
+
+**Repositorio landing:** `5antuca/gerstnerwerks5`  
+**Workflow:** `.github/workflows/deploy.yml`  
+**Script generador:** `scripts/generate-projects-json.mjs`  
+**Config de carpetas:** `assets/projects.config.json`  
+**Salida generada:** `assets/projects.generated.json`
+
+#### Secrets obligatorios en GitHub Actions
+
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `FTP_SERVER`
+- `FTP_USERNAME` / usuario configurado en workflow
+- `FTP_PASSWORD`
+
+#### Error típico y causa
+
+- `Missing Cloudinary credentials...`  
+  Faltan uno o más secrets `CLOUDINARY_*` en `Settings -> Secrets and variables -> Actions`.
+
+- `Invalid workflow file ... Unrecognized named-value: 'secrets'`  
+  No usar `secrets.*` directo en `if:` de step; usar `env.*` a nivel job.
+
+#### Verificación rápida post-deploy
+
+1. En Actions, el step `Generate projects feed from Cloudinary API` debe terminar OK.
+2. El log debe mostrar: `Generated X projects into assets/projects.generated.json`.
+3. En la web, entre `Nosotros` y `Proveedores` deben verse las cards de `Proyectos`.
+4. Hover sobre una card: rota imagen cada 3s y muestra overlay `Ver`.
+5. Click en la card: abre lightbox con galería del proyecto.
+
 ---
 
 ## Roadmap y Estado Actual (Studio)
