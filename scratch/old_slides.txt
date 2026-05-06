@@ -1,0 +1,1 @@
+<div class="carousel-slide"><img loading="lazy" src="https://res.cloudinary.com/dttrfxbio/image/upload/q_auto,f_auto,c_limit,w_1400/v1755538129/WhatsApp_Image_2025-08-18_at_14.15.35_bcknmd.jpg" alt="Foto 52" /></div>
