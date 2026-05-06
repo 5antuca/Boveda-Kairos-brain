@@ -22,6 +22,17 @@ Plataforma integral de automatización para concesionarias en Argentina, desarro
 
 ### Testing
 - [[Testing_Harness]] — Golden set + harness `test_conversation.sh`
+- [[decisiones/AiTesterPlan]] — Plan de AI Tester: suite de regression testing basada en conversaciones reales (DRAFT)
+
+### Decisiones y Planes
+- [[decisiones/SESSION-SUMMARY-2026-04-17]] — Resumen sesión 17 abr (Fase 7 LangGraph)
+- [[decisiones/PLAN-2026-02-19-fix-clasificacion-leads-handoff]] — Fix clasificación leads + alertas duplicadas
+- [[decisiones/PLAN-2026-03-01-auto-simulacion-cuotas]] — Auto-simulación cuotas + sync workflow live→repo
+- [[decisiones/ultimo.plan]] — Fix formato JSON fotos en AI Agent ✅
+
+### Operaciones
+- [[operaciones/reset-test-session]] — Cómo resetear sesión en entorno TEST
+- [[operaciones/guardar-feedback-conversacion]] — Notas del workflow GuardarFeedbackConversacion
 
 ### Bugs y conversaciones
 - **Bugs**: `bugs/` — postmortems técnicos

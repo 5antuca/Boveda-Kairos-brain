@@ -11,14 +11,10 @@
             "id": "0c64062070f3eba7",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "proyectos/Fangio_CRM/code/env_vars.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "env_vars"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Vista gráfica"
             }
           }
         ]
@@ -186,6 +182,19 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "Bienvenido.md",
+    "CLAUDE.md",
+    "index.md",
+    "Instrucciones Generales.md",
+    "log.md",
+    "sobre-mi.md",
+    "Sin título.canvas",
+    "Sin título 2.canvas",
+    "Sin título 3.canvas",
+    "Sin título 1.canvas",
+    "proyectos/Gerstner_Werks/README.md",
+    "proyectos/Gerstner_Werks/Gerstner_Studio/README.md",
+    "proyectos/Fangio_CRM/code/env_vars.md",
     "proyectos/Gerstner_Werks/landing/assets/providers/solga.png",
     "proyectos/Gerstner_Werks/landing/assets/providers/rodeo.png",
     "proyectos/Gerstner_Werks/landing/assets/favicon.png",
@@ -196,7 +205,6 @@
     "proyectos/Gerstner_Werks/landing/assets/providers/braidLogo.png",
     "proyectos/Gerstner_Werks/landing/assets/providers/Spinneybecklogo.png",
     "proyectos/Gerstner_Werks/landing/assets/providers/RGBlogo-removebg-preview.png",
-    "proyectos/Gerstner_Werks/landing/assets/providers/GRlogo-removebg-preview.png",
     "proyectos/Gerstner_Werks/landing/assets/providers",
     "proyectos/Gerstner_Werks/landing/assets",
     "proyectos/Fangio_CRM/Next_Session_Checklist.md",
@@ -217,24 +225,12 @@
     "proyectos/Gerstner_Werks/landing/node_modules/popper.js/README.md",
     "proyectos/Gerstner_Werks/landing/node_modules/jquery/README.md",
     "proyectos/Gerstner_Werks/Gerstner_Studio/ROADMAP.md",
-    "proyectos/Gerstner_Werks/Gerstner_Studio/README.md",
-    "proyectos/Gerstner_Werks/README.md",
     "proyectos/Gerstner_Werks.md",
     "proyectos/Gerstner_Studio/ROADMAP.md",
     "proyectos/Gerstner_Studio/README.md",
     "proyectos/gerstnerwerks911/node_modules/tunnel-rat/node_modules/zustand/readme.md",
     "proyectos/gerstnerwerks911/node_modules/tunnel-rat/README.md",
     "proyectos/gerstnerwerks911/node_modules/tunnel-rat/CHANGELOG.md",
-    "proyectos/gerstnerwerks911/node_modules/stats-gl/node_modules/three/examples/jsm/libs/basis/README.md",
-    "proyectos/gerstnerwerks911/node_modules/stats-gl/node_modules/three/examples/jsm/libs/draco/README.md",
-    "proyectos/gerstnerwerks911/node_modules/stats-gl/node_modules/three/src/nodes/materialx/DISCLAIMER.md",
-    "proyectos/gerstnerwerks911/node_modules/stats-gl/node_modules/three/examples/fonts/ttf/README.md",
-    "proyectos/gerstnerwerks911/node_modules/stats-gl/node_modules/three/examples/fonts/README.md",
-    "proyectos/gerstnerwerks911/node_modules/stats-gl/node_modules/three/README.md",
-    "proyectos/gerstnerwerks911/node_modules/stats-gl/README.md",
-    "Sin título 3.canvas",
-    "Sin título.canvas",
-    "Sin título 1.canvas",
-    "Sin título 2.canvas"
+    "proyectos/gerstnerwerks911/node_modules/stats-gl/node_modules/three/examples/jsm/libs/basis/README.md"
   ]
 }

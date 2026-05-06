@@ -7,6 +7,9 @@
 ## 📁 Recursos del Proyecto
 - **📂 Código Fuente (Local):** [Abrir Carpeta FangioCRM](file:///Users/5an/Documents/FangioCRM)
 - **🌐 Repositorio GitHub:** [5antuca/FangioCRM](https://github.com/5antuca/FangioCRM)
+- **📋 MVP:** [[MVP]] — definición inicial y funcionalidades objetivo del SaaS.
+- **🔑 Credenciales:** [[Keys]] — APIs, MongoDB, evolution. Confidencial.
+- **⚙️ Variables de Entorno:** [[code/env_vars]] — vars de entorno para Vercel y VPS.
 
 ---
 

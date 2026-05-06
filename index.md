@@ -40,3 +40,9 @@
 
 ## 📄 Fuentes Crudas (Raw)
 - `raw/roadmap_vps_legacy.md` - Backup histórico de tareas (Procesado).
+
+## 🧭 General
+- [[Bienvenido]]
+- [[sobre-mi]]
+- [[Instrucciones Generales]]
+- [[CLAUDE]]
