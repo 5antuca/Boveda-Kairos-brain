@@ -182,6 +182,9 @@
   },
   "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "scratch/update_projects_json.mjs",
+    "cloudinary_results.json",
+    "scratch/check_cloudinary.mjs",
     "proyectos/Gerstner_Werks/README.md",
     "scratch/new_carousel_track.txt",
     "scratch/current_slides.txt",
@@ -191,8 +194,6 @@
     "scratch/old_index.html",
     "scratch",
     "proyectos/Gerstner_Werks/landing_temp/style.css",
-    "proyectos/Gerstner_Werks/landing_temp/script.js",
-    "proyectos/Gerstner_Werks/landing_temp/index.html",
     "proyectos/Gerstner_Werks/landing_temp/images/rotisserie.jpg",
     "proyectos/Gerstner_Werks/landing_temp/images/ferrari_engine.jpg",
     "proyectos/Gerstner_Werks/landing_temp/images/dashboard.jpg",
