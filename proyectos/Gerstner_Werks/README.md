@@ -92,6 +92,17 @@ La sección `Proyectos` de la landing se genera en deploy desde la API de Cloudi
 4. Hover sobre una card: rota imagen cada 3s y muestra overlay `Ver`.
 5. Click en la card: abre lightbox con galería del proyecto.
 
+#### Nota clave (evita secciones vacías)
+
+- Para `Proyectos`, la generación debe filtrar por `asset_folder` (no por `prefix/public_id`).
+- Carpetas verificadas actualmente:
+  - `Aston Martin DB3`
+  - `Aston Martin Vantage`
+  - `Ferrari Dino`
+  - `Ford Bronco`
+  - `Jaguar e-type cabriolet`
+- Si en Cloudinary se renombra una carpeta, actualizar `assets/projects.config.json` en la landing.
+
 ---
 
 ## Roadmap y Estado Actual (Studio)
