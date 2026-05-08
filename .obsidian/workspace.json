@@ -180,8 +180,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d34a23c50ab124e8",
+  "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "scratch/optimized_carousel.html",
+    "scratch/optimize_gallery.py",
     "scratch/gerstner_repo/style.css",
     "scratch/gerstner_repo/script.js",
     "scratch/gerstner_repo/index.html",
@@ -191,8 +193,6 @@
     "scratch/gerstner_repo/lib",
     "scratch/gerstner_repo/js",
     "scratch/gerstner_repo/img",
-    "scratch/gerstner_repo/images",
-    "scratch/gerstner_repo/css",
     "scratch/gerstner_repo/assets/providers/tapiceriamacarlogo.png",
     "scratch/gerstner_repo/assets/providers/solga.png",
     "scratch/gerstner_repo/assets/providers/rodeo.png",
