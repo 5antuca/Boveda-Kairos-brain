@@ -30,7 +30,7 @@ proyectos almacenados en Google Drive (~20 GB) usando lenguaje natural.
 - 📝 **Decisiones pendientes**: [[Drive_Assistant/Decisiones_Pendientes]]
 - 📜 **Spec original**: [[Drive_Assistant/Spec_Original]]
 - 🔧 **Stack**: Python (FastAPI + LangGraph) + React (Vite) + MongoDB + OpenAI + Google Drive API (OAuth user)
-- 🌐 **Dominio previsto**: `gerstnerwerks.ai` (a registrar)
+- 🌐 **Dominio**: `ai.kairosaisolutions.com` (A record creado 2026-05-09 → 46.62.235.162)
 - 📊 **Estado** (2026-05-09): spec recibido + decisiones tomadas. Pendiente: dev local Fase 1.
 
 ---

@@ -60,19 +60,15 @@ solo gente con link autorizado".
 
 ---
 
-## D-DNS — Proveedor del dominio
+## D-DNS — Dominio
 
-**Pregunta**: ¿dónde registrar `gerstnerwerks.ai`?
+**Pregunta**: ¿qué dominio usar?
 
-| Opción | Costo aprox `.ai` | Pros |
-|---|---|---|
-| **Cloudflare Registrar** | ~$80 USD/año | Sin upsell, DNS bueno, opcional proxy + WAF gratis. |
-| **Namecheap** | ~$70-90 USD/año | UI familiar. |
-| **Porkbun** | ~$60-80 USD/año | Más barato, registrar especializado. |
+**Resolución (2026-05-09)**: ✅ **Subdominio del dominio existente de Kairos** — `ai.kairosaisolutions.com`. A record creado apuntando a `46.62.235.162` (IP del VPS) con TTL 3600. DNS propagado y verificado (`dig +short ai.kairosaisolutions.com → 46.62.235.162`). Cero costo extra. Consistente con el resto de subdominios del stack (`test-trebol.bot.kairosaisolutions.com`, `test-trebol.evo.kairosaisolutions.com`). Cert Let's Encrypt se va a emitir solo cuando levante el container con labels Traefik.
 
-**Recomendación**: **Cloudflare Registrar** — además del registro tenés WAF, rate limiting y bot protection gratis. Para una herramienta interna con auth por token, esa capa extra de bloqueo de bots es muy útil.
+Descartado: `gerstnerwerks.ai` (TLD `.ai` cuesta ~$80 USD/año, sin valor agregado para herramienta interna).
 
-**Estado**: ⏳ pendiente decisión usuario.
+**Estado**: ✅ resuelto.
 
 ---
 
@@ -80,14 +76,9 @@ solo gente con link autorizado".
 
 **Pregunta**: ¿este VPS o uno nuevo?
 
-| Opción | Pros | Contras |
-|---|---|---|
-| **A — Este VPS** | Ya tiene Traefik, Docker, networking. Cero infra nueva. 16GB RAM con holgura (~6GB libres). | Mezcla cliente Trebol/Fangio con Gerstner. Si crece carga, hay competencia por CPU. |
-| **B — VPS nuevo** | Aislamiento. Si Gerstner crece, no afecta a Trebol. | Costo extra ($10-20/mes). Más infra a mantener. |
+**Resolución (2026-05-09)**: ✅ **Este VPS** (`46.62.235.162`). Tiene Traefik, Docker, networking listo. 16GB RAM con holgura (~6GB libres). El Drive Assistant agrega 2-3 containers (backend + frontend + Mongo local) — carga marginal sobre el stack existente.
 
-**Recomendación**: **A — este VPS** para v1. La carga del Drive Assistant es baja (queries puntuales, no streaming continuo). Si crece, migrar es 1 día.
-
-**Estado**: ⏳ pendiente confirmación usuario.
+**Estado**: ✅ resuelto.
 
 ---
 

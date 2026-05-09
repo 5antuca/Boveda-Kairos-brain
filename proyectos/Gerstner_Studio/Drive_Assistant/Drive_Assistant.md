@@ -2,7 +2,7 @@
 tags: [gerstner-werks, drive-assistant, langgraph, fastapi, openai, mvp, en-diseño]
 fecha-creacion: 2026-05-09
 estado: DISEÑO — spec v1 recibido, ajustes pendientes antes de codear
-dominio: gerstnerwerks.ai (a registrar)
+dominio: ai.kairosaisolutions.com (A record creado 2026-05-09 → 46.62.235.162)
 ---
 
 # 🏎️ Gerstner Werks — Drive Assistant
@@ -76,7 +76,7 @@ Cuando deployemos a este VPS:
 ```yaml
 labels:
   - "traefik.enable=true"
-  - "traefik.http.routers.gerstner-drive.rule=Host(`gerstnerwerks.ai`)"
+  - "traefik.http.routers.gerstner-drive.rule=Host(`ai.kairosaisolutions.com`)"
   - "traefik.http.routers.gerstner-drive.entrypoints=websecure"
   - "traefik.http.routers.gerstner-drive.tls.certresolver=letsencrypt"
   - "traefik.http.services.gerstner-drive.loadbalancer.server.port=8000"
