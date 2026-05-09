@@ -27,6 +27,7 @@ en ~600ms (cache) o ~2.5s (cold).
 | URL | **https://ai.kairosaisolutions.com** |
 | Cómo acceder (incl. mobile) | [[Como_Acceder]] |
 | Spec original | [[Spec_Original]] (recibido 2026-05-09) |
+| Spec mejoras | [[Spec_Vision_Analyzer]] · [[Spec_Auto_Sync_Drive]] |
 | Decisiones | [[Decisiones_Pendientes]] (todas resueltas al 2026-05-09) |
 | Repo | https://github.com/5antuca/ai.gerstner.git (privado) |
 | Dominio | `ai.kairosaisolutions.com` (A record → 46.62.235.162, TTL 3600) |
