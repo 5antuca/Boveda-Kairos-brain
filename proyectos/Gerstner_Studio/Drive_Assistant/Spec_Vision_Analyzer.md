@@ -1,8 +1,8 @@
 ---
 tags: [gerstner-studio, drive-assistant, spec, vision, mejora]
 fecha: 2026-05-09
-estado: PROPUESTO — pendiente decisión usuario
-relacionado: [[Drive_Assistant]], [[Decisiones_Pendientes]]
+estado: APROBADO — approach C ratificado el 2026-05-09, pendiente implementación
+relacionado: [[Drive_Assistant]], [[Spec_Fix_Matching_y_Cache]], [[Decisiones_Pendientes]]
 ---
 
 # Spec — Analizador de visión para filtros por contenido
@@ -123,15 +123,29 @@ match_folders → 3 candidatos
 
 ## Recomendación
 
-**B (on-demand) para v1**. Razones:
+**~~B (on-demand) para v1~~** → **C (híbrido) ratificado el 2026-05-09**.
 
-1. **Cero deuda inicial**. No requiere correr un batch grande.
-2. **Costo despreciable** ($0.30-1.00/mes).
-3. **Iterativo**: si después vemos que ciertas queries dominan (ej. "Singer"
-   se pide 50× por día), upgradeamos a C pre-tageando ese folder.
-4. **Latencia tolerable**: +2-5s en queries con keywords de color/contenido
-   visual NO es bloqueante para una herramienta interna donde el user mira los
-   resultados varios segundos.
+Cambio de criterio: el usuario pidió explícitamente "que pueda reconocer
+**hasta algunas imágenes de todas las carpetas** para que al menos le pueda
+mencionar cosas por colores". Eso es approach C: pre-tag liviano (3-5
+muestras por carpeta) + on-demand para casos no cubiertos.
+
+Razones para C sobre B:
+
+1. **Cobertura mínima garantizada**: cualquier carpeta tiene tags de color
+   básicos. Query "amarillo" puede filtrar el árbol entero sin disparar
+   vision API en cada carpeta.
+2. **Latencia query: 0** para colores/materiales comunes (todo precomputado).
+3. **Costo inicial bajo**: ~400 carpetas × 5 muestras × $0.0015 = ~$3 USD.
+   Mantenimiento: marginal (solo carpetas nuevas vía cron).
+4. **On-demand sigue disponible**: si el query pide algo no cubierto por
+   los tags pre-computados (ej. "patente XYZ-123"), cae al sampling de B.
+
+Razones para descartar B puro:
+
+- B requería disparar vision API en cada query con filtro visual → +2-5s
+  por query y costo proporcional al uso.
+- B no garantiza cobertura: el sampling random podía perder el item buscado.
 
 ---
 
@@ -259,20 +273,48 @@ se acerca a A con el tiempo, sin la inversión inicial.
 
 ---
 
-## Decisiones abiertas
+## Decisiones tomadas (2026-05-09)
 
-| # | Pregunta |
-|---|---|
-| V1 | ¿Approach A, B, o C? Recomiendo B con cache. |
-| V2 | ¿Activar siempre que haya color en la query, o exponer un toggle "🔍 con visión" en la UI para que el user decida? |
-| V3 | ¿OpenAI vision o Google Vision? Si optimizás costo: Google. Si calidad: OpenAI. |
-| V4 | ¿Cuántas muestras por folder (3-5-10)? Más = más preciso pero más caro/lento. |
-| V5 | ¿Limpiamos cache de visión periódicamente o queda forever (TTL N días)? |
+| # | Pregunta | Resolución |
+|---|---|---|
+| V1 | ¿Approach A, B, o C? | **C (híbrido)**: pre-tag de 5 muestras por carpeta + on-demand para queries con filtros raros. Trigger: pedido explícito del usuario de cobertura sobre todas las carpetas. |
+| V2 | ¿Activar siempre que haya color, o toggle UI? | **Siempre que `parse_intent` detecte `visual_filter` no nulo**. Sin toggle UI — debe ser transparente al user. |
+| V3 | ¿OpenAI vision o Google Vision? | **OpenAI gpt-4o-mini**. Consistencia con el resto del stack + flexibilidad de prompts en español. |
+| V4 | ¿Cuántas muestras por folder? | **5** para el pre-tag offline (cubre la diversidad típica de una carpeta de proyecto). On-demand: 3 (más rápido). |
+| V5 | ¿TTL del cache de visión? | **Sin TTL — invalidación por mtime**. Cuando el indexer detecta que una carpeta cambió (ver [[Spec_Auto_Sync_Drive]]), borra los tags de visión asociados a esa carpeta y los re-genera en la próxima corrida del tagger. |
+
+### Plan de tagger offline (approach C)
+
+Cron job nuevo (puede vivir junto al de [[Spec_Auto_Sync_Drive]]) que:
+
+1. Lista carpetas en `folder_tree` que no tengan entradas correspondientes
+   en `image_vision_cache`.
+2. Por cada carpeta, samplea hasta 5 archivos de imagen.
+3. Llama a OpenAI vision con prompt de tagging estructurado:
+   ```
+   { "color_dominante": "amarillo|azul|rojo|...",
+     "carroceria": "coupé|sedán|wagon|...",
+     "fase": "sin pintar|pintado|terminado|en chasis|...",
+     "tags_libres": ["..."] }
+   ```
+4. Guarda por archivo en `image_vision_cache` + agrega a la carpeta un
+   `vision_summary` con los colores/carrocerías predominantes.
+5. En `match_folders`, si `intent.visual_filter` matchea contra
+   `folder.vision_summary` → score boost. Si no hay match en summary →
+   on-demand sampling (path B) sobre los top 3 candidatos.
+
+Costo inicial: ~400 carpetas × 5 imgs × $0.0015 = ~$3 USD.
+Mantenimiento: solo carpetas nuevas o invalidadas → ~$0.10/mes.
 
 ---
 
 ## Estado
 
-- **2026-05-09**: spec escrito. Trigger: usuario detectó que "jaguar amarillo"
-  devolvía azul (porque no hay carpeta "amarillo" y los filenames son hashes).
-  Pendiente decisión.
+- **2026-05-09**: spec escrito. Trigger inicial: usuario detectó que "jaguar
+  amarillo" devolvía azul (porque no hay carpeta "amarillo" y los filenames
+  son hashes).
+- **2026-05-09 (mismo día)**: ratificado approach **C** (pre-tag liviano +
+  on-demand). Trigger: pedido explícito del usuario de cobertura sobre todas
+  las carpetas para poder mencionar cosas por colores. V1-V5 cerradas.
+  Implementación pendiente — depende de [[Spec_Auto_Sync_Drive]] para el
+  cron de invalidación por mtime.
