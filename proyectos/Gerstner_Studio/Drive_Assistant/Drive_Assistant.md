@@ -24,6 +24,8 @@ en ~600ms (cache) o ~2.5s (cold).
 
 | Pieza | Donde / URL |
 |---|---|
+| URL | **https://ai.kairosaisolutions.com** |
+| Cómo acceder (incl. mobile) | [[Como_Acceder]] |
 | Spec original | [[Spec_Original]] (recibido 2026-05-09) |
 | Decisiones | [[Decisiones_Pendientes]] (todas resueltas al 2026-05-09) |
 | Repo | https://github.com/5antuca/ai.gerstner.git (privado) |

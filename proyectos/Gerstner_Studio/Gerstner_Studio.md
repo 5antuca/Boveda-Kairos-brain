@@ -26,12 +26,13 @@ Aplicación interactiva de alta fidelidad para la personalización técnica y es
 Chatbot interno para el equipo del taller que busca y muestra fotos/videos de
 proyectos almacenados en Google Drive (~20 GB) usando lenguaje natural.
 
+- 🌐 **URL en producción**: **https://ai.kairosaisolutions.com**
 - 📋 **Dashboard**: [[Drive_Assistant/Drive_Assistant]]
-- 📝 **Decisiones pendientes**: [[Drive_Assistant/Decisiones_Pendientes]]
+- 🚪 **Cómo acceder (PC + mobile)**: [[Drive_Assistant/Como_Acceder]]
+- 📝 **Decisiones**: [[Drive_Assistant/Decisiones_Pendientes]]
 - 📜 **Spec original**: [[Drive_Assistant/Spec_Original]]
 - 🔧 **Stack**: Python (FastAPI + LangGraph) + React (Vite) + MongoDB + OpenAI + Google Drive API (OAuth user)
-- 🌐 **Dominio**: `ai.kairosaisolutions.com` (A record creado 2026-05-09 → 46.62.235.162)
-- 📊 **Estado** (2026-05-09): spec recibido + decisiones tomadas. Pendiente: dev local Fase 1.
+- 📊 **Estado** (2026-05-09): **operativo**. Etapa 1 (carga premium imágenes) deployada. Próximas etapas: streaming de texto + lightbox premium.
 
 ---
 
