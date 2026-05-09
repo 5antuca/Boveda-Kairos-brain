@@ -151,7 +151,8 @@ Definir en [[Decisiones_Pendientes#Auth de la app]].
 
 - [[Spec_Original]] — spec recibido del usuario el 2026-05-09 (verbatim, antes de modificaciones).
 - [[Decisiones_Pendientes]] — D-list para resolver antes/durante implementación.
-- [[../README|Gerstner Werks (overview)]] — proyecto paraguas.
+- [[../Gerstner_Studio|Gerstner Studio (proyecto paraguas)]].
+- [[../../Gerstner_Werks/README|Gerstner Werks (taller / cliente final)]].
 - [Drive API v3 — OAuth desktop apps](https://developers.google.com/identity/protocols/oauth2/native-app).
 - [LangGraph docs](https://langchain-ai.github.io/langgraph/).
 - Memory: `reference_secrets_inventario.md` — workflow para rotar API keys sin pegarlas en chat.
