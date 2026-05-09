@@ -29,7 +29,9 @@ en ~600ms (cache) o ~2.5s (cold).
 | Repo | https://github.com/5antuca/ai.gerstner.git (privado) |
 | Dominio | `ai.kairosaisolutions.com` (A record → 46.62.235.162, TTL 3600) |
 | VPS | `46.62.235.162` (este mismo, reusa Traefik existente) |
-| Clone local previsto | `/root/apps/ai-gerstner/` (consistente con `/root/apps/FangioCRM/`) |
+| Clone local | `/root/apps/ai-gerstner/` ✅ |
+| Drive root folder ID | `1aUspFknqw8fdxsowT8HMnUI6f1IGsLGy` |
+| OAuth client_secret | `/root/apps/ai-gerstner/credentials/client_secret.json` ✅ |
 
 ---
 
