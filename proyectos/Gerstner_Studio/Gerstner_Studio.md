@@ -31,6 +31,7 @@ proyectos almacenados en Google Drive (~20 GB) usando lenguaje natural.
 - 🚪 **Cómo acceder (PC + mobile)**: [[Drive_Assistant/Como_Acceder]]
 - 📝 **Decisiones**: [[Drive_Assistant/Decisiones_Pendientes]]
 - 📜 **Spec original**: [[Drive_Assistant/Spec_Original]]
+- 🔮 **Spec mejora — analizador de visión**: [[Drive_Assistant/Spec_Vision_Analyzer]] (color/contenido)
 - 🔧 **Stack**: Python (FastAPI + LangGraph) + React (Vite) + MongoDB + OpenAI + Google Drive API (OAuth user)
 - 📊 **Estado** (2026-05-09): **operativo**. Etapa 1 (carga premium imágenes) deployada. Próximas etapas: streaming de texto + lightbox premium.
 
