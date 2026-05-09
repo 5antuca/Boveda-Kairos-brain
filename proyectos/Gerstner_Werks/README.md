@@ -5,7 +5,7 @@ Taller especializado en la **restauración y modificación de autos clásicos**.
 
 ## Estructura del Proyecto
 
-El ecosistema digital de Gerstner Werks se divide en dos componentes principales:
+El ecosistema digital de Gerstner Werks se divide en tres componentes:
 
 ### 1. Gerstner Werks (Landing Page)
 Sitio institucional principal que presenta la marca, los servicios de restauración y el portafolio de proyectos terminados.
@@ -18,6 +18,13 @@ Aplicación interactiva de alta fidelidad para la personalización técnica y es
 - **Dominio**: [studio.gerstnerwerks.com](https://studio.gerstnerwerks.com/)
 - **Repositorio**: [5antuca/gerstnersinger911](https://github.com/5antuca/gerstnersinger911.git)
 - **Código fuente local**: `/Users/5an/Documents/gerstnersinger911/`
+
+### 3. Drive Assistant (Bot interno) — 🆕 EN DISEÑO
+Chatbot interno para el equipo del taller que busca y muestra fotos/videos de proyectos almacenados en Google Drive (~20 GB) usando lenguaje natural. LangGraph + OpenAI + Google Drive API + MongoDB.
+- **Dominio previsto**: `gerstnerwerks.ai` (a registrar)
+- **Stack**: Python (FastAPI + LangGraph) + React (Vite) + MongoDB
+- **Documentación**: [[Drive_Assistant/Drive_Assistant]] · [[Drive_Assistant/Decisiones_Pendientes]] · [[Drive_Assistant/Spec_Original]]
+- **Estado** (2026-05-09): spec recibido, decisiones tomadas (OAuth user-account, OpenAI, LLM matcher, Traefik, no público). Pendiente: dev local Fase 1.
 
 ---
 
