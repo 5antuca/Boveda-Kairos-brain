@@ -9,13 +9,18 @@ estado: en-construcción
 Proyecto paraguas que agrupa las aplicaciones internas y herramientas digitales
 asociadas a Gerstner Werks (taller de restauración de autos clásicos).
 
-> **Nota**: existe también `proyectos/Gerstner_Werks/Gerstner_Studio/` (el
-> configurador 3D `studio.gerstnerwerks.com`). Ese subfolder y este pueden
-> convivir, fusionarse o reorganizarse — pendiente decisión del usuario.
-
 ---
 
 ## 🚀 Subproyectos
+
+### Configurador 911 (`studio.gerstnerwerks.com`)
+Aplicación interactiva de alta fidelidad para la personalización técnica y estética de Porsche 911/964.
+
+- 📋 **README**: [[Configurador_911/README]]
+- 🗺️ **Roadmap**: [[Configurador_911/ROADMAP]]
+- 🔧 **Stack**: configurador 3D web
+- 📦 **Repo**: [5antuca/gerstnersinger911](https://github.com/5antuca/gerstnersinger911.git)
+- 💾 **Código local**: `/Users/5an/Documents/gerstnersinger911/`
 
 ### Drive Assistant (`gerstnerwerks.ai`) — 🆕 EN DISEÑO
 Chatbot interno para el equipo del taller que busca y muestra fotos/videos de
@@ -32,12 +37,12 @@ proyectos almacenados en Google Drive (~20 GB) usando lenguaje natural.
 
 ## 🔗 Relación con otros proyectos
 
-- **Gerstner Werks (`gerstnerwerks.com`)** — landing institucional, repo `gerstnerwerks5`. Vive en `proyectos/Gerstner_Werks/`.
-- **Configurador 3D (`studio.gerstnerwerks.com`)** — repo `gerstnersinger911`. Vive en `proyectos/Gerstner_Werks/Gerstner_Studio/` (folder con nombre que duplica este — pendiente reorganizar).
+- **Gerstner Werks (`gerstnerwerks.com`)** — landing institucional del taller (cliente final). Vive en `proyectos/Gerstner_Werks/`.
 
 ---
 
 ## 📚 Referencias
 
-- [[../Gerstner_Werks/README|Gerstner Werks (proyecto paraguas histórico)]]
-- [[Drive_Assistant/Drive_Assistant]] — primer subproyecto activo de Gerstner Studio
+- [[../Gerstner_Werks/README|Gerstner Werks (taller / cliente final)]]
+- [[Configurador_911/README]] — configurador 3D
+- [[Drive_Assistant/Drive_Assistant]] — bot interno de Drive

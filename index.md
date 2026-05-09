@@ -31,9 +31,13 @@
 #### 🗃️ Referencia (FangioBot n8n — deprecando)
 - [[proyectos/Fangio_CRM/FangioBot_v2_Architecture|FangioBot_v2_Architecture]] - Bot n8n (siendo reemplazado por bot Python).
 
-### Gerstner Werks (Landing + Studio)
-- [[proyectos/Gerstner_Werks/README|README]] - Overview del ecosistema Gerstner.
-- [[proyectos/Gerstner_Werks/Gerstner_Studio/ROADMAP|ROADMAP Studio]] - Estado y fases del configurador 3D.
+### Gerstner Werks (Landing institucional)
+- [[proyectos/Gerstner_Werks/README|README]] - Overview del taller / cliente final.
+
+### Gerstner Studio (Paraguas de herramientas internas)
+- [[proyectos/Gerstner_Studio/Gerstner_Studio|Gerstner Studio (dashboard)]] - Mapa del paraguas.
+- [[proyectos/Gerstner_Studio/Configurador_911/ROADMAP|ROADMAP Configurador 911]] - Estado y fases del configurador 3D.
+- [[proyectos/Gerstner_Studio/Drive_Assistant/Drive_Assistant|Drive Assistant]] - Bot LangGraph para buscar fotos del taller en Drive (`gerstnerwerks.ai`).
 
 ## 📄 General
 - [[Bienvenido]]
