@@ -1,8 +1,8 @@
 ---
 tags: [gerstner-werks, drive-assistant, langgraph, fastapi, openai, mvp, en-diseño]
 fecha-creacion: 2026-05-09
-estado: DISEÑO — spec v1 recibido, ajustes pendientes antes de codear
-dominio: gerstnerwerks.ai (a registrar)
+estado: LISTO PARA BOOTSTRAP — todas las decisiones cerradas, repo creado
+dominio: ai.kairosaisolutions.com (A record creado 2026-05-09 → 46.62.235.162)
 ---
 
 # 🏎️ Gerstner Werks — Drive Assistant
@@ -24,12 +24,16 @@ en ~600ms (cache) o ~2.5s (cold).
 
 | Pieza | Donde / URL |
 |---|---|
+| URL | **https://ai.kairosaisolutions.com** |
+| Cómo acceder (incl. mobile) | [[Como_Acceder]] |
 | Spec original | [[Spec_Original]] (recibido 2026-05-09) |
-| Decisiones tomadas | sección de abajo |
-| Decisiones pendientes | [[Decisiones_Pendientes]] |
-| Repo | (a crear — propuesta `5antuca/gerstnerwerks-drive-assistant`) |
-| Dominio | `gerstnerwerks.ai` (a registrar) |
-| Infra inicial | dev local primero, después VPS (probable: este mismo VPS con Traefik) |
+| Decisiones | [[Decisiones_Pendientes]] (todas resueltas al 2026-05-09) |
+| Repo | https://github.com/5antuca/ai.gerstner.git (privado) |
+| Dominio | `ai.kairosaisolutions.com` (A record → 46.62.235.162, TTL 3600) |
+| VPS | `46.62.235.162` (este mismo, reusa Traefik existente) |
+| Clone local | `/root/apps/ai-gerstner/` ✅ |
+| Drive root folder ID | `1aUspFknqw8fdxsowT8HMnUI6f1IGsLGy` |
+| OAuth client_secret | `/root/apps/ai-gerstner/credentials/client_secret.json` ✅ |
 
 ---
 
@@ -37,12 +41,17 @@ en ~600ms (cache) o ~2.5s (cold).
 
 | # | Decisión |
 |---|---|
-| **D1** | **Auth a Drive: OAuth con cuenta Google del usuario (no service account)**. Razón: la carpeta del taller no es propia, le fue compartida — no se puede share a una SA sin pedírselo al dueño. OAuth interactivo: un login al setup, refresh token guardado, el bot mintea access tokens. |
-| **D2** | **LLM: OpenAI** (no Anthropic Haiku). Razón: ya hay `OPENAI_API_KEY` en `bot-service/.env`, evita gestionar dos providers. Modelo concreto a definir (D-pendiente). |
-| **D3** | **Matcher de carpetas: opción C — LLM ve folder_tree y elige.** El nodo `match_folders` manda el árbol de carpetas (resumido) + query al LLM y deja que él seleccione los `folder_ids` relevantes. Más natural en LangGraph que `difflib`, más robusto a drift de nombres. |
-| **D4** | **No público.** El bot no debe ser accesible para cualquiera con la URL. Acceso sólo para gente con link autorizado. **Esquema concreto pendiente** (token en URL, Basic auth, etc — ver Decisiones_Pendientes). |
-| **D5** | **Dev local primero, deploy después.** Arrancamos con `docker compose up` en local; cuando esté estable se decide VPS (probablemente este mismo, reutilizando Traefik). |
-| **D6** | **Ubicación en vault: `Gerstner_Werks/Drive_Assistant/`** (subproyecto al lado de Gerstner_Studio y la landing). |
+| **D1** | **Auth a Drive: OAuth con cuenta Google del usuario** (no SA). Carpeta del taller fue compartida, no es propia. |
+| **D2** | **LLM: OpenAI gpt-4.1-mini**. Consistencia con Trebol bot, costo despreciable (~$0.30/mes a 50 q/día). |
+| **D3** | **Matcher de carpetas: LLM ve folder_tree y elige** (no difflib). |
+| **D4** | **Auth de la app: tokens por persona** (Mongo `users` + endpoints admin + `Authorization: Bearer` o `?t=` para magic-links iniciales). |
+| **D5** | **Mongo: container local mongo:7** (no Atlas, no cluster compartido con FangioCRM). Aislamiento físico. |
+| **D6** | **Streaming: JSON completo** (no SSE) en v1. |
+| **D7** | **Indexer: manual via `POST /admin/index-drive`** en v1. Cron en v2. |
+| **D8** | **Dominio: `ai.kairosaisolutions.com`**. Subdominio del existente, $0 extra. |
+| **D9** | **VPS: este mismo (`46.62.235.162`)**, reusa Traefik. |
+| **D10** | **Repo: `5antuca/ai.gerstner` privado**. |
+| **D11** | **Ubicación vault: `proyectos/Gerstner_Studio/Drive_Assistant/`**. |
 
 ---
 
@@ -76,7 +85,7 @@ Cuando deployemos a este VPS:
 ```yaml
 labels:
   - "traefik.enable=true"
-  - "traefik.http.routers.gerstner-drive.rule=Host(`gerstnerwerks.ai`)"
+  - "traefik.http.routers.gerstner-drive.rule=Host(`ai.kairosaisolutions.com`)"
   - "traefik.http.routers.gerstner-drive.entrypoints=websecure"
   - "traefik.http.routers.gerstner-drive.tls.certresolver=letsencrypt"
   - "traefik.http.services.gerstner-drive.loadbalancer.server.port=8000"

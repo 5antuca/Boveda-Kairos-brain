@@ -23,9 +23,9 @@ solo gente con link autorizado".
 | **C — Basic Auth en Traefik** | Middleware `basicAuth` de Traefik con htpasswd. Browser muestra dialog nativo. | Cero código en backend. Robusto. | UX feo (popup nativo). No funciona bien en mobile. |
 | **D — Google Workspace login** | OAuth contra dominio del taller. Solo emails @gerstnerwerks.com pasan. | Auth correcta y prolija. Usa cuentas que ya tienen. | Requiere que el taller tenga Google Workspace. Más implementación. |
 
-**Recomendación inicial**: **B** — tokens por persona. El extra es chico (1 collection Mongo + 2 endpoints admin) y te da revoke granular sin rotar a todos. **A** está OK para v1 si querés acelerar.
+**Resolución (2026-05-09)**: ✅ **B — tokens por persona**. Mongo collection `users` con `{ email, name, token, created_at, revoked_at }`. Endpoints `/admin/users` (crear/revocar). Frontend manda token en header `Authorization: Bearer <token>` (también acepta query string `?t=` para magic-links iniciales). Trazabilidad completa de quién hizo qué query.
 
-**Estado**: ⏳ pendiente decisión usuario.
+**Estado**: ✅ resuelto.
 
 ---
 
@@ -38,9 +38,9 @@ solo gente con link autorizado".
 | **gpt-4o-mini** | ~$0.0001 | Muy buena para clasificación + selección | ~400-600ms |
 | **gpt-4.1-mini** | ~$0.0002 | Mejor reasoning, lo usás en Trebol | ~500-800ms |
 
-**Recomendación**: **gpt-4.1-mini** por consistencia con Trebol bot (mismo provider, ya tunado, ya conocés sus quirks). El 2x de costo es despreciable a estos volúmenes (taller, no cliente final).
+**Resolución (2026-05-09)**: ✅ **gpt-4.1-mini** (decisión delegada al ingeniero). Razón: consistencia con Trebol bot, mismos quirks ya conocidos. Costo despreciable a estos volúmenes (~$0.0002/query × ~50 queries/día = $0.30/mes).
 
-**Estado**: ⏳ pendiente confirmación usuario.
+**Estado**: ✅ resuelto.
 
 ---
 
@@ -54,25 +54,23 @@ solo gente con link autorizado".
 | **B — Atlas cluster nuevo** | Backups automáticos. UI de Atlas para inspección. | Costo (M0 free tiene 512MB, suficiente; M2 paga). Latencia VPS↔Atlas (~30-50ms). |
 | **C — Reusar cluster `fangiocrm` con DB nueva** | Cero costo extra, cero infra extra. | Mezcla data de clientes (Gerstner en cluster de Fangio). Mal precedente. |
 
-**Recomendación**: **A — container local**. Folder tree y cache son data efímera/regenerable, no necesita backups. Mongo en Docker arranca en 5s.
+**Resolución (2026-05-09)**: ✅ **A — container local mongo:7** (decisión delegada al ingeniero). Razones: aislamiento físico entre clientes (no mezclar Gerstner con FangioCRM en mismo cluster), latencia <1ms, datos regenerables (folder_tree con `POST /admin/index-drive` en ~30s, folder_cache con TTL 24h). Persistencia con volume Docker `mongo_data`. Backup chico de `users` + `chat_sessions` con `mongodump` cron si hace falta. Migración a Atlas en el futuro = cambio de `MONGODB_URI`, cero lock-in.
 
-**Estado**: ⏳ pendiente confirmación usuario.
+Descartado: opción C (reusar cluster fangiocrm) — mal precedente mezclar clientes.
+
+**Estado**: ✅ resuelto.
 
 ---
 
-## D-DNS — Proveedor del dominio
+## D-DNS — Dominio
 
-**Pregunta**: ¿dónde registrar `gerstnerwerks.ai`?
+**Pregunta**: ¿qué dominio usar?
 
-| Opción | Costo aprox `.ai` | Pros |
-|---|---|---|
-| **Cloudflare Registrar** | ~$80 USD/año | Sin upsell, DNS bueno, opcional proxy + WAF gratis. |
-| **Namecheap** | ~$70-90 USD/año | UI familiar. |
-| **Porkbun** | ~$60-80 USD/año | Más barato, registrar especializado. |
+**Resolución (2026-05-09)**: ✅ **Subdominio del dominio existente de Kairos** — `ai.kairosaisolutions.com`. A record creado apuntando a `46.62.235.162` (IP del VPS) con TTL 3600. DNS propagado y verificado (`dig +short ai.kairosaisolutions.com → 46.62.235.162`). Cero costo extra. Consistente con el resto de subdominios del stack (`test-trebol.bot.kairosaisolutions.com`, `test-trebol.evo.kairosaisolutions.com`). Cert Let's Encrypt se va a emitir solo cuando levante el container con labels Traefik.
 
-**Recomendación**: **Cloudflare Registrar** — además del registro tenés WAF, rate limiting y bot protection gratis. Para una herramienta interna con auth por token, esa capa extra de bloqueo de bots es muy útil.
+Descartado: `gerstnerwerks.ai` (TLD `.ai` cuesta ~$80 USD/año, sin valor agregado para herramienta interna).
 
-**Estado**: ⏳ pendiente decisión usuario.
+**Estado**: ✅ resuelto.
 
 ---
 
@@ -80,14 +78,9 @@ solo gente con link autorizado".
 
 **Pregunta**: ¿este VPS o uno nuevo?
 
-| Opción | Pros | Contras |
-|---|---|---|
-| **A — Este VPS** | Ya tiene Traefik, Docker, networking. Cero infra nueva. 16GB RAM con holgura (~6GB libres). | Mezcla cliente Trebol/Fangio con Gerstner. Si crece carga, hay competencia por CPU. |
-| **B — VPS nuevo** | Aislamiento. Si Gerstner crece, no afecta a Trebol. | Costo extra ($10-20/mes). Más infra a mantener. |
+**Resolución (2026-05-09)**: ✅ **Este VPS** (`46.62.235.162`). Tiene Traefik, Docker, networking listo. 16GB RAM con holgura (~6GB libres). El Drive Assistant agrega 2-3 containers (backend + frontend + Mongo local) — carga marginal sobre el stack existente.
 
-**Recomendación**: **A — este VPS** para v1. La carga del Drive Assistant es baja (queries puntuales, no streaming continuo). Si crece, migrar es 1 día.
-
-**Estado**: ⏳ pendiente confirmación usuario.
+**Estado**: ✅ resuelto.
 
 ---
 
@@ -100,9 +93,9 @@ solo gente con link autorizado".
 | **A — Repo nuevo** `gerstnerwerks-drive-assistant` | Limpio, deploy independiente, git history propio. | Otro repo más a mantener. |
 | **B — Subfolder de `kairos-infrastructure`** | Todo en un lugar, deploy junto con resto. | Mezcla código de cliente con infra propia. |
 
-**Recomendación**: **A — repo nuevo, privado**. Es código de cliente, no de infra Kairos. Visibilidad privada hasta que se decida abrirlo (probablemente nunca).
+**Resolución (2026-05-09)**: ✅ **A — repo nuevo separado**. URL: `https://github.com/5antuca/ai.gerstner.git`. Privado.
 
-**Estado**: ⏳ pendiente confirmación usuario.
+**Estado**: ✅ resuelto.
 
 ---
 
