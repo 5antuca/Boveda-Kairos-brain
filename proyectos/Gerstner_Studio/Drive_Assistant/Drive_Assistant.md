@@ -27,8 +27,9 @@ en ~600ms (cache) o ~2.5s (cold).
 | URL | **https://ai.kairosaisolutions.com** |
 | Cómo acceder (incl. mobile) | [[Como_Acceder]] |
 | Spec original | [[Spec_Original]] (recibido 2026-05-09) |
-| Spec mejoras | [[Spec_Vision_Analyzer]] · [[Spec_Auto_Sync_Drive]] · [[Spec_Fix_Matching_y_Cache]] |
-| Implementaciones | [[Vision_Analyzer]] (deployado 2026-05-10, fases 1-3) · [[Metricas_Latencia]] (logs estructurados) |
+| Spec mejoras | [[Spec_Vision_Analyzer]] · [[Spec_Auto_Sync_Drive]] · [[Spec_Fix_Matching_y_Cache]] · [[Spec_Bot_Ordenador]] |
+| Implementaciones | [[Vision_Analyzer]] (fases 1-3) · [[Bot_Ordenador]] (fases 1-7, deploy 2026-05-10) · [[Metricas_Latencia]] |
+| Quickstarts | [[Como_Usar_Ordenador]] (comandos copy-paste del ordenador) · [[Como_Acceder]] (cómo usar el chat) |
 | Decisiones | [[Decisiones_Pendientes]] (todas resueltas al 2026-05-09) |
 | Repo | https://github.com/5antuca/ai.gerstner.git (privado) |
 | Dominio | `ai.kairosaisolutions.com` (A record → 46.62.235.162, TTL 3600) |
