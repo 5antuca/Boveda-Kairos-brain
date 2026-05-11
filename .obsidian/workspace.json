@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
+                "file": "proyectos/Gerstner_Studio/Drive_Assistant/Drive_Assistant.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Agente_FangioBot_Design"
+              "title": "Drive_Assistant"
             }
           }
         ]
@@ -184,8 +184,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d34a23c50ab124e8",
+  "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "test_urls.js",
+    "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Vision_Analyzer.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Fix_Matching_y_Cache.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Auto_Sync_Drive.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Como_Acceder.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/ai-gerstner/frontend/src/hooks/useChat.js",
     "proyectos/Gerstner_Studio/Drive_Assistant/ai-gerstner/frontend/src/lib/auth.js",
@@ -212,7 +217,6 @@
     "proyectos/Fangio_CRM/Trebol_Bot_Embedded.md",
     "proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant.md",
     "proyectos/Fangio_CRM/Fangio_CRM.md",
-    "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
     "scratch/repo_crudo/assets/providers/tapiceriamacarlogo.png",
     "scratch/repo_crudo/assets/providers/solga.png",
     "scratch/repo_crudo/assets/providers/rodeo.png",
@@ -228,10 +232,6 @@
     "scratch/repo_clon/README.md",
     "scratch/gerstner_repo/README.md",
     "proyectos/Gerstner_Werks/README.md",
-    "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/Token_Optimization.md",
-    "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/LLM_Providers.md",
-    "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/Supreme_Sales_Swarm.md",
-    "proyectos/Fangio_CRM/LangGraph_Bot/_archivado/Sesion_2026-04-25_Sales_Swarm_y_LLM_Migration.md",
     "Sin título.canvas",
     "Sin título 2.canvas",
     "Sin título 3.canvas",
