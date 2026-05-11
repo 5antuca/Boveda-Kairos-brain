@@ -21,7 +21,7 @@ Dos colecciones Mongo persisten datos de Drive:
 | Colección | Qué guarda | Cómo se actualiza hoy |
 |---|---|---|
 | `folder_tree` | Árbol completo de carpetas (folder_id, path, name, depth) | Solo manualmente via `POST /admin/index-drive` |
-| `folder_cache` | Listado de archivos por carpeta (id, name, mime, thumbnail_base) | Lazy en query — se llena la primera vez que alguien busca esa carpeta. TTL nominal de 24h pero `check_cache.py:14-16` no chequea `expires_at` → vive para siempre |
+| `folder_cache` | Listado de archivos por carpeta (id, name, mime, thumbnail_base) | Lazy en query — se llena la primera vez que alguien busca esa carpeta. TTL real de 45 min (chequeo en `check_cache.py` + índice TTL Mongo en `expires_at`). El límite viene de la validez del `thumbnailLink` firmado de Drive (~1h). |
 | `thumbnail_cache` | Bytes de thumbnails proxy-eados | TTL real 7 días (sí se respeta) |
 
 ### Tabla de impacto
@@ -30,7 +30,7 @@ Dos colecciones Mongo persisten datos de Drive:
 |---|---|
 | Carpeta nueva | ❌ Hasta reindex manual |
 | Renombrás carpeta | ❌ Mismo, queda con path viejo |
-| Foto nueva en carpeta existente | ❌ Sirve cache viejo (sin TTL real) |
+| Foto nueva en carpeta existente | ⚠️ Sirve cache viejo hasta 45 min (TTL real). Después se refetchea sola. |
 | Borrás carpeta | ❌ Queda huérfana en `folder_tree` |
 | Borrás foto | ❌ Sigue listada hasta limpiar `folder_cache` |
 | Reemplazás foto (mismo file_id) | ⚠️ Lista nueva pero thumbnail cacheada vieja hasta 7 días |
@@ -288,7 +288,7 @@ Si después se necesita más profundidad, agregar a Mongo una collection
 - Endpoint `/admin/sync-now` para ejecución manual.
 - Verificar que `max_instances=1` realmente bloquea overlap (test forzando
   intervalo bajo + carga).
-- Fix bug: `check_cache.py` debería respetar `expires_at` (cleanup obvio).
+- ~~Fix bug: `check_cache.py` debería respetar `expires_at`~~ → **resuelto** en `Spec_Fix_Matching_y_Cache.md` (TTL ahora 45 min, chequeado en runtime + índice TTL Mongo).
 
 **Total**: ~5 horas. Reversible 100% (apagar cron con env var, datos quedan).
 

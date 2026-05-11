@@ -54,7 +54,7 @@ solo gente con link autorizado".
 | **B — Atlas cluster nuevo** | Backups automáticos. UI de Atlas para inspección. | Costo (M0 free tiene 512MB, suficiente; M2 paga). Latencia VPS↔Atlas (~30-50ms). |
 | **C — Reusar cluster `fangiocrm` con DB nueva** | Cero costo extra, cero infra extra. | Mezcla data de clientes (Gerstner en cluster de Fangio). Mal precedente. |
 
-**Resolución (2026-05-09)**: ✅ **A — container local mongo:7** (decisión delegada al ingeniero). Razones: aislamiento físico entre clientes (no mezclar Gerstner con FangioCRM en mismo cluster), latencia <1ms, datos regenerables (folder_tree con `POST /admin/index-drive` en ~30s, folder_cache con TTL 24h). Persistencia con volume Docker `mongo_data`. Backup chico de `users` + `chat_sessions` con `mongodump` cron si hace falta. Migración a Atlas en el futuro = cambio de `MONGODB_URI`, cero lock-in.
+**Resolución (2026-05-09)**: ✅ **A — container local mongo:7** (decisión delegada al ingeniero). Razones: aislamiento físico entre clientes (no mezclar Gerstner con FangioCRM en mismo cluster), latencia <1ms, datos regenerables (folder_tree con `POST /admin/index-drive` en ~30s, folder_cache con TTL 45 min). Persistencia con volume Docker `mongo_data`. Backup chico de `users` + `chat_sessions` con `mongodump` cron si hace falta. Migración a Atlas en el futuro = cambio de `MONGODB_URI`, cero lock-in.
 
 Descartado: opción C (reusar cluster fangiocrm) — mal precedente mezclar clientes.
 

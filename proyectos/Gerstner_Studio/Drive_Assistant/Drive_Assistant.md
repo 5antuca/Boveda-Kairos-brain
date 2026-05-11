@@ -27,14 +27,60 @@ en ~600ms (cache) o ~2.5s (cold).
 | URL | **https://ai.kairosaisolutions.com** |
 | Cómo acceder (incl. mobile) | [[Como_Acceder]] |
 | Spec original | [[Spec_Original]] (recibido 2026-05-09) |
-| Spec mejoras | [[Spec_Vision_Analyzer]] · [[Spec_Auto_Sync_Drive]] · [[Spec_Fix_Matching_y_Cache]] |
+| Spec mejoras | [[Spec_Vision_Analyzer]] · [[Spec_Auto_Sync_Drive]] · [[Spec_Fix_Matching_y_Cache]] · [[Spec_Bot_Ordenador]] |
+| Implementaciones | [[Vision_Analyzer]] (fases 1-3) · [[Bot_Ordenador]] (fases 1-7, deploy 2026-05-10) · [[Metricas_Latencia]] |
+| Quickstarts | [[Como_Usar_Ordenador]] (comandos copy-paste del ordenador) · [[Como_Acceder]] (cómo usar el chat) |
 | Decisiones | [[Decisiones_Pendientes]] (todas resueltas al 2026-05-09) |
 | Repo | https://github.com/5antuca/ai.gerstner.git (privado) |
 | Dominio | `ai.kairosaisolutions.com` (A record → 46.62.235.162, TTL 3600) |
 | VPS | `46.62.235.162` (este mismo, reusa Traefik existente) |
 | Clone local | `/root/apps/ai-gerstner/` ✅ |
-| Drive root folder ID | `1aUspFknqw8fdxsowT8HMnUI6f1IGsLGy` |
+| **Drive root folder ID (sandbox)** | `1Kp4wPnKhZ-p3yj1dAdIbCJNw6i0KW5Qx` (copia bajo control del usuario, switch hecho 2026-05-10) |
+| Drive root folder ID (original taller) | `1aUspFknqw8fdxsowT8HMnUI6f1IGsLGy` (referencia, no usado por el bot) |
 | OAuth client_secret | `/root/apps/ai-gerstner/credentials/client_secret.json` ✅ |
+
+---
+
+## 🔄 Switch a sandbox (2026-05-10)
+
+A partir del 2026-05-10 el bot **no apunta más al Drive del taller original**.
+Apunta a una copia (`1Kp4wPnKhZ-p3yj1dAdIbCJNw6i0KW5Qx`) que vive en el Drive
+personal del usuario y que él controla. Razones:
+
+1. **Experimentación segura**: poder probar futuras features de escritura
+   (renombrar, mover, ordenar fotos) sin riesgo de tocar el Drive de producción
+   de Andreas.
+2. **Estructura más limpia**: la copia tiene 140 carpetas (vs 386 originales)
+   con proyectos al root (Shelby Cobra 289, Cobra 427, Singer, etc) en vez
+   de sepultados en `00 Fotos Trabajos Gerstner/FOTOS FALTA ORDENAR/`.
+3. **Bot ordenador (futuro)**: cuando se diseñe el agente que renombra/mueve
+   automáticamente, opera sobre esta copia, no sobre el original.
+
+⚠️ **Implicancia**: cualquiera que use `https://ai.kairosaisolutions.com`
+ahora ve contenido del sandbox, no del taller original. Si Andreas quiere
+ver el Drive de prod, hay que volver a apuntar el `.env` al ID original.
+
+Comandos del switch documentados en [[Vision_Analyzer]] (sección "Reindex
+selectivo") y resumidos acá:
+
+```bash
+# 1. Cambiar .env
+sed -i 's|DRIVE_ROOT_FOLDER_ID=.*|DRIVE_ROOT_FOLDER_ID=<NUEVO_ID>|' .env
+cd /root/apps/ai-gerstner && docker compose up -d backend --force-recreate
+
+# 2. Limpiar todo lo del root viejo
+docker exec ai-gerstner-mongo mongosh gerstner_drive --eval 'db.folder_tree.deleteMany({})'
+curl -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" .../api/admin/cache
+curl -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" .../api/admin/vision
+curl -X DELETE -H "Authorization: Bearer $ADMIN_TOKEN" .../api/admin/sessions
+
+# 3. Reindex contra la copia
+curl -X POST -H "Authorization: Bearer $ADMIN_TOKEN" .../api/admin/index-drive
+
+# 4. Tag-all en background
+curl -X POST -H "Authorization: Bearer $ADMIN_TOKEN" \
+  ".../api/admin/vision/tag-all?n_samples=5"
+```
 
 ---
 

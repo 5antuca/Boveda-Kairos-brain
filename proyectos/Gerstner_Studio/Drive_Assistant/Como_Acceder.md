@@ -78,7 +78,7 @@ Aparece como ícono en tu home screen, abre fullscreen sin barra del browser.
 ## Performance esperada
 
 - **Primera query** (cache miss): 2-4 segundos.
-- **Mismo proyecto en queries siguientes**: <1 segundo (cache 24h).
+- **Mismo proyecto en queries siguientes**: <1 segundo (cache 45 min — limitado por la validez del thumbnailLink firmado de Drive, ~1h).
 - **Imágenes**: aparecen con skeleton shimmer y fade-in suave; las primeras 6 cargan inmediato, el resto al ir scrolleando.
 
 ---
