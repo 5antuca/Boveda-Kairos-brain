@@ -205,8 +205,16 @@ POST /api/chat/  { query, session_id }
        │           ▼
        │  ┌─────────────────────────────────────────────────┐
        │  │  generate_response                               │
-       │  │    LLM (gpt-4.1-mini) elige hasta 20 file_ids    │
-       │  │    + redacta texto en español ("Encontré N…")   │
+       │  │    1. Selección DETERMINÍSTICA hasta 20 imgs     │
+       │  │       (filtro por visual_filter contra           │
+       │  │       image_vision_cache si hay)                 │
+       │  │    2. LLM chico (gpt-4.1-mini) compone TEXTO     │
+       │  │       tipo agente: menciona el último segmento   │
+       │  │       del path matcheado + ofrece 2-3 carpetas   │
+       │  │       hermanas (siblings) o hijas (children)     │
+       │  │       como alternativa cuando hay <15 fotos      │
+       │  │       o el query era específico. Fallback a      │
+       │  │       template estático si la llamada falla.     │
        │  └────────┬────────────────────────────────────────┘
        │           ▼
        └────  state final con text + images
@@ -401,6 +409,7 @@ Pasos en orden:
 
 | Gap | Cómo se manifiesta | Cuándo lo arreglamos |
 |---|---|---|
+| Bot ofrece carpetas pero el "sí" no es un botón | Si el bot ofrece "tapizado de techo" y respondés "sí pasame esas", el `parse_intent` lo trata como query nueva — funciona, pero podría ser más prolijo con chips/botones clickeables en el frontend | Backlog: protocolo `suggested_folders` en la respuesta + UI de chips |
 | No hay sync automático Drive → Mongo | Subís fotos nuevas, no aparecen hasta que pegues `/admin/index-drive` | [[Spec_Auto_Sync_Drive]] (propuesto) |
 | Matching nivel carpeta, no archivo | "asientos cuero" sin proyecto devuelve 0 | Opción A: per-file vision (backlog) |
 | Sin embeddings vectoriales | "auto rojo descapotable 60s" no funciona como búsqueda semántica | Opción B: text-embedding-3-small + Atlas Vector Search (backlog) |
