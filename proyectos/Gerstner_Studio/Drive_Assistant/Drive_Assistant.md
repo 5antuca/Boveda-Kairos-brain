@@ -29,6 +29,7 @@ en ~600ms (cache) o ~2.5s (cold).
 | Spec pendiente | [[Spec_Auto_Sync_Drive]] (cron de sync, todavía no implementado) |
 | Implementaciones | [[Vision_Analyzer]] (fases 1-3) · [[Bot_Ordenador]] (fases 1-7, deploy 2026-05-10) · [[Metricas_Latencia]] |
 | Cómo funciona end-to-end | [[Funcionamiento]] (arquitectura, flujo LangGraph, schemas Mongo, gaps conocidos) |
+| Roadmap de mejoras | [[Roadmap]] (plan de 10 chunks para llegar a per-file matching) |
 | Tests de regresión | [[Tests_Regresion]] (catálogo de bugs históricos + script) |
 | Quickstarts | [[Como_Usar_Ordenador]] (comandos copy-paste del ordenador) · [[Como_Acceder]] (cómo usar el chat) |
 | Repo | https://github.com/5antuca/ai.gerstner.git (privado) |
