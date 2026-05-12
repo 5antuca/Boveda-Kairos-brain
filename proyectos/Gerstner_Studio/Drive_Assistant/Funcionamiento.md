@@ -289,7 +289,18 @@ Latencias típicas (de [[Metricas_Latencia]]):
 
 ## 🔄 ¿Cómo se actualiza el folder_tree cuando cambia Drive?
 
-**Hoy, manualmente.** Endpoints admin:
+**Automático cada 15 min** desde Chunk 8 (2026-05-12) — APScheduler corre
+`sync_drive_job` dentro del proceso FastAPI. Apagable con
+`DRIVE_SYNC_ENABLED=false` en `.env` (no requiere rebuild).
+
+Detecta automáticamente:
+- Carpetas nuevas → upsert en folder_tree + opcionalmente vision-tag (con
+  `DRIVE_SYNC_RETAG_NEW=true`, default).
+- Carpetas renombradas/movidas → invalida folder_cache para refetch.
+- Carpetas borradas → delete de folder_tree + folder_cache (sin huérfanos).
+- Log estructurado en `drive_sync_log` con métricas por corrida.
+
+Trigger manual también disponible. Endpoints admin:
 
 ```bash
 ADMIN=$(grep ADMIN_TOKEN /root/apps/ai-gerstner/.env | cut -d= -f2)
@@ -305,15 +316,27 @@ curl -X POST -H "Authorization: Bearer $ADMIN" \
 # Forzar limpieza completa de vision (re-tag desde cero)
 curl -X DELETE -H "Authorization: Bearer $ADMIN" \
   https://ai.kairosaisolutions.com/api/admin/vision
+
+# Forzar sync inmediato (no esperar 15min)
+curl -X POST -H "Authorization: Bearer $ADMIN" \
+  https://ai.kairosaisolutions.com/api/admin/sync-now
+
+# Ver histórico de las últimas N corridas del scheduler
+curl -H "Authorization: Bearer $ADMIN" \
+  "https://ai.kairosaisolutions.com/api/admin/sync-log?limit=20"
 ```
 
-⚠️ **Gotcha conocido**: el indexer hace `upsert` por `folder_id`. Si una carpeta
-se borra y recrea en Drive (folder_id nuevo), Mongo queda con la entrada vieja
-huérfana. **Hay que limpiar manualmente** cuando pase (script en
-[[Drive_Assistant]] o ver historial 2026-05-12 cuando se limpiaron 140 huérfanos).
+Variables de entorno relacionadas:
 
-La automatización de esto está propuesta en [[Spec_Auto_Sync_Drive]] (cron
-interno cada 15 min) — todavía no implementada.
+| Var | Default | Para qué |
+|---|---|---|
+| `DRIVE_SYNC_ENABLED` | `true` | Kill switch del scheduler sin rebuild |
+| `DRIVE_SYNC_INTERVAL_MIN` | `15` | Cada cuántos minutos corre |
+| `DRIVE_SYNC_RETAG_NEW` | `true` | Si carpetas nuevas se vision-taggean automático |
+
+⚠️ **Carpetas borradas-y-recreadas (folder_id nuevo)**: el sync auto las
+detecta y limpia. Esto resuelve el bug histórico de huérfanos (2026-05-12,
+140 huérfanos por reindex no idempotente — ya no debería volver a pasar).
 
 ---
 
@@ -410,7 +433,6 @@ Pasos en orden:
 | Gap | Cómo se manifiesta | Cuándo lo arreglamos |
 |---|---|---|
 | Bot ofrece carpetas pero el "sí" no es un botón | Si el bot ofrece "tapizado de techo" y respondés "sí pasame esas", el `parse_intent` lo trata como query nueva — funciona, pero podría ser más prolijo con chips/botones clickeables en el frontend | Backlog: protocolo `suggested_folders` en la respuesta + UI de chips |
-| No hay sync automático Drive → Mongo | Subís fotos nuevas, no aparecen hasta que pegues `/admin/index-drive` | [[Spec_Auto_Sync_Drive]] (propuesto) |
 | Matching nivel carpeta, no archivo | "asientos cuero" sin proyecto devuelve 0 | Opción A: per-file vision (backlog) |
 | Sin embeddings vectoriales | "auto rojo descapotable 60s" no funciona como búsqueda semántica | Opción B: text-embedding-3-small + Atlas Vector Search (backlog) |
 | 2 carpetas "Singer" en Drive | "fotos singer" puede caer en la vacía vs la con fotos | Ejecutar [[Bot_Ordenador]] sobre `FOTOS FALTA ORDENAR (carpetas viejas)` |

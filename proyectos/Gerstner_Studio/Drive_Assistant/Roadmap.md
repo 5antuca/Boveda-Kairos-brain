@@ -50,7 +50,7 @@ ni distingue piezas específicas porque el schema actual es muy genérico
 | 5 | Tag-all 100% con v2 (idempotente, ~$2-4 USD) | 0.5d | ✅ 495 imgs v2 + 108 carpetas |
 | 6 | Per-file filter + canonicalización en `parse_intent` | 3d | ✅ 2026-05-12 — 22/22 regresión |
 | 7 | UI admin de validación (endpoint HTML con muestra random) | 0.5d | Pendiente |
-| 8 | Polling cada 15 min (NO webhooks) | 1d | Pendiente |
+| 8 | Polling cada 15 min (NO webhooks) | 1d | ✅ 2026-05-12 — APScheduler + /admin/sync-now |
 | 9 | Auto-naming via Bot Ordenador (DESPUÉS de 1 semana de uso) | 2d | Pendiente |
 | 10 | Embeddings + Atlas Vector Search (SOLO si 6 no alcanza) | 5d | Backlog |
 
