@@ -47,8 +47,8 @@ ni distingue piezas específicas porque el schema actual es muy genérico
 | 2 | Telemetría: collection `query_log` para tunear con datos reales | 0.5d | ✅ 2026-05-12 |
 | 3 | Prompt vision v2 + few-shot + `schema_version` field | 1d | ✅ 2026-05-12 |
 | 4 | Validación manual del prompt en 20 imgs random | 0.5d | ✅ 17/20 OK (85%) con folder hint |
-| 5 | Tag-all 100% con v2 (idempotente, ~$2-4 USD) | 0.5d | 🔄 EN CURSO (background) |
-| 6 | Nodo `match_files` + canonicalización en `parse_intent` | 3d | Pendiente |
+| 5 | Tag-all 100% con v2 (idempotente, ~$2-4 USD) | 0.5d | ✅ 495 imgs v2 + 108 carpetas |
+| 6 | Per-file filter + canonicalización en `parse_intent` | 3d | ✅ 2026-05-12 — 22/22 regresión |
 | 7 | UI admin de validación (endpoint HTML con muestra random) | 0.5d | Pendiente |
 | 8 | Polling cada 15 min (NO webhooks) | 1d | Pendiente |
 | 9 | Auto-naming via Bot Ordenador (DESPUÉS de 1 semana de uso) | 2d | Pendiente |

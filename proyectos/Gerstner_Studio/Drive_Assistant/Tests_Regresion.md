@@ -85,6 +85,36 @@ buscar la IA"*.
 | `motor ferrari` | Ferrari * |
 | `fotos del bronco` | Bronco |
 
+### Per-file matching v2 (Chunk 6, 2026-05-12)
+
+**Bug original**: queries con pieza específica devolvían 0 o resultados mezclados
+porque el matcher trabajaba solo a nivel carpeta. Ej. "asientos cuero" sin proyecto
+devolvía 0 (sin project_token → top-30 carpetas cortas, nada de butacas).
+"espejos jaguar" devolvía 0 porque el LLM de match_folders era muy estricto y no
+elegía ningún Jaguar al no tener "espejos" en path.
+
+**Fix aplicado**:
+1. `parse_intent` agrega 3 campos canónicos: `pieza_canonica`, `marca_canonica`,
+   `color_canonico` mapeados al enum de 65 piezas.
+2. `generate_response` agrega `_match_files_by_canonical` que filtra
+   `image_vision_cache` por `pieza_especifica == pieza_canonica` exact match
+   (solo en tags v2 — los v1 pasan como untagged para no perder cobertura).
+3. Fallback heurístico: si la carpeta es chica (≤15 archivos) y el filtro v2
+   devuelve 0 matches sin untagged, mostrar todo el folder (trust del contexto
+   de carpeta).
+4. Prompt de `match_folders` actualizado para devolver carpetas del proyecto
+   AUNQUE no tengan la pieza en path — el per-file filter las selecciona.
+
+| Query | Folder esperado | Cubre |
+|---|---|---|
+| `tablero singer` | Singer * | pieza_canonica=tablero_dashboard |
+| `asientos cuero` | Singer * | pieza+material sin proyecto explícito (gap conocido del v1!) |
+| `llantas porsche singer` | Singer * | pieza+proyecto |
+| `volante porsche singer` | Singer * | pieza específica con pocos resultados |
+| `capot porsche singer` | Capot subfolder | fallback de "carpeta chica" cuando tags están mal |
+| `frenos singer` | Singer * | filtro canónico |
+| `espejos jaguar` | Jaguar * | pieza resuelve aunque path no tenga "espejos" |
+
 ---
 
 ## Casos NO cubiertos por la suite (gaps conocidos)
@@ -106,6 +136,7 @@ cuando se implemente la solución correspondiente:
 | Fecha | Cambio | Tests sumados |
 |---|---|---|
 | 2026-05-12 | Suite inicial, fix variants + visual boost combinado | 15 casos (9 variants + 3 base + 3 smoke) |
+| 2026-05-12 | Chunk 6 — per-file matching v2 (pieza_canonica + marca + color) | +7 casos (per-file matching) → 22 total |
 
 ---
 
