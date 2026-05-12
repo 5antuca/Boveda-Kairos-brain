@@ -144,11 +144,10 @@ El servidor de **DonWeb** tiene límites estrictos de conexión y timeouts que s
 
 Para garantizar un deploy exitoso, se han implementado las siguientes configuraciones en `.github/workflows/deploy.yml`:
 
-1.  **Subida Secuencial (`parallel: 1`)**: DonWeb cierra la conexión si se intentan subir múltiples archivos en paralelo. Esta opción asegura que los archivos se transfieran uno a uno.
-2.  **Protocolo FTP Plano (`protocol: ftp`)**: Se ha encontrado que es más estable que FTPS para este proveedor específico, evitando fallos durante el handshake de seguridad.
-3.  **Timeout Extendido (`timeout: 1800000`)**: Configurado en 30 minutos para permitir la subida lenta y secuencial de todos los assets.
-4.  **Exclusiones de Sync**: Se excluyen carpetas como `.github`, `node_modules` y `scripts` para reducir la cantidad de archivos y el tiempo de conexión.
-5.  **Versión de Node**: Se utiliza **Node 20** para garantizar la compatibilidad total con la acción de FTP.
+1.  **Protocolo FTP Plano (`protocol: ftp`)**: Se ha encontrado que es más estable que FTPS para este proveedor específico, evitando fallos durante el handshake de seguridad.
+2.  **Timeout Extendido (`timeout: 1800000`)**: Configurado en 30 minutos para permitir la subida lenta de todos los assets sin cortes prematuros.
+3.  **Exclusiones de Sync**: Se excluyen carpetas como `.github`, `node_modules` y `scripts` para reducir drásticamente la cantidad de archivos y el tiempo de conexión.
+4.  **Versión de Node**: Se utiliza **Node 24** para garantizar la compatibilidad total con la acción de FTP.
 
 ---
 
