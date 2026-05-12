@@ -17,6 +17,9 @@ Sitio institucional principal que presenta la marca, los servicios de restauraci
 - **Configurador 3D Porsche 911** (`studio.gerstnerwerks.com`) → [[../Gerstner_Studio/Configurador_911/ROADMAP|ROADMAP]]
 - **Drive Assistant** (`gerstnerwerks.ai`, en diseño 2026-05-09) → [[../Gerstner_Studio/Drive_Assistant/Drive_Assistant|Dashboard]]
 
+### Docs técnicas de la landing
+- [[logicaDeCargaFotosGalerias]] — Cómo funciona el skeleton+LQIP+blur-up y la precarga secuencial del lightbox (2026-05-12)
+
 > Reorganización 2026-05-09: el subfolder `Gerstner_Studio/` que estaba acá adentro fue movido a `proyectos/Gerstner_Studio/Configurador_911/` para evitar la duplicación de nombres con el nuevo paraguas top-level.
 
 ---
