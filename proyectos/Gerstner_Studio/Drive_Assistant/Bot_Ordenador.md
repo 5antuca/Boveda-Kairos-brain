@@ -2,13 +2,12 @@
 tags: [gerstner-studio, drive-assistant, ordenador, drive-write, deployed]
 fecha-creacion: 2026-05-10
 estado: ACTIVO — fases 1-7 deployadas el 2026-05-10
-relacionado: [[Spec_Bot_Ordenador]], [[Drive_Assistant]], [[Vision_Analyzer]]
+relacionado: [[Drive_Assistant]], [[Vision_Analyzer]]
 ---
 
 # Bot Ordenador — implementación
 
-Spec original en [[Spec_Bot_Ordenador]]. Este doc cubre lo que está
-**deployado** y cómo usarlo.
+Este doc cubre lo que está **deployado** y cómo usarlo.
 
 ## Fases implementadas
 
@@ -157,7 +156,7 @@ _PARA_REVISAR/     (creada en el scope original — los archivos low-confidence)
 
 ## Schemas
 
-Detalle completo en [[Spec_Bot_Ordenador]]. Resumen:
+Resumen:
 
 **`drive_changes_log`**: cada operación de escritura registra una entrada
 con `change_id`, `batch_id`, `operation`, `file_id`, `before`, `after`,

@@ -2,7 +2,7 @@
 tags: [gerstner-studio, drive-assistant, spec, sync, mejora]
 fecha: 2026-05-09
 estado: PROPUESTO — pendiente implementación
-relacionado: [[Drive_Assistant]], [[Spec_Original]], [[Decisiones_Pendientes]]
+relacionado: [[Drive_Assistant]]
 ---
 
 # Spec — Auto-sync de cambios en Drive
@@ -241,7 +241,7 @@ async def trigger_sync_now():
 
 Y en el sidebar del frontend (que ya armamos), agregar un botón
 "🔄 Sincronizar Drive ahora" cuando el user esté autenticado como admin.
-**Fuera de scope de esta spec** — backlog en [[Decisiones_Pendientes]].
+**Fuera de scope de esta spec** — backlog.
 
 ### 6. Variables de entorno nuevas
 
@@ -288,7 +288,7 @@ Si después se necesita más profundidad, agregar a Mongo una collection
 - Endpoint `/admin/sync-now` para ejecución manual.
 - Verificar que `max_instances=1` realmente bloquea overlap (test forzando
   intervalo bajo + carga).
-- ~~Fix bug: `check_cache.py` debería respetar `expires_at`~~ → **resuelto** en `Spec_Fix_Matching_y_Cache.md` (TTL ahora 45 min, chequeado en runtime + índice TTL Mongo).
+- ~~Fix bug: `check_cache.py` debería respetar `expires_at`~~ → **resuelto** (TTL ahora 45 min, chequeado en runtime + índice TTL Mongo).
 
 **Total**: ~5 horas. Reversible 100% (apagar cron con env var, datos quedan).
 

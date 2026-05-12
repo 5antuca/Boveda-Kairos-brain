@@ -163,6 +163,6 @@ Devuelve emails, fecha de creación, último uso y si está revocado.
 ## Referencias
 
 - [[Drive_Assistant]] — dashboard del proyecto.
-- [[Decisiones_Pendientes]] — todas las decisiones de diseño cerradas.
+- [[Drive_Assistant#✅ Decisiones tomadas (2026-05-09)]] — decisiones de diseño cerradas.
 - Repo: https://github.com/5antuca/ai.gerstner
 - Código local en VPS: `/root/apps/ai-gerstner/`

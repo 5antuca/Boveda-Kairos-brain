@@ -2,7 +2,7 @@
 tags: [gerstner-studio, drive-assistant, ordenador, quickstart]
 fecha: 2026-05-10
 estado: ACTIVO
-relacionado: [[Bot_Ordenador]] (detalle técnico) · [[Spec_Bot_Ordenador]] (spec)
+relacionado: [[Bot_Ordenador]] (detalle técnico)
 ---
 
 # Cómo usar el Bot Ordenador — Guía rápida

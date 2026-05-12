@@ -2,7 +2,7 @@
 tags: [gerstner-studio, drive-assistant, vision, llm, openai]
 fecha-creacion: 2026-05-10
 estado: ACTIVO — desplegado el 2026-05-10 (Fases 1-3)
-relacionado: [[Drive_Assistant]], [[Spec_Vision_Analyzer]], [[Metricas_Latencia]]
+relacionado: [[Drive_Assistant]], [[Metricas_Latencia]]
 ---
 
 # Vision Analyzer — implementación
@@ -13,8 +13,8 @@ que el bot pueda responder queries del estilo "tablero shelby cobra",
 "jaguar amarillo", "asientos cuero" — donde la respuesta NO está en el
 nombre de la carpeta sino en el contenido de las fotos.
 
-Spec original aprobado en [[Spec_Vision_Analyzer]] (approach C híbrido).
-Este doc cubre la **implementación deployada**.
+Approach C híbrido (pre-tag liviano de 5 muestras por carpeta + on-demand
+para queries con filtros raros). Este doc cubre la **implementación deployada**.
 
 ---
 
@@ -208,6 +208,6 @@ db.folder_tree.findOne(
   Tag-all sobre 140 carpetas de la copia del Drive lanzado en background.
 - **Próximos pasos sugeridos**:
   1. Validar queries golden post tag-all completo.
-  2. On-demand sampling como fallback (Spec_Vision_Analyzer.B): cuando ninguna
-     carpeta del proyecto tiene match visual, samplear en vivo. Pendiente.
+  2. On-demand sampling como fallback: cuando ninguna carpeta del proyecto
+     tiene match visual, samplear en vivo. Pendiente.
   3. Cron de invalidación por mtime cuando exista [[Spec_Auto_Sync_Drive]].

@@ -2,7 +2,7 @@
 tags: [gerstner-studio, drive-assistant, observability, metrics]
 fecha-creacion: 2026-05-10
 estado: ACTIVO — desplegado el 2026-05-10
-relacionado: [[Drive_Assistant]], [[Spec_Fix_Matching_y_Cache]]
+relacionado: [[Drive_Assistant]]
 ---
 
 # Métricas de latencia — Drive Assistant

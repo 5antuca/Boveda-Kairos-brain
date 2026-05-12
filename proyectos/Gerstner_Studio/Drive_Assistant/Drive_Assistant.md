@@ -26,11 +26,9 @@ en ~600ms (cache) o ~2.5s (cold).
 |---|---|
 | URL | **https://ai.kairosaisolutions.com** |
 | Cómo acceder (incl. mobile) | [[Como_Acceder]] |
-| Spec original | [[Spec_Original]] (recibido 2026-05-09) |
-| Spec mejoras | [[Spec_Vision_Analyzer]] · [[Spec_Auto_Sync_Drive]] · [[Spec_Fix_Matching_y_Cache]] · [[Spec_Bot_Ordenador]] |
+| Spec pendiente | [[Spec_Auto_Sync_Drive]] (cron de sync, todavía no implementado) |
 | Implementaciones | [[Vision_Analyzer]] (fases 1-3) · [[Bot_Ordenador]] (fases 1-7, deploy 2026-05-10) · [[Metricas_Latencia]] |
 | Quickstarts | [[Como_Usar_Ordenador]] (comandos copy-paste del ordenador) · [[Como_Acceder]] (cómo usar el chat) |
-| Decisiones | [[Decisiones_Pendientes]] (todas resueltas al 2026-05-09) |
 | Repo | https://github.com/5antuca/ai.gerstner.git (privado) |
 | Dominio | `ai.kairosaisolutions.com` (A record → 46.62.235.162, TTL 3600) |
 | VPS | `46.62.235.162` (este mismo, reusa Traefik existente) |
@@ -153,7 +151,7 @@ El spec no tiene auth en `/api/chat`. Hay que agregar:
 - **Mejor**: tokens por persona (cada miembro del equipo tiene su URL única + revocable).
 - **Best**: Google Workspace login del equipo del taller.
 
-Definir en [[Decisiones_Pendientes#Auth de la app]].
+Resuelto: tokens por persona (Mongo `users` + magic links).
 
 ### Otros menores
 - `@app.on_event("startup")` → `lifespan` context manager (FastAPI moderno).
@@ -180,7 +178,7 @@ Definir en [[Decisiones_Pendientes#Auth de la app]].
 4. Tests unitarios de los nodos críticos (`parse_intent`, `match_folders`, `generate_response`).
 
 ### Fase 3 — Deploy (1 día)
-1. Decidir VPS (este mismo recomendado; ver Decisiones_Pendientes).
+1. Decidir VPS (este mismo recomendado).
 2. Comprar dominio `gerstnerwerks.ai`.
 3. Crear A record → IP del VPS.
 4. Levantar containers con labels Traefik.
@@ -194,19 +192,8 @@ Definir en [[Decisiones_Pendientes#Auth de la app]].
 
 ---
 
-## 🚧 Bloqueantes para arrancar Fase 1
-
-1. **Confirmar decisiones pendientes** en [[Decisiones_Pendientes]].
-2. **Acceso al Drive**: verificar que tu cuenta Google tiene acceso de lectura a la carpeta raíz del taller. Pedir el folder_id (en la URL de Drive cuando abrís la carpeta).
-3. **OAuth Client** en Google Cloud Console (gratis, 5 min). Lo armo cuando arranquemos.
-4. **Repo nuevo en GitHub**: nombre y org.
-
----
-
 ## 📚 Referencias
 
-- [[Spec_Original]] — spec recibido del usuario el 2026-05-09 (verbatim, antes de modificaciones).
-- [[Decisiones_Pendientes]] — D-list para resolver antes/durante implementación.
 - [[../Gerstner_Studio|Gerstner Studio (proyecto paraguas)]].
 - [[../../Gerstner_Werks/README|Gerstner Werks (taller / cliente final)]].
 - [Drive API v3 — OAuth desktop apps](https://developers.google.com/identity/protocols/oauth2/native-app).
