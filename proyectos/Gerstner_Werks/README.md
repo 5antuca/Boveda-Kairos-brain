@@ -99,12 +99,44 @@ La sección `Proyectos` de la landing se genera en deploy desde la API de Cloudi
 
 - Para `Proyectos`, la generación debe filtrar por `asset_folder` (no por `prefix/public_id`).
 - Carpetas verificadas actualmente:
-  - `Aston Martin DB3`
-  - `Aston Martin Vantage`
+  - `Porsche 964 Gerstner`
+  - `Porsche 911 1965`
+  - `Porsche 964 Targa`
+  - `Porsche 911 Carrera`
+  - `Porsche 993 Turbo`
+  - `Porsche 911 Targa`
+  - `Ferrari 488 Spider`
+  - `Ferrari 488 GTB`
   - `Ferrari Dino`
-  - `Ford Bronco`
-  - `Jaguar e-type cabriolet`
-- Si en Cloudinary se renombra una carpeta, actualizar `assets/projects.config.json` en la landing.
+  - `Jaguar E-Type 60s`
+  - `Jaguar E-Type Cabriolet`
+  - `Jaguar E-Type Roadster`
+  - `Jaguar E-Type V12`
+  - `Jaguar E-Type (1)`
+  - `Aston Martin DB3`
+  - `Aston Martin DB5`
+  - `Aston Martin Vantage`
+  - `Shelby Cobra 289`
+  - `Shelby Cobra 427`
+  - `shelby cobra 427 (1)`
+  - `Ford Mustang Fastback 1966`
+  - `Ford Mustang Fastback 1969`
+  - `Ford Early Bronco`
+  - `Ford SVT F150 Lightning`
+  - `Mercedes-Benz 560 SL`
+  - `Mercedes-Benz 230 SL`
+  - `Ford Coupe 1938`
+  - `Land Rover Defender 90`
+  - `Land Rover`
+  - `Camaro Z28`
+  - `Maserati Ghibli Spyder`
+  - `Torino 380 W`
+  - `Chevrolet Corvette C1`
+  - `Toyota Hilux Back to the Future 1 y 2`
+  - `Toyota Hilux Competición`
+  - `Toyota Hilux Rally`
+  - `BMW De Carlo`
+- Si en Cloudinary se añade una carpeta nueva, el script la detectará automáticamente si es de primer nivel. Si se necesita orden específico o cover manual, actualizar `assets/projects.config.json` en la landing.
 
 #### Deploy Stability (DonWeb & FTP)
 
