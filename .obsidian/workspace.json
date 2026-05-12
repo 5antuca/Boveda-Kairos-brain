@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "proyectos/Gerstner_Studio/Drive_Assistant/Drive_Assistant.md",
+                "file": "proyectos/Gerstner_Studio/Drive_Assistant/Funcionamiento.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Drive_Assistant"
+              "title": "Funcionamiento"
             }
           }
         ]
@@ -184,8 +184,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "0c64062070f3eba7",
+  "active": "d34a23c50ab124e8",
   "lastOpenFiles": [
+    "proyectos/Gerstner_Werks/logicaDeCargaFotosGalerias.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Roadmap.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Drive_Assistant.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Tests_Regresion.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Funcionamiento.md",
     "med_curl_results.txt",
@@ -210,7 +213,6 @@
     "proyectos/Gerstner_Studio/Drive_Assistant/ai-gerstner/frontend/src/lib/auth.js",
     "proyectos/Gerstner_Studio/Drive_Assistant/ai-gerstner/README.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Original.md",
-    "proyectos/Gerstner_Studio/Drive_Assistant/Drive_Assistant.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Decisiones_Pendientes.md",
     "proyectos/Gerstner_Studio/Configurador_911/ROADMAP.md",
     "proyectos/Gerstner_Studio/Configurador_911/README.md",
@@ -220,8 +222,6 @@
     "proyectos/Fangio_CRM/Roadmap_Stock_Ingestion_v1.md",
     "proyectos/Fangio_CRM/Roadmap_Backend.md",
     "proyectos/Fangio_CRM/SheetsToMongo_RAG_Inventario.md",
-    "proyectos/Fangio_CRM/Trebol_Bot_Embedded.md",
-    "proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant.md",
     "scratch/repo_crudo/assets/providers/tapiceriamacarlogo.png",
     "scratch/repo_crudo/assets/providers/solga.png",
     "scratch/repo_crudo/assets/providers/rodeo.png",
