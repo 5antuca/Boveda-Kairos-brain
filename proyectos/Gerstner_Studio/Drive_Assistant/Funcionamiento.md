@@ -7,7 +7,7 @@ relacionado: [[Drive_Assistant]], [[Vision_Analyzer]], [[Bot_Ordenador]], [[Metr
 
 # Funcionamiento del Drive Assistant
 
-Doc explicativo de cómo funciona el bot que vive en `https://ai.kairosaisolutions.com`.
+		Doc explicativo de cómo funciona el bot que vive en `https://ai.kairosaisolutions.com`.
 Pensado para alguien que entra a tocar el código sin contexto previo. Refleja
 el estado **deployado al 2026-05-12**.
 
