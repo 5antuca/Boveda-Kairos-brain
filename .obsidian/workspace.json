@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "proyectos/Gerstner_Studio/Drive_Assistant/Funcionamiento.md",
+                "file": "proyectos/Gerstner_Studio/Drive_Assistant/Como_Usar_Ordenador.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Funcionamiento"
+              "title": "Como_Usar_Ordenador"
             }
           }
         ]
@@ -184,13 +184,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d34a23c50ab124e8",
+  "active": "0c64062070f3eba7",
   "lastOpenFiles": [
+    "proyectos/Gerstner_Studio/Drive_Assistant/Como_Acceder.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Como_Usar_Ordenador.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Bot_Ordenador.md",
+    "proyectos/Gerstner_Studio/Drive_Assistant/Funcionamiento.md",
     "proyectos/Gerstner_Werks/logicaDeCargaFotosGalerias.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Roadmap.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Drive_Assistant.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Tests_Regresion.md",
-    "proyectos/Gerstner_Studio/Drive_Assistant/Funcionamiento.md",
     "med_curl_results.txt",
     "med_urls.txt",
     "video_curl_results.txt",
@@ -201,14 +204,11 @@
     "proyectos/Gerstner_Studio/Drive_Assistant/Vision_Analyzer.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Bot_Ordenador.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Metricas_Latencia.md",
-    "proyectos/Gerstner_Studio/Drive_Assistant/Como_Usar_Ordenador.md",
-    "proyectos/Gerstner_Studio/Drive_Assistant/Bot_Ordenador.md",
     "test_urls.js",
     "proyectos/Fangio_CRM/Agente_FangioBot_Design.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Vision_Analyzer.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Fix_Matching_y_Cache.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/Spec_Auto_Sync_Drive.md",
-    "proyectos/Gerstner_Studio/Drive_Assistant/Como_Acceder.md",
     "proyectos/Gerstner_Studio/Drive_Assistant/ai-gerstner/frontend/src/hooks/useChat.js",
     "proyectos/Gerstner_Studio/Drive_Assistant/ai-gerstner/frontend/src/lib/auth.js",
     "proyectos/Gerstner_Studio/Drive_Assistant/ai-gerstner/README.md",

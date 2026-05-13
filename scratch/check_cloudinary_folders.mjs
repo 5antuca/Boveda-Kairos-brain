@@ -1,37 +1,38 @@
 import { readFile } from "node:fs/promises";
 
-const cloudName = "dttrfxbio";
-const apiKey = "415316417757989";
-const apiSecret = "kH2QZ-Z52O_BOnSgqS9qVf7_f9M"; // I'll try to find them from environment if possible, or use placeholders to see if it works
+const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+const apiKey = process.env.CLOUDINARY_API_KEY;
+const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-// Wait, I don't have the secrets. I'll check if I can find them in the environment.
-console.log("Checking secrets...");
-console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME);
-
-async function checkFolders() {
-  const authHeader = `Basic ${Buffer.from(`${process.env.CLOUDINARY_API_KEY}:${process.env.CLOUDINARY_API_SECRET}`).toString("base64")}`;
+async function searchLogos() {
+  const authHeader = `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString("base64")}`;
   
-  const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/search`;
-  const body = {
-    expression: "resource_type:(image OR video)",
-    max_results: 500,
-  };
+  const logos = ["braidLogo", "chnbllogo", "carbonfibersolutionslogo", "neumaticosderossilogo", "rodeo", "RGBlogo", "Spinneybecklogo", "tapiceriamacarlogo", "GRlogo", "solga"];
+  
+  console.log("Searching for Provider Logos:");
+  for (const name of logos) {
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/resources/search`;
+    const body = {
+      expression: name,
+      max_results: 1,
+    };
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      Authorization: authHeader,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: authHeader,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
 
-  const payload = await res.json();
-  const folders = new Set();
-  payload.resources.forEach(r => {
-    if (r.asset_folder) folders.add(r.asset_folder);
-  });
-  console.log("Discovered Folders:", [...folders].sort());
+    const payload = await res.json();
+    if (payload.resources && payload.resources.length > 0) {
+      console.log(`- ${name}: FOUND -> ${payload.resources[0].secure_url}`);
+    } else {
+      console.log(`- ${name}: NOT FOUND`);
+    }
+  }
 }
 
-checkFolders();
+searchLogos();
