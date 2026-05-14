@@ -37,6 +37,14 @@ Singer entera y devuelve fotos genéricas. El bot no busca a nivel archivo
 ni distingue piezas específicas porque el schema actual es muy genérico
 ("parte_visible: capot" mezcla tornillos, juntas, bisagras, pintura).
 
+> **Update 2026-05-14**: Para Modo Presentación se decidió ir por la vía
+> contraria: en vez de buscar más granular, **multiplicar carpetas** (60
+> nuevas) para que cada concepto tenga su carpeta dedicada. La indexación
+> ahora es **folder-as-piece** sin LLM extractor — totalmente determinística.
+> Ver [[Reorg_Singer_2026_05_14]]. Esto cambió el folder_tree (132 → 237
+> carpetas) pero NO el schema de image_vision_cache; los chunks de matching
+> a nivel archivo siguen pendientes para el modo Chat.
+
 ---
 
 ## Plan en 10 chunks (orden ratificado 2026-05-12)

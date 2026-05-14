@@ -2,14 +2,16 @@
 tags: [gerstner-studio, drive-assistant, arquitectura, doc-vivo]
 fecha-creacion: 2026-05-12
 estado: ACTIVO — refleja lo que está deployado en https://ai.kairosaisolutions.com
-relacionado: [[Drive_Assistant]], [[Vision_Analyzer]], [[Bot_Ordenador]], [[Metricas_Latencia]]
+relacionado: [[Drive_Assistant]], [[Vision_Analyzer]], [[Bot_Ordenador]], [[Metricas_Latencia]], [[Reorg_Singer_2026_05_14]]
 ---
 
 # Funcionamiento del Drive Assistant
 
 		Doc explicativo de cómo funciona el bot que vive en `https://ai.kairosaisolutions.com`.
 Pensado para alguien que entra a tocar el código sin contexto previo. Refleja
-el estado **deployado al 2026-05-12**.
+el estado **deployado al 2026-05-12** (con anexo Modo Presentación 2026-05-14, ver [[Reorg_Singer_2026_05_14]]).
+
+> **2026-05-14 — Modo Presentación**: además del chat normal, hay un modo "hands-free" para presentaciones en vivo en el taller. Mic prendido, palabra → slide. Indexación folder-as-piece (determinística, sin LLM extractor). Ver doc dedicado para taxonomía + reorg de carpetas.
 
 ---
 
