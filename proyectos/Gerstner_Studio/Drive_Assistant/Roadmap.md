@@ -1,11 +1,17 @@
 ---
 tags: [gerstner-studio, drive-assistant, roadmap, planning]
 fecha-creacion: 2026-05-12
-estado: ACTIVO — plan de mejoras post-cleanup huérfanos
-relacionado: [[Drive_Assistant]], [[Funcionamiento]], [[Tests_Regresion]]
+ultima-actualizacion: 2026-05-15
+estado: ACTIVO — modo Chat baseline + modo Presentación en iteración intensiva
+relacionado: [[Drive_Assistant]], [[Funcionamiento]], [[Tests_Regresion]], [[Sesion_2026_05_15]]
 ---
 
 # Roadmap Drive Assistant — Mejoras post 2026-05-12
+
+> **Sesiones recientes**: [[Reorg_Singer_2026_05_14]] (2026-05-14) y
+> [[Sesion_2026_05_15]] (2026-05-15) — foco intensivo en Modo Presentación
+> (matching, UX, lazy-load, mirror de carpetas Procesos↔Marketing). Ver
+> seccion "Próxima sesión" al final para el carry-over.
 
 Plan de evolución desde el estado actual (folder-level matching + tags
 agregados por carpeta) hacia un sistema **per-file** con búsqueda
@@ -241,3 +247,75 @@ similitud coseno.
 - [[Tests_Regresion]] — suite de tests + bugs históricos.
 - [[Vision_Analyzer]] — implementación v1 del tagger.
 - [[Bot_Ordenador]] — infra para futuro auto-rename.
+- [[Sesion_2026_05_15]] — sesión más reciente del Modo Presentación.
+
+---
+
+## Próxima sesión — carry-over 2026-05-15
+
+Items concretos que quedaron afuera de la sesión 2026-05-15 y que vale la
+pena retomar. Ordenado por prioridad / efectividad:
+
+### Alta prioridad (UX directo)
+
+1. **Telemetría real del matching de piezas (paso 1 del plan de tuning)**.
+   Persistir cada intento de match (regex layers + embeddings) en una
+   collection `piece_match_events` con: window_text, last_sentence, layer,
+   matched_slug, score, second_score, emitted_to_user, ms_elapsed. Sin
+   esto, tunear thresholds es a ciegas. ~1h. Detalle en
+   [[Sesion_2026_05_15]] sección "Tuning empírico".
+
+2. **Mirror reverso Marketing ← Procesos** (opcional).
+   Hoy Procesos tiene 22 carpetas que Marketing no tiene (Llantas,
+   Guanteras, Guardabarros, Bisagras de baul, Spoiler, Mecánica, etc.).
+   Si querés simetría total, crear esas 22 vacías en Marketing. NO se
+   borró nada en Procesos — todas conservan su contenido pre-existente.
+
+3. **UI feedback de match incorrecto**.
+   Botón discreto "❌ no era esa" sobre la slide actual. Click → marca el
+   evento como wrong en `piece_match_events`. Construir labels limpios
+   para regresar tests más adelante.
+
+### Media prioridad (pulido)
+
+4. **Golden set + script de regresión del matcher**.
+   Después de tener ~50 eventos labeled (telemetría + feedback), armar un
+   golden set YAML y un script que mida precision/recall. Antes de mover
+   thresholds, correr este script.
+
+5. **Revisar aliases para vocabulario rioplatense**.
+   "asientos delanteros" no agarra butacas (no está como alias).
+   Embedding semántico tampoco lo agarra por sesgo de "delanteros".
+   Decidir: agregar `asientos` como alias de butacas, o aceptar que
+   "asientos" no se use.
+
+### Backlog del modo Chat (sin cambios)
+
+Sigue vigente lo del bloque "Plan en 10 chunks" arriba — específicamente
+los chunks pendientes:
+- Chunk 7: UI admin de validación de tags (endpoint HTML).
+- Chunk 9: Auto-naming via Bot Ordenador (post tags validados con uso).
+- Chunk 10: Embeddings + Atlas Vector Search (solo si chunk 6 no
+  alcanza). **Nota**: para el modo Presentación ya implementamos
+  embeddings con `text-embedding-3-small` (ver Sesion_2026_05_15);
+  podría reusarse en el modo Chat también.
+
+### Bugs / mejoras técnicas conocidas
+
+- **CONFIDENCE_THRESHOLD vs embeddings score**: ya fixed pero queda
+  fragil. El embedding devuelve coseno (0.4-0.85) y se mapea a 0.80-0.98
+  para sobrevivir al `CONFIDENCE_THRESHOLD=0.78` del router. Mejor
+  diseño: que cada layer reporte un score normalizado 0-1 explícito.
+- **Refresh de carpetas con >1000 hijos**: hoy se rompe (`pageSize=1000`
+  sin paginar). El bug similar de 100 ya está fixed, pero si el Drive
+  crece más allá de 1000 carpetas hijas de un solo nivel, hay que
+  paginar también en otros llamados.
+
+### Decisiones pendientes del usuario
+
+- ¿Borrar las 22 carpetas extras en Procesos que NO tienen equivalente
+  en Marketing? **Por ahora NO** (algunas tienen contenido), pero hay
+  que decidir caso por caso si vale unificarlas con merges canónicos en
+  `presentation_pieces.py` o dejarlas como piezas propias.
+- ¿Sumar telemetría a Langfuse o mantener `piece_match_events` en
+  Mongo? Langfuse ya está en otros bots; Mongo es lo más fácil acá.
