@@ -258,12 +258,25 @@ pena retomar. Ordenado por prioridad / efectividad:
 
 ### Alta prioridad (UX directo)
 
-1. **Telemetría real del matching de piezas (paso 1 del plan de tuning)**.
-   Persistir cada intento de match (regex layers + embeddings) en una
-   collection `piece_match_events` con: window_text, last_sentence, layer,
-   matched_slug, score, second_score, emitted_to_user, ms_elapsed. Sin
-   esto, tunear thresholds es a ciegas. ~1h. Detalle en
-   [[Sesion_2026_05_15]] sección "Tuning empírico".
+0. **Cargar más fotos a las carpetas + clonar folder tree Marketing → Procesos**.
+   Dos cosas pendientes del lado del contenido en Drive:
+   - **Agregar más fotos** en las carpetas existentes (Marketing principalmente,
+     donde hay piezas con pocos thumbs). El PreviewGrid soporta hasta 400+
+     items con paginación; falta material en Drive para llenarlo.
+   - **Clonar el árbol de carpetas de Marketing a Procesos** y cargar fotos
+     nuevas ahí. Hoy Procesos tiene 22 carpetas que Marketing no tiene
+     (Llantas, Guanteras, etc., ver item 2 de abajo) pero la simetría
+     inversa también falta: Procesos necesita las piezas de Marketing
+     pobladas con material de taller. Procesos sigue **off** en el bot por
+     [[feedback_gerstner_procesos_off]] hasta que se pueble este árbol.
+
+1. ~~**Telemetría real del matching de piezas**~~ ✅ **HECHO 2026-05-15**
+   (commit `af3580f`). Collection `piece_match_events` (1 doc/turno:
+   layer `lexical|embedding|llm|vista_wrapper|none`, matched_slug,
+   candidatos embeddings, ms, window). **Próximo paso**: juntar ~1 semana
+   de datos reales y de ahí armar golden set + decidir si el LLM pasa de
+   "último recurso" a "validador en cada commit" (ver caveat de falsos
+   positivos del léxico en [[Sesion_2026_05_15]] continuación tarde).
 
 2. **Mirror reverso Marketing ← Procesos** (opcional).
    Hoy Procesos tiene 22 carpetas que Marketing no tiene (Llantas,
