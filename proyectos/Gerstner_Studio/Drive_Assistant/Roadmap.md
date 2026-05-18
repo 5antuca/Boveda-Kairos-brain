@@ -11,7 +11,9 @@ relacionado: [[Drive_Assistant]], [[Funcionamiento]], [[Tests_Regresion]], [[Ses
 > **Sesiones recientes**: [[Reorg_Singer_2026_05_14]] (2026-05-14),
 > [[Sesion_2026_05_15]] (2026-05-15) y [[Sesion_2026_05_18]] (2026-05-18 —
 > voz multi-vehículo inteligente, overhaul UX "todo en la slide", fix
-> galerías con muchos videos). Foco intensivo en Modo Presentación
+> galerías con muchos videos, **+ Knowledge RAG sobre Procesos/
+> Documentación: chat de proceso texto+voz, deployado en LIVE**). Foco
+> intensivo en Modo Presentación
 > (matching, UX, lazy-load, mirror de carpetas Procesos↔Marketing). Ver
 > seccion "Próxima sesión" al final para el carry-over.
 
