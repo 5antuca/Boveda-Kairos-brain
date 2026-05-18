@@ -1,15 +1,17 @@
 ---
 tags: [gerstner-studio, drive-assistant, roadmap, planning]
 fecha-creacion: 2026-05-12
-ultima-actualizacion: 2026-05-15
+ultima-actualizacion: 2026-05-18
 estado: ACTIVO — modo Chat baseline + modo Presentación en iteración intensiva
-relacionado: [[Drive_Assistant]], [[Funcionamiento]], [[Tests_Regresion]], [[Sesion_2026_05_15]]
+relacionado: [[Drive_Assistant]], [[Funcionamiento]], [[Tests_Regresion]], [[Sesion_2026_05_15]], [[Sesion_2026_05_18]]
 ---
 
 # Roadmap Drive Assistant — Mejoras post 2026-05-12
 
-> **Sesiones recientes**: [[Reorg_Singer_2026_05_14]] (2026-05-14) y
-> [[Sesion_2026_05_15]] (2026-05-15) — foco intensivo en Modo Presentación
+> **Sesiones recientes**: [[Reorg_Singer_2026_05_14]] (2026-05-14),
+> [[Sesion_2026_05_15]] (2026-05-15) y [[Sesion_2026_05_18]] (2026-05-18 —
+> voz multi-vehículo inteligente, overhaul UX "todo en la slide", fix
+> galerías con muchos videos). Foco intensivo en Modo Presentación
 > (matching, UX, lazy-load, mirror de carpetas Procesos↔Marketing). Ver
 > seccion "Próxima sesión" al final para el carry-over.
 
