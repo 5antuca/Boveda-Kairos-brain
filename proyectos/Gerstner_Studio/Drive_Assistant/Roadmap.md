@@ -1,18 +1,21 @@
 ---
 tags: [gerstner-studio, drive-assistant, roadmap, planning]
 fecha-creacion: 2026-05-12
-ultima-actualizacion: 2026-05-18
+ultima-actualizacion: 2026-05-19
 estado: ACTIVO — modo Chat baseline + modo Presentación en iteración intensiva
-relacionado: [[Drive_Assistant]], [[Funcionamiento]], [[Tests_Regresion]], [[Sesion_2026_05_15]], [[Sesion_2026_05_18]]
+relacionado: [[Drive_Assistant]], [[Funcionamiento]], [[Tests_Regresion]], [[Sesion_2026_05_15]], [[Sesion_2026_05_18]], [[Sesion_2026_05_19]]
 ---
 
 # Roadmap Drive Assistant — Mejoras post 2026-05-12
 
 > **Sesiones recientes**: [[Reorg_Singer_2026_05_14]] (2026-05-14),
-> [[Sesion_2026_05_15]] (2026-05-15) y [[Sesion_2026_05_18]] (2026-05-18 —
+> [[Sesion_2026_05_15]] (2026-05-15), [[Sesion_2026_05_18]] (2026-05-18 —
 > voz multi-vehículo inteligente, overhaul UX "todo en la slide", fix
 > galerías con muchos videos, **+ Knowledge RAG sobre Procesos/
-> Documentación: chat de proceso texto+voz, deployado en LIVE**). Foco
+> Documentación: chat de proceso texto+voz, deployado en LIVE**) y
+> [[Sesion_2026_05_19]] (2026-05-19 — bugfixes: pines que se "reseteaban"
+> por desajuste de tipos, "porsche gerstner" no abría el Singer (fuzzy
+> robusto al STT), "Cambiar carpeta" fuera del menú ⋮). Foco
 > intensivo en Modo Presentación
 > (matching, UX, lazy-load, mirror de carpetas Procesos↔Marketing). Ver
 > seccion "Próxima sesión" al final para el carry-over.
