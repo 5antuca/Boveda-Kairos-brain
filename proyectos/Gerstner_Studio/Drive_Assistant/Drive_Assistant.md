@@ -1,16 +1,31 @@
 ---
-tags: [gerstner-werks, drive-assistant, langgraph, fastapi, openai, mvp, en-diseño]
+tags: [gerstner-werks, drive-assistant, fastapi, openai, v8, live]
 fecha-creacion: 2026-05-09
-estado: LISTO PARA BOOTSTRAP — todas las decisiones cerradas, repo creado
-dominio: ai.kairosaisolutions.com (A record creado 2026-05-09 → 46.62.235.162)
+estado: LIVE (v8 desde 2026-05-20) — agente único en una pantalla, voz + texto siempre activos
+dominio: ai.kairosaisolutions.com (A record → 46.62.235.162)
 ---
 
 # 🏎️ Gerstner Werks — Drive Assistant
 
-Chatbot interno para el equipo del taller que permite buscar y visualizar imágenes
-y videos de proyectos almacenados en Google Drive (~20 GB) usando lenguaje natural.
-Entiende la intención, localiza la carpeta correcta vía LangGraph, trae los archivos
-desde Drive y los muestra inline en un chat web.
+> ⚡ **Actualizado al 2026-05-20**: la página de referencia para tocar el
+> agente es **[[v8_Como_Trabajar]]** (cómo agregar aliases sin restart,
+> cómo agregar carpetas opt-in, cómo reindexar doc/Drive, qué NO hacer).
+> Las páginas históricas de esta carpeta (sesiones, reorgs, etc.)
+> quedan como registro.
+>
+> Pivotes importantes del 2026-05-20:
+> - LangGraph **fuera**: el agente ahora es FastAPI + langchain directo.
+>   El chat REST viejo `/chat` y `backend/app/agent/` se eliminaron.
+> - **Una sola pantalla**: presentación es la app, sin chat fallback.
+> - **Hot-reload de aliases** del perfil flat vía
+>   `config/aliases/presentacion_flat.yaml`.
+> - **Multi-tenant scaffold** con resolver hardcoded a `default`
+>   (todos los devices del usuario comparten estado).
+
+Bot interno para el equipo del taller que permite buscar y visualizar
+imágenes/videos de proyectos en Google Drive (~20 GB) por voz o texto, y
+responde consultas con la documentación del taller como contexto
+(Knowledge RAG + búsqueda web). Una sola URL, una sola pantalla.
 
 ## 🎯 Propuesta de valor
 
@@ -24,6 +39,7 @@ en ~600ms (cache) o ~2.5s (cold).
 
 | Pieza | Donde / URL |
 |---|---|
+| **Cómo trabajar (v8 — actualizado)** | **[[v8_Como_Trabajar]]** — editar aliases sin restart, agregar carpetas opt-in, reindexar doc/Drive, smoke test |
 | URL | **https://ai.kairosaisolutions.com** |
 | Cómo acceder (incl. mobile) | [[Como_Acceder]] |
 | Spec pendiente | [[Spec_Auto_Sync_Drive]] (cron de sync, todavía no implementado) |
