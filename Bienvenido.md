@@ -24,6 +24,7 @@ Cualquier LLM que opere bajo este usuario debe entender este archivo como la rut
     - Conversaciones: [[Malas]] · [[Buenas]]
     - Decisiones: `proyectos/Trebol/decisiones/` (planes históricos, session summaries)
     - Operaciones: `proyectos/Trebol/operaciones/` (playbooks de reset, feedback)
+  - [[Bug_Del_Kairos]] — Sitio web del proyecto musical personal (`bugdelkairos.com`) · híbrido SoundCloud + tienda MercadoPago + VR · Fase 0 (landing) pendiente decisión hosting
 - 📥 **Inbox (`inbox/`):** captura rápida sin clasificar (volcado de memoria, postmortems sueltos, ideas crudas)
 
 ## 📊 Estado Actual
