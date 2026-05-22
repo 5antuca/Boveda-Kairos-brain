@@ -2,6 +2,9 @@
 
 Este documento define las fases de desarrollo e implementación del configurador de GerstnerWerks.
 
+> [!info] Ver también
+> [[ROADMAP_Modelo_Singer_3D]] — roadmap específico para reemplazar el modelo 911 gratuito por el Porsche Singer propio (AutoCAD → web, fotorrealista, interior + aperturas) + auditoría del estado real del código.
+
 ## Fase 1: Setup de escena 3D y carga del modelo base
 - [ ] Procesar `Porsche911.glb` a través de `gltfjsx` para extraer la jerarquía de componentes React.
 - [ ] Configurar el `<Canvas>` de React Three Fiber y establecer las cámaras (`PerspectiveCamera`).
