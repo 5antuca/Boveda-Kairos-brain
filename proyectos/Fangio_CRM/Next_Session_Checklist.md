@@ -1,9 +1,21 @@
 ---
 tags: [fangiocrm, checklist, ingesta, next-session]
 fecha: 2026-05-05
-estado: PENDIENTE — abrir esto al empezar próxima sesión
+estado: EJECUTADO 2026-05-23 — A.1, A.2, B.1-B.6 hechos. Falta B.7 (trigger live) + commit.
 relacionado: [[Arquitectura_Datos]], [[Roadmap_Stock_Ingestion_v1]], [[project_inventory_pivot_2026_05_05]]
 ---
+
+> [!success] EJECUTADO 2026-05-23
+> Ingesta de stock LIVE. Módulo `bot-service/trebol_bot/ingest/` (fangiocrm_reader · transform · classifier · embedder · mongo · pipeline) + endpoints `POST /ingest/reimport-tenant` y `POST /webhook/inventory-changed`. Reimport real corrido: **54 autos del Trébol** (67 leídos, 13 excluidos por señado/no-en-agencia), 0 fallos de clasificación. `propiedades-test` pasó de 59 docs viejos (Sheets) → 54 nuevos (FangioCRM). Backups en `kairos-infrastructure/backups/propiedades-test{,-FULL}-2026-05-23.json`.
+>
+> **Hallazgos vs el plan:**
+> - DB real = `fangio_crm` (guión bajo), no `fangiocrm`.
+> - `gridState`: headers en la FILA 0 (no en `columns`), `data` sparse keyed `rowId-colId`. Ver `reference_fangiocrm_gridstate_shape`.
+> - `build_sheetstomongo_v2_test.py` es un builder de workflow, no transform reusable → el transform se porteó del JS del nodo "Classify & Prepare" del workflow prod. `backfill_classify_inventario.py` sí se reusó (clasificador).
+> - Decisiones del usuario: excluir señado **+** no-en-agencia; `14 M` = 14M ARS; TC blue **en vivo** (Bluelytics) al ingestar (≈1425); `PRECIO_AL_CONTADO` numérico USD.
+> - Campo FECHA del XLSX = serial de Excel (bug cosmético del importador FangioCRM, el bot no lo usa).
+>
+> **PENDIENTE**: B.7 (trigger live en `FangioCRM/src/app/api/inventory/route.ts` post-save → POST a `/webhook/inventory-changed`) + commitear el módulo `ingest/`. NO es multi-tenant real aún (escribe siempre a `propiedades-test`).
 
 # Next Session Checklist — Ingesta de Stock vía FangioCRM
 

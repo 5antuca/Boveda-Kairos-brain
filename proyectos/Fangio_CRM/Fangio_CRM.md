@@ -68,5 +68,8 @@ Cambio estratégico mayor: FangioCRM se vuelve la plataforma SaaS principal. Cad
 - 📋 **Diseño completo**: [[Roadmap_Stock_Ingestion_v1]] · [[Trebol_Bot_Embedded]]
 - ⏳ Pendiente decisiones D1-D6 antes de Sprint 0.
 
+#### ✅ Ingesta de Stock implementada (2026-05-23)
+Pipeline de ingesta **LIVE**. Módulo `bot-service/trebol_bot/ingest/` lee el `gridState` que FangioCRM guarda en `fangio_crm.tenantinventories`, lo transforma (precio→USD con blue en vivo, filtra señados/no-en-agencia), clasifica con LLM (8 campos) y reembede a `RAGtrebol.propiedades-test`. Endpoints `POST /ingest/reimport-tenant` (manual) y `POST /webhook/inventory-changed` (lo llamará FangioCRM al guardar). Primer reimport: 54 autos del Trébol. Detalle en [[Next_Session_Checklist]] (banner EJECUTADO). **Pendiente**: trigger live en el frontend de FangioCRM + commit.
+
 ---
 *Nota: Esta es la documentación estratégica en Kairos Brain. El código fuente vive fuera de esta bóveda.*
