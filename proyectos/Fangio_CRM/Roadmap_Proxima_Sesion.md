@@ -21,6 +21,7 @@ relacionado: [[Fangio_CRM]], [[Next_Session_Checklist]], [[Trebol_Bot_Embedded]]
 1. Confirmar deploy Vercel **verde** + hard refresh en `www.fangiocrm.com/dashboard` y probar los 3 cambios de grilla en vivo (no se testearon visualmente, solo build + lint + tsc).
 2. **Reembed end-to-end**: guardar inventario en FangioCRM → verificar en logs del bot:
    `docker logs trebol-test-bot 2>&1 | grep inventory_changed` → debe loguear `inventory_changed_reimport_done`.
+3. **Grid estilo Excel (F0–F6, `main@dced97c`)** — verificar visualmente en `/dashboard`: barra de menús Archivo/Editar/Ver/Insertar/Herramientas con atajos por ítem; sin tope de autos; eliminar filas/cols (⌘−/⌘⇧−); Nuevo (⌘⌥N); buscar+reemplazar (⌘⇧H); ajustar texto (↵); picker de formato de número. Spec: `specs/2026-05-23-fangiocrm-grid-excel-controls.md`. Fuera de alcance (no implementado): combinar celdas, filtros tipo Excel, bordes por celda.
 
 ## 📋 Backlog FangioCRM
 
