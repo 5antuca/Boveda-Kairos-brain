@@ -26,7 +26,7 @@ relacionado: [[Fangio_CRM]], [[Next_Session_Checklist]], [[Trebol_Bot_Embedded]]
 
 - **Multi-tenant real**: hoy `ingest/` escribe SIEMPRE a `propiedades-test`. Cuando llegue 2º tenant productivo → `inventory_{tenantId}`. Ver [[Roadmap_Stock_Ingestion_v1]] + [[Trebol_Bot_Embedded]].
 - **Bot embebido por tenant** ([[Trebol_Bot_Embedded]]): config por tenant (nombre concesionaria, vendedor, tono, financiación) — diseñado, NO implementado. El bot sigue hardcodeado a `trebol.yaml`.
-- **Bug cosmético**: columna FECHA del XLSX se guarda como serial de Excel (ej. `45983`) en la grilla — heurística `detectColType` la marca `text`. El bot NO usa FECHA. Fix opcional: detectar columnas de fecha en el importador y convertir serial→fecha.
+- ~~**Bug cosmético**: columna FECHA del XLSX se guarda como serial de Excel (ej. `45983`) en la grilla.~~ **RESUELTO 2026-05-23** (`main@b6f9adf`, Vercel): `InventoryGrid.tsx` ahora detecta columnas de fecha por header (`isDateHeader`) y convierte el serial→`dd/mm/yyyy` (`excelSerialToDate`, UTC) en el loop de import. Aplica a imports futuros; el gridState ya guardado del Trébol sigue con serial hasta re-import. El bot NO usa FECHA → cosmético.
 - **Regresión bot "tiago" (permuta)**: 21/23 checks; los 2 fails (T3/T4, varían a T2) son **variabilidad del LLM** en el flujo de permuta, NO regresión (el inventario cambió pero ese flujo no lo toca). Estabilizar el golden si molesta.
 
 ## 🧹 Deuda en kairos-infrastructure (sin commitear)
