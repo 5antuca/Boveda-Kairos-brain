@@ -80,7 +80,7 @@ Tras el bug "el bot no responde" (la sesión WhatsApp se deslogueaba 401 y el en
 - **C3 UI**: banner "WhatsApp desconectado — reconectá" en el dashboard (poll 30s).
 - **C4 monitor**: `wa_health.monitor_loop` en el bot cada 150s → auto-reconecta tenants caídos; tras 3 fallos → `needsReconnect`. Envs `WA_MONITOR_INTERVAL_S`/`WA_MONITOR_MAX_DOWN`.
 - **C5 timeouts**: `lib/evo.ts::evoFetch` (AbortController) en las llamadas a Evolution.
-- ⚠️ **GAP (no es del hardening): envío multi-tenant**. El bot usa `EVOLUTION_INSTANCE_NAME` ÚNICA (= `el-trebol`) → hoy manda TODAS las respuestas a esa instancia. OK para el test single-tenant; multi-tenant real necesita enviar a la instancia del tenant (=tenantId) por request. **Pendiente.**
+- ✅ **Multi-tenant REAL — RESUELTO 2026-05-24** (FangioCRM `8f2d2bc`+`390fe64`, bot `77e85ba`+`25ad444`): sacado el alias el-trebol→trebol (cada tenant usa su config de Mongo); identidad parametrizada (`{NOMBRE_AGENTE}`=`nombreBot` del wizard, `{NOMBRE_AGENCIA}`=`nombre`); stock etiquetado por `tenantId`; envío por la instancia del tenant (`instance=client_id`); reset limpia memoria del bot. Verificado: "Lucho de El Trébol Automotores". `el-trebol` ya es un tenant self-serve más. Pendiente menor: cache `lru_cache` de config requiere restart del bot al editar un Tenant (F4 invalidación).
 
 ## ⚠️ Deuda / decisiones
 - **Rama `bot-rollback-2026-04-18`**: ~25 commits adelante de `main`, 15 atrás → decidir estrategia (merge/rebase a `main`) en algún momento.
