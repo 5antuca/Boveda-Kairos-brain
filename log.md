@@ -1,5 +1,15 @@
 # Operation Log
 
+## [2026-05-24] build | FangioCRM SaaS MVP — F0 auditoría + F1 bot multi-tenant + fix presupuesto
+Sesión con santi para arrancar el MVP de FangioCRM como **SaaS alquilable** (50k ARS/mes vía MercadoPago, público no-técnico, Excel-drop con auto-schema). Se escribió spec/roadmap, se auditó el scaffold (F0) y se completó F1 (bot multi-tenant), todo en test sobre `bot-rollback-2026-04-18`.
+
+- **F0** (auditoría): el scaffold ya tenía onboarding (`register`/`setup`), **zero-touch Evolution** por tenant, QR con self-heal, loop inbound (texto/audio→Whisper/imagen→Vision) y persistencia. Mock: el checkout (sin MercadoPago real).
+- **F1** (deployado a test, regresión 25-26/27): config del bot resuelta desde `Tenant` en Mongo (`fangio_crm.tenants`, fallback YAML), prompt parametrizado por tenant (template + `{NOMBRE_AGENCIA}`/etc.), stock aislado por `tenantId` en colección + `vector_index` compartidos. Aislamiento verificado.
+- También fix de la pregunta de presupuesto: el bot inventaba el monto del precio de un auto; ahora ante señal sin número pregunta presupuesto+uso. Commits `kairos-infrastructure@a89804a` + `@89eb35b`.
+- Decisiones: WhatsApp = Evolution por tenant; stock = colección compartida + filtro tenantId; billing = MercadoPago suscripciones (F3); prompt caching obligatorio.
+- Docs: [[proyectos/Fangio_CRM/Roadmap_SaaS_MVP]] · spec `specs/2026-05-24-fangiocrm-saas-mvp.md` · update en [[proyectos/Fangio_CRM/Fangio_CRM]].
+- Próximo: **F2** — auto-schema "de fábrica" (Excel→canónico) + agente de onboarding.
+
 ## [2026-05-04] design | Roadmap Stock Ingestion v1 + Trebol Bot Embedded en FangioCRM
 Diseño aprobado por santi para que cada concesionaria (tenant) suba su XLSX de inventario a FangioCRM, lo mapee a un schema canónico y se sincronice incremental a su colección Mongo privada con embeddings. En paralelo, Trebol Bot (Python LangGraph) absorbe el rol de motor de respuestas WhatsApp para todos los tenants — cada tenant configura nombre/vendedor/tono/financiación desde la UI. Reemplaza gradualmente el FangioBot v2 (n8n).
 
