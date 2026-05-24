@@ -1,5 +1,14 @@
 # Operation Log
 
+## [2026-05-24] build | FangioCRM SaaS MVP (cont.) — F2 auto-schema + F4 prompt caching + billing Shopify
+Continuación de la misma sesión. Se completó el **backend autónomo** del MVP.
+
+- **F2.1/F2.2 — auto-schema "de fábrica"**: `ingest/schema_mapping.py` (mapper LLM Excel→canónico que desambigua por valores, ej. "Año Modelo"→ANIO) + wired en el ingest con `columnMapping` persistido en `tenantinventories`. Verificado: el-trebol real, planilla sucia, planilla sin precio (genera pregunta del agente); dry-run reimport → 0 cambios (cero regresión). Commits `9e3cf0b`+`c917793`.
+- **F4 — prompt caching**: el estado CRM del turno se pasa como mensaje aparte → el prompt estático (~5k tok) queda como prefijo estable → **~98% de prompt_tokens cacheados** por OpenAI (antes ~25%). Commit `e5d81d0`.
+- **Billing = Shopify** (decisión del usuario; descartado MercadoPago directo por fees + recurrente incierto en AR — queda como plan B). Verificado que el webhook `api/webhooks/shopify` está vivo y el `SHOPIFY_WEBHOOK_SECRET` ya está en Vercel. Regla: **registro obligatorio antes de pagar** (match por email). Falta: confirmar el lado Shopify (producto/pago/topic) + endurecer webhook (baja→pausar) + gate de pago.
+- Docs: [[proyectos/Fangio_CRM/Roadmap_SaaS_MVP]] (vivo), [[proyectos/Fangio_CRM/Roadmap_Proxima_Sesion]] (empezar acá), spec `specs/2026-05-24-fangiocrm-saas-mvp.md`. Todo commiteado en `bot-rollback-2026-04-18` (pusheado a GitHub).
+- Próximo: F3 (Shopify — confirmar tienda + endurecer webhook), F2.3 (UI onboarding), F4 metering, F5/F6.
+
 ## [2026-05-24] build | FangioCRM SaaS MVP — F0 auditoría + F1 bot multi-tenant + fix presupuesto
 Sesión con santi para arrancar el MVP de FangioCRM como **SaaS alquilable** (50k ARS/mes vía MercadoPago, público no-técnico, Excel-drop con auto-schema). Se escribió spec/roadmap, se auditó el scaffold (F0) y se completó F1 (bot multi-tenant), todo en test sobre `bot-rollback-2026-04-18`.
 
