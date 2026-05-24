@@ -30,7 +30,7 @@ relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Ne
 ### 2. F2.3 — UI de onboarding *(frontend FangioCRM)*
 - Mostrar las `questions` del mapper al usuario no-técnico + guardar el override en `columnMapping`.
 - Flujo **registro → pago** (dirigir al checkout de Shopify post-registro).
-- **Sumar `ubicacion`/`horario` al modelo `Tenant` + al form** (gap de F1: hoy tenants nuevos usan fallback "nuestra concesionaria/horario").
+- ✅ ~~Sumar `ubicacion`/`horario` al `Tenant` + form~~ — HECHO 2026-05-24 (FangioCRM `75f6af6`: campos en modelo + Settings UI; el bot ya los lee).
 
 ### 3. F4 metering
 - Enforcement de `limiteMensajes` + dashboard de consumo por tenant + **validar costos reales con Langfuse** (confirmar que 50k cubre a ~600 conv/mes).
