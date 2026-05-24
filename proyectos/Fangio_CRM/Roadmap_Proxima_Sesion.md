@@ -44,6 +44,26 @@ Modal multi-paso que se abre al registrarse y deja TODO configurado con pregunta
 - F5: WhatsApp self-serve hardening (probar con **celular real**, reconexión, sesión fantasma).
 - F6: seguridad multi-tenant — ✅ `agent/context` asegurado (Bearer secret, `33e9708`); falta auditar aislamiento general (que cada ruta filtre por `session.tenantId`) + landing/pricing.
 
+### 5. Rebrand FangioCRM → FangioBot (dominio + UI) — DIFERIDO *(pedido 2026-05-24, "lo hago después")*
+Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es un dominio **NUEVO** (no se renombra el viejo: se compra y se apunta la app). Falta comprarlo.
+
+**Parte del usuario (dashboards — Claude no tiene acceso):**
+1. **Comprar `fangiobot.com`** (registrador o Vercel Domains). TLD: `.com` recomendado; `.ai` si se busca look "AI".
+2. Vercel → proyecto FangioCRM → **Settings → Domains → Add** `fangiobot.com` + `www.fangiobot.com`.
+3. **DNS**: cargar los records que da Vercel (automático si se compra en Vercel).
+4. Vercel → **Environment Variables**: `NEXTAUTH_URL=https://www.fangiobot.com` (⚠️ si no matchea el dominio, **el login se rompe**) + `APP_URL=https://www.fangiobot.com`.
+5. **MercadoPago**: actualizar back_url/notification_url que apunten a fangiocrm.com.
+6. Decidir: ¿`fangiocrm.com` se redirige a fangiobot o se deja morir?
+
+**Parte de código (Claude, ~10 min — NO empezado, cero cambios aplicados):**
+- Reemplazar marca visible "FangioCRM" → "FangioBot":
+  - `src/app/layout.tsx:9` (title de la pestaña)
+  - `src/app/page.tsx:34` (logo) y `:233` (footer ©)
+  - `src/app/login/page.tsx:62` (h1) · `src/app/register/page.tsx:75` (h1)
+  - `src/app/api/billing/subscribe/route.ts:39` (reason del preapproval MP)
+- Parametrizar dominio: `subscribe/route.ts:16` `const APP_URL = "https://www.fangiocrm.com"` → `process.env.APP_URL || "https://www.fangiocrm.com"`.
+- **NO** tocar el env var `FANGIOCRM_BOT_SHARED_SECRET` (nombre interno de secret; renombrarlo rompe bot + Vercel). Los comentarios con "fangiocrm" se pueden dejar.
+
 ## ⚠️ Deuda / decisiones
 - **Rama `bot-rollback-2026-04-18`**: ~25 commits adelante de `main`, 15 atrás → decidir estrategia (merge/rebase a `main`) en algún momento.
 - **Trebol = tenant de dogfooding** (`el-trebol` en Mongo + `trebol.yaml`); prod de Trébol sigue apagado.
