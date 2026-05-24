@@ -20,6 +20,15 @@ relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Ne
 - **Fix presupuesto**: ante señal sin número, el bot pregunta presupuesto+uso en vez de inventar el monto.
 - Regresión `test_bot.sh`: 25-26/27 (los 2 fails = asserts viejos de TIAGO permuta, variabilidad LLM, NO regresión).
 
+## 🧪 Fase de prueba actual (2026-05-24): alta de usuarios nuevos
+Probando el flujo de **onboarding de usuario nuevo de punta a punta** (register → prueba gratis → wizard → Excel+agente → QR). Para que cada test arranque limpio:
+
+- **Reset de un comando**: `bash scripts/reset-fangiocrm-test.sh` (commit `57726a7`) → backup de `fangio_crm` (→ `backups/fangio_reset_last.json`) + wipe total de `fangio_crm` + borra TODAS las instancias de Evolution TEST (logout+delete). **Solo test, no toca prod.**
+- **Loop**: `reset` → `fangiocrm.com/register` (usuario nuevo) → wizard → repetir.
+- **Estado AHORA: todo en 0** — `el-trebol` (tenant + inventario + instancia Evolution) borrado. Backup original completo en `backups/fangio_full_backup_20260524.json` (el-trebol real: 67 autos + `columnMapping` + usuario), restaurable con `bson.json_util`.
+- ⚠️ **El WhatsApp del bot test (+5491123809397) quedó desconectado** (se borró su instancia Evolution); se reconecta re-escaneando en el wizard.
+- 🐞 **Bug resuelto** "QR en blanco y al instante ya conectado" = el `tenantId` nuevo colisiona con una instancia de Evolution vieja todavía `state=open` → el `poll()` la detecta CONNECTED. Fix = borrar la instancia vieja (lo hace el script). Procedimiento de reset de Evolution test documentado en `scripts/reset-fangiocrm-test.sh`.
+
 ## 🟢 EMPEZAR ACÁ (lo que queda — necesita input/config o frontend)
 
 ### 1. F3 — billing por MercadoPago Suscripciones *(pivote desde Shopify; IMPLEMENTADO+DEPLOYADO 2026-05-24)*
@@ -66,7 +75,7 @@ Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es 
 
 ## ⚠️ Deuda / decisiones
 - **Rama `bot-rollback-2026-04-18`**: ~25 commits adelante de `main`, 15 atrás → decidir estrategia (merge/rebase a `main`) en algún momento.
-- **Trebol = tenant de dogfooding** (`el-trebol` en Mongo + `trebol.yaml`); prod de Trébol sigue apagado.
+- **Trebol = tenant de dogfooding** (`trebol.yaml`); su data de FangioCRM (`el-trebol`) fue **borrada en la fase de prueba** (backup `backups/fangio_full_backup_20260524.json`). El bot cae al fallback `trebol.yaml`; el stock embebido en RAGtrebol persiste (cluster aparte). Prod de Trébol sigue apagado.
 - Cache de config del bot es `lru_cache` por proceso → editar un `Tenant` requiere restart (invalidación = parte de F4).
 - Untracked ajenos sin commitear en el repo (gerstner specs, scripts sheetstomongo) — no son de este laburo.
 
@@ -75,6 +84,9 @@ Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es 
 
 ## 🔧 Comandos útiles
 ```bash
+# Reset del entorno de prueba SaaS a 0 (backup + wipe Mongo + borra instancias Evolution test)
+bash scripts/reset-fangiocrm-test.sh
+
 # Regresión del bot (debe dar ~25-26/27; T3/T4 flakys)
 bash scripts/test_bot.sh all
 
