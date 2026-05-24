@@ -27,10 +27,15 @@ relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Ne
 - ✅ **Verificado** (diag 2026-05-24): token producción OK + subscribe crea preapproval + webhook lee/mapea/actualiza el tenant (probado con preapproval real). ⏳ **Falta el flip `authorized→pro`** con un pago autorizado real. ⚠️ **OJO: MP no deja que el dueño de la cuenta MP se suscriba a sí mismo** (401) → testear con un comprador de OTRA cuenta MP (2da cuenta del usuario o el primer cliente real). El `SUBSCRIPTION_PRICE_ARS=100` se usó para el test → **borrarlo en Vercel para volver a 50k**.
 - ✅ **Prueba gratis 7 días (sin MP) + gate del bot HECHOS** (FangioCRM `22e6724`): `register` arranca la prueba (`trialEndsAt = +7d`); el bot responde si paga / está en prueba / es exento (sin `trialEndsAt`, como el-trebol); pausa si la prueba venció sin suscripción. ⏳ Falta: **botón "Suscribirme"** en el dashboard (hoy se dispara visitando `/api/billing/subscribe`).
 
-### 2. F2.3 — UI de onboarding *(frontend FangioCRM)*
-- Mostrar las `questions` del mapper al usuario no-técnico + guardar el override en `columnMapping`.
-- Flujo **registro → pago** (botón que lleva a `/api/billing/subscribe` → checkout MercadoPago).
-- ✅ ~~Sumar `ubicacion`/`horario` al `Tenant` + form~~ — HECHO 2026-05-24 (FangioCRM `75f6af6`: campos en modelo + Settings UI; el bot ya los lee).
+### 2. F2.3 — Wizard de onboarding post-registro *(idea del usuario 2026-05-24; el diferenciador UX)*
+Modal multi-paso que se abre al registrarse y deja TODO configurado con preguntas simples. **El backend de cada paso YA EXISTE** → es básicamente frontend que orquesta APIs existentes:
+1. **¿Cómo se llama tu concesionaria?** → `Tenant.nombre` (register ya lo toma / settings lo edita). ✅ backend.
+2. **Arrastrá tu Excel** (campos obligatorios: marca, modelo, detalles, precio contado…) → import XLSX + **auto-schema mapper** (F2.1/2.2, `ingest/schema_mapping`) mapea columnas arbitrarias → canónico; si falta/ambiguo un obligatorio → **agente de onboarding** pregunta (las `questions` del mapper) y se guarda en `columnMapping`. ✅ backend; falta paso UI + validación de obligatorios.
+3. **¿Qué financiación tenés?** → `Tenant.detallesFinanciacion`/`tasaFinanciacion` (settings). ✅ backend.
+4. **Redes sociales** (omitible) → `Tenant.instagramUrl`/`facebookUrl` (settings). ✅ backend.
+5. **Escaneá el QR de WhatsApp Business** → `whatsapp/status` (POST=QR) + `whatsapp/activate` (gate al conectar). ✅ backend (zero-touch Evolution).
+→ **Trabajo**: construir el wizard (frontend, modal por pasos) + integrar el agente de auto-schema en el paso 2 + persistir cada paso con las APIs existentes. Hace realidad el *"tirá el Excel y funciona"*.
+- ✅ Sumar `ubicacion`/`horario` al Tenant + Settings — HECHO (FangioCRM `75f6af6`). ✅ Botón "Suscribirme" + banner de prueba — HECHO (`1861057`).
 
 ### 3. F4 metering
 - Enforcement de `limiteMensajes` + dashboard de consumo por tenant + **validar costos reales con Langfuse** (confirmar que 50k cubre a ~600 conv/mes).
