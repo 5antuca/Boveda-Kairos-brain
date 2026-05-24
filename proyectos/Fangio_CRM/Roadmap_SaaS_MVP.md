@@ -36,7 +36,7 @@ El "autoseteo de fábrica": mapear un **Excel arbitrario y desprolijo → el sch
 | **F1** | Bot multi-tenant (config dinámica + prompt param + stock por tenantId) | ✅ **HECHO** (2026-05-24) |
 | **F2** | Auto-schema "de fábrica" (Excel→canónico) + agente de onboarding | 🟡 **F2.1+F2.2 HECHO** (mapper LLM + wired/persistido); falta UI (F2.3) |
 | **F3** | Billing MercadoPago real + gating (hoy es checkout mock) | ⏳ |
-| **F4** | Metering / prompt caching / validar economía con datos reales | ⏳ |
+| **F4** | Metering / prompt caching / validar economía | 🟡 **caching HECHO** (~98% cacheado); falta metering/validación |
 | **F5** | WhatsApp self-serve hardening (Evolution a prueba de no-técnicos) | ⏳ |
 | **F6** | Seguridad multi-tenant (aislamiento) + go-to-market (landing/pricing) | ⏳ |
 
@@ -71,9 +71,10 @@ El scaffold estaba MÁS completo de lo asumido. Funcional y real: onboarding (`r
 
 ## ▶️ Próximo paso
 
-**Backend de F2 completo** (F2.1 mapper + F2.2 wiring/persistencia, verificado el 2026-05-24, commits `9e3cf0b` + `c917793`). Lo que queda:
+**Backend autónomo COMPLETO** (2026-05-24): F1 multi-tenant + F2.1/F2.2 auto-schema + F4 prompt caching. Todo verificado y commiteado en `bot-rollback-2026-04-18` (pusheado).
 
-- **F4** (prompt caching) — único ítem autónomo restante; implica reestructurar el prompt (estático como prefijo cacheable + estado al final) + regresión.
-- **F2.3** — UI del agente de onboarding en FangioCRM (mostrar `questions`, guardar override; sumar `ubicacion`/`horario`). **Necesita input/UX + test visual.**
-- **F3** (MercadoPago) — **bloqueado** hasta tener credenciales/cuenta MP.
-- **F5/F6** — necesitan celular real (WhatsApp) y decisiones de producto.
+Lo que queda **necesita input del usuario**:
+- **F3 — billing por Shopify** (decisión del usuario): configurar la tienda (producto 50k + MercadoPago como medio de pago + webhook → `SHOPIFY_WEBHOOK_SECRET` en Vercel). **Regla: registro OBLIGATORIO antes de pagar**, mismo email. El webhook ya activa el tenant; falta endurecer (baja/cancelación → pausar bot) + gate de pago. → bloqueado en la config de Shopify.
+- **F2.3 / UI** — agente de onboarding (mostrar `questions`, guardar override) + flujo registro→pago + sumar `ubicacion`/`horario` al Tenant. → frontend FangioCRM + UX.
+- **F4 metering** — enforcement de `limiteMensajes` + validar costos. → necesita tráfico real.
+- **F5/F6** — WhatsApp self-serve + seguridad/landing. → celular real + decisiones.
