@@ -73,6 +73,15 @@ Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es 
 - Parametrizar dominio: `subscribe/route.ts:16` `const APP_URL = "https://www.fangiocrm.com"` → `process.env.APP_URL || "https://www.fangiocrm.com"`.
 - **NO** tocar el env var `FANGIOCRM_BOT_SHARED_SECRET` (nombre interno de secret; renombrarlo rompe bot + Vercel). Los comentarios con "fangiocrm" se pueden dejar.
 
+### 🛡️ Hardening Evolution — HECHO 2026-05-24 (5 capas + monitor)
+Tras el bug "el bot no responde" (la sesión WhatsApp se deslogueaba 401 y el envío fallaba en silencio). FangioCRM `0caf631`+`964de6f`, bot `20a2b33`. Detalle: memoria `reference_evolution_hardening`.
+- **C1 detección**: instancias suscritas a `CONNECTION_UPDATE`; el receptor marca `whatsappConnected`/`needsReconnect`/`lastDisconnect*` y reconnecta al toque si no es 401.
+- **C2 bot**: si el envío a Evolution falla, marca el tenant desconectado (no en silencio).
+- **C3 UI**: banner "WhatsApp desconectado — reconectá" en el dashboard (poll 30s).
+- **C4 monitor**: `wa_health.monitor_loop` en el bot cada 150s → auto-reconecta tenants caídos; tras 3 fallos → `needsReconnect`. Envs `WA_MONITOR_INTERVAL_S`/`WA_MONITOR_MAX_DOWN`.
+- **C5 timeouts**: `lib/evo.ts::evoFetch` (AbortController) en las llamadas a Evolution.
+- ⚠️ **GAP (no es del hardening): envío multi-tenant**. El bot usa `EVOLUTION_INSTANCE_NAME` ÚNICA (= `el-trebol`) → hoy manda TODAS las respuestas a esa instancia. OK para el test single-tenant; multi-tenant real necesita enviar a la instancia del tenant (=tenantId) por request. **Pendiente.**
+
 ## ⚠️ Deuda / decisiones
 - **Rama `bot-rollback-2026-04-18`**: ~25 commits adelante de `main`, 15 atrás → decidir estrategia (merge/rebase a `main`) en algún momento.
 - **Trebol = tenant de dogfooding** (`trebol.yaml`); su data de FangioCRM (`el-trebol`) fue **borrada en la fase de prueba** (backup `backups/fangio_full_backup_20260524.json`). El bot cae al fallback `trebol.yaml`; el stock embebido en RAGtrebol persiste (cluster aparte). Prod de Trébol sigue apagado.
