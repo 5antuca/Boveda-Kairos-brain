@@ -37,7 +37,7 @@ relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Ne
 
 ### 4. F5 / F6
 - F5: WhatsApp self-serve hardening (probar con **celular real**, reconexión, sesión fantasma).
-- F6: seguridad multi-tenant (auditar aislamiento; `agent/context` es **GET público** que expone config de cualquier tenant), landing + pricing.
+- F6: seguridad multi-tenant — ✅ `agent/context` asegurado (Bearer secret, `33e9708`); falta auditar aislamiento general (que cada ruta filtre por `session.tenantId`) + landing/pricing.
 
 ## ⚠️ Deuda / decisiones
 - **Rama `bot-rollback-2026-04-18`**: ~25 commits adelante de `main`, 15 atrás → decidir estrategia (merge/rebase a `main`) en algún momento.
