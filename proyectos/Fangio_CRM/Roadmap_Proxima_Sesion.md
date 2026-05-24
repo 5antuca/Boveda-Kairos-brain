@@ -24,7 +24,7 @@ relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Ne
 
 ### 1. F3 — billing por MercadoPago Suscripciones *(pivote desde Shopify; IMPLEMENTADO+DEPLOYADO 2026-05-24)*
 - ✅ **Construido + deployado** (FangioCRM `4cd29bb`): `GET /api/billing/subscribe` (preapproval 50k/mes, `external_reference=tenantId`, redirige al checkout MP) + `POST /api/webhooks/mercadopago` (activa `pro` / pausa `basic` por status). `MERCADOPAGO_ACCESS_TOKEN` en Vercel ✅ (webhook responde 200). Shopify descartado (pedía pagar plan propio + app de suscripciones + gateway MP incierto en AR).
-- ⏳ **Test E2E sandbox** (lo hace el usuario): logueado → visitar `https://www.fangiocrm.com/api/billing/subscribe` → debe redirigir a MP → pagar con **usuario de prueba** de MP → el webhook activa el tenant. Verificar en Mongo `fangio_crm.tenants.subscriptionActive=true`.
+- ✅ **Verificado** (diag 2026-05-24): token producción OK + subscribe crea preapproval + webhook lee/mapea/actualiza el tenant (probado con preapproval real). ⏳ **Falta el flip `authorized→pro`** con un pago autorizado real. ⚠️ **OJO: MP no deja que el dueño de la cuenta MP se suscriba a sí mismo** (401) → testear con un comprador de OTRA cuenta MP (2da cuenta del usuario o el primer cliente real). El `SUBSCRIPTION_PRICE_ARS=100` se usó para el test → **borrarlo en Vercel para volver a 50k**.
 - 🔨 **Falta (autónomo, post-test)**: gate del bot (pausar si `subscriptionActive=false`, **eximir tenants de dogfooding** como el-trebol) + botón "Suscribirme" en el dashboard.
 
 ### 2. F2.3 — UI de onboarding *(frontend FangioCRM)*
