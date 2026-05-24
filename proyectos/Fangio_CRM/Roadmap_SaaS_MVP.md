@@ -34,7 +34,7 @@ El "autoseteo de fábrica": mapear un **Excel arbitrario y desprolijo → el sch
 |---|---|---|
 | **F0** | Auditoría del scaffold (qué funciona vs mock) | ✅ **HECHO** (2026-05-24) |
 | **F1** | Bot multi-tenant (config dinámica + prompt param + stock por tenantId) | ✅ **HECHO** (2026-05-24) |
-| **F2** | Auto-schema "de fábrica" (Excel→canónico) + agente de onboarding | 🟡 **F2.1 core HECHO** (mapper LLM); falta wiring + UI |
+| **F2** | Auto-schema "de fábrica" (Excel→canónico) + agente de onboarding | 🟡 **F2.1+F2.2 HECHO** (mapper LLM + wired/persistido); falta UI (F2.3) |
 | **F3** | Billing MercadoPago real + gating (hoy es checkout mock) | ⏳ |
 | **F4** | Metering / prompt caching / validar economía con datos reales | ⏳ |
 | **F5** | WhatsApp self-serve hardening (Evolution a prueba de no-técnicos) | ⏳ |
@@ -71,8 +71,9 @@ El scaffold estaba MÁS completo de lo asumido. Funcional y real: onboarding (`r
 
 ## ▶️ Próximo paso
 
-- **F2.2** — wiring del `columnMapping` en `transform.build_prepared_data` + persistencia en `TenantInventory.columnMapping` + re-ingesta al confirmar.
-- **F2.3** — UI del agente de onboarding en FangioCRM (mostrar las preguntas al usuario no-técnico, guardar respuestas; sumar `ubicacion`/`horario`).
-- **F3** (MercadoPago) **está bloqueado** hasta tener credenciales/cuenta MP del usuario.
+**Backend de F2 completo** (F2.1 mapper + F2.2 wiring/persistencia, verificado el 2026-05-24, commits `9e3cf0b` + `c917793`). Lo que queda:
 
-> F2.1 (mapper LLM `ingest/schema_mapping.py`) ✅ verificado el 2026-05-24 contra el-trebol real + planilla sucia ("Año Modelo"→ANIO) + planilla sin precio (genera la pregunta del agente). Commit `kairos-infrastructure@9e3cf0b`.
+- **F4** (prompt caching) — único ítem autónomo restante; implica reestructurar el prompt (estático como prefijo cacheable + estado al final) + regresión.
+- **F2.3** — UI del agente de onboarding en FangioCRM (mostrar `questions`, guardar override; sumar `ubicacion`/`horario`). **Necesita input/UX + test visual.**
+- **F3** (MercadoPago) — **bloqueado** hasta tener credenciales/cuenta MP.
+- **F5/F6** — necesitan celular real (WhatsApp) y decisiones de producto.
