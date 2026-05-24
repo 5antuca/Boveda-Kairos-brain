@@ -22,14 +22,14 @@ relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Ne
 
 ## 🟢 EMPEZAR ACÁ (lo que queda — necesita input/config o frontend)
 
-### 1. F3 — billing por Shopify *(decisión tomada; arrancar acá)*
-- ✅ **Verificado**: webhook `api/webhooks/shopify` vivo + `SHOPIFY_WEBHOOK_SECRET` cargado en Vercel (POST con firma falsa → `401`).
-- ❓ **Falta verificar** (no hay Admin API de Shopify en el repo → lo chequea el usuario o pasa un token read-only `shpat_…` + dominio `xxx.myshopify.com`): que exista el **producto** (50k), **MercadoPago** como medio de pago, y el **topic** del webhook ("Pago de pedido"/recurrente vs único). Botón "Enviar notificación de prueba" en Shopify → revisar Mongo/logs.
-- 🔨 **Código (autónomo, cuando esté confirmado el lado Shopify)**: endurecer el webhook (atar al producto, baja/cancelación → **pausar bot**), **gate de pago** en el bot, regla **registro-OBLIGATORIO-antes-de-pagar** (mismo email).
+### 1. F3 — billing por MercadoPago Suscripciones *(pivote desde Shopify; IMPLEMENTADO+DEPLOYADO 2026-05-24)*
+- ✅ **Construido + deployado** (FangioCRM `4cd29bb`): `GET /api/billing/subscribe` (preapproval 50k/mes, `external_reference=tenantId`, redirige al checkout MP) + `POST /api/webhooks/mercadopago` (activa `pro` / pausa `basic` por status). `MERCADOPAGO_ACCESS_TOKEN` en Vercel ✅ (webhook responde 200). Shopify descartado (pedía pagar plan propio + app de suscripciones + gateway MP incierto en AR).
+- ⏳ **Test E2E sandbox** (lo hace el usuario): logueado → visitar `https://www.fangiocrm.com/api/billing/subscribe` → debe redirigir a MP → pagar con **usuario de prueba** de MP → el webhook activa el tenant. Verificar en Mongo `fangio_crm.tenants.subscriptionActive=true`.
+- 🔨 **Falta (autónomo, post-test)**: gate del bot (pausar si `subscriptionActive=false`, **eximir tenants de dogfooding** como el-trebol) + botón "Suscribirme" en el dashboard.
 
 ### 2. F2.3 — UI de onboarding *(frontend FangioCRM)*
 - Mostrar las `questions` del mapper al usuario no-técnico + guardar el override en `columnMapping`.
-- Flujo **registro → pago** (dirigir al checkout de Shopify post-registro).
+- Flujo **registro → pago** (botón que lleva a `/api/billing/subscribe` → checkout MercadoPago).
 - ✅ ~~Sumar `ubicacion`/`horario` al `Tenant` + form~~ — HECHO 2026-05-24 (FangioCRM `75f6af6`: campos en modelo + Settings UI; el bot ya los lee).
 
 ### 3. F4 metering
