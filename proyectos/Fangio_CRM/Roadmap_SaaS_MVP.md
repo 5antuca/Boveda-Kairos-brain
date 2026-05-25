@@ -79,9 +79,11 @@ Lo que queda **necesita input del usuario**:
 - **F4 metering** — enforcement de `limiteMensajes` + validar costos. → necesita tráfico real.
 - **F5/F6** — WhatsApp self-serve + seguridad/landing. → celular real + decisiones.
 
-## 🎨 Landing + Demo (LIVE 2026-05-25)
+## 🎨 Landing + Demo + Dashboard UI (LIVE 2026-05-25)
 
-Landing minimal **"Fangio Bot"** (grafito + gradiente) + **demo del agente en vivo** (wizard → chat con streaming, audio por mic→Whisper, cierre `[FIN]`→CTA, botón Registrarse). Endpoints `/api/demo/chat` (gpt-4.1-mini) y `/api/demo/transcribe` (whisper-1). Verificado en prod. Detalle técnico en la memoria `project_fangiocrm_landing_demo`.
+> **Doc completo: [[UI_y_Demo_2026-05]]** (estética grafito/glass, demo del agente, auth, dashboard, fixes).
+
+Landing minimal **"Fangio Bot"** (grafito + gradiente) + **demo del agente en vivo** (wizard → chat con streaming, audio por mic→Whisper, cierre `[FIN]`→CTA, botón Registrarse). Endpoints `/api/demo/chat` (gpt-4.1-mini) y `/api/demo/transcribe` (whisper-1). Auth (register/login) y **dashboard completo** (Inicio, Chat, Analíticas, WhatsApp, Config) pasados a grafito/glass. Verificado en prod.
 
 **▶️ Backlog (pedido del usuario): seguir mejorando UI/UX** — iterativo:
 - Afinar copy + estética de la landing y de la ventana de la demo.
