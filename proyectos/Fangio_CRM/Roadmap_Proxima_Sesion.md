@@ -53,16 +53,16 @@ Modal multi-paso que se abre al registrarse y deja TODO configurado con pregunta
 - F5: WhatsApp self-serve hardening (probar con **celular real**, reconexión, sesión fantasma).
 - F6: seguridad multi-tenant — ✅ `agent/context` asegurado (Bearer secret, `33e9708`); falta auditar aislamiento general (que cada ruta filtre por `session.tenantId`) + landing/pricing.
 
-### 5. Rebrand FangioCRM → FangioBot (dominio + UI) — DIFERIDO *(pedido 2026-05-24, "lo hago después")*
-Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es un dominio **NUEVO** (no se renombra el viejo: se compra y se apunta la app). Falta comprarlo.
+### 5. Rebrand FangioCRM → FangioBot (dominio + UI) — DNS EN VIVO 2026-05-25 *(pedido 2026-05-24)*
+Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es un dominio **NUEVO** (no se renombra el viejo: se apunta la app). **fangiobot.com pasa a ser el dominio PRINCIPAL.**
 
 **Parte del usuario (dashboards — Claude no tiene acceso):**
-1. **Comprar `fangiobot.com`** (registrador o Vercel Domains). TLD: `.com` recomendado; `.ai` si se busca look "AI".
-2. Vercel → proyecto FangioCRM → **Settings → Domains → Add** `fangiobot.com` + `www.fangiobot.com`.
-3. **DNS**: cargar los records que da Vercel (automático si se compra en Vercel).
-4. Vercel → **Environment Variables**: `NEXTAUTH_URL=https://www.fangiobot.com` (⚠️ si no matchea el dominio, **el login se rompe**) + `APP_URL=https://www.fangiobot.com`.
-5. **MercadoPago**: actualizar back_url/notification_url que apunten a fangiocrm.com.
-6. Decidir: ¿`fangiocrm.com` se redirige a fangiobot o se deja morir?
+1. ✅ **Comprado `fangiobot.com`** (registrado en Squarespace, NS `nseN.squarespacedns.com`).
+2. ✅ Vercel → proyecto `fangio-crm` (`prj_hPmY5ZHrknXxaKVCHziqMXNP0qn3`) → dominios agregados y `verified`: `fangiobot.com` (redirect→www) + `www.fangiobot.com` (sirve la app).
+3. ✅ **DNS en Squarespace** (confirmado contra NS autoritativo 2026-05-25): apex `@` A → `76.76.21.21`; `www` CNAME → `cname.vercel-dns.com`. TTL 4h (la propagación del apex puede tardar). Presets de email (SPF `v=spf1 -all` + DMARC `p=reject`) = el dominio NO manda mail → revisar si se agregan magic links.
+4. ✅ **`NEXTAUTH_URL=https://www.fangiobot.com`** seteado en Vercel (prod/preview/dev) + redeploy de prod (commit `fde6e99`) 2026-05-25. Verificado: home/login/`api/auth/csrf` = 200. `APP_URL` NO existe como env var → está hardcodeado en código (ver Parte de código).
+5. ✅ **MercadoPago / APP_URL** (commit `283ea88` en FangioCRM `main` 2026-05-25): `subscribe/route.ts:16` parametrizado → `process.env.APP_URL || process.env.NEXTAUTH_URL || "https://www.fangiobot.com"` (back_url + notification_url dejan de apuntar al dominio muerto). Env `APP_URL=https://www.fangiobot.com` seteado en Vercel. `reason` del preapproval ya decía "FangioBot". ⚠️ Revisar si en el **dashboard de MP** hay una notification URL global apuntando a fangiocrm.com (lado usuario).
+6. ⏳ Decidir: ¿`fangiocrm.com` se redirige a fangiobot o se deja morir? (login en fangiocrm.com YA no anda — NEXTAUTH_URL apunta a fangiobot).
 
 **Parte de código (Claude, ~10 min — NO empezado, cero cambios aplicados):**
 - Reemplazar marca visible "FangioCRM" → "FangioBot":
