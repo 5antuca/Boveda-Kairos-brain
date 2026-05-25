@@ -16,6 +16,7 @@
 - [[proyectos/Fangio_CRM/Arquitectura_Datos|Arquitectura_Datos]] - Modelo de datos MongoDB.
 - [[proyectos/Fangio_CRM/Arquitectura_SaaS_Multitenant|Arquitectura_SaaS_Multitenant]] - Topología actual.
 - [[proyectos/Fangio_CRM/SheetsToMongo_RAG_Inventario|SheetsToMongo_RAG_Inventario]] - Pipeline inventario Sheets → MongoDB + embeddings RAG.
+- [[proyectos/Fangio_CRM/Sesion_2026-05-25_UI_y_Bot|Sesión 2026-05-25]] - 🆕 Dominio **fangiobot.com** (principal), rediseño UI del chat (WhatsApp-Web), rollback temporal del bot a WhatsApp + backlog UI/bot.
 
 #### 🧠 Bot LangGraph (Python) — Motor IA
 - [[proyectos/Fangio_CRM/LangGraph_Bot/LangGraph_Bot|LangGraph_Bot]] - Proyecto principal, fases 0-11.

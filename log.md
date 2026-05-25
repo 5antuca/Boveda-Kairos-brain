@@ -1,5 +1,13 @@
 # Operation Log
 
+## [2026-05-25] sesion | FangioBot — dominio nuevo, UI del chat, rollback del bot a WhatsApp
+Sesión larga multi-frente. Detalle completo + backlog en [[proyectos/Fangio_CRM/Sesion_2026-05-25_UI_y_Bot]].
+- **DOMINIO (LIVE)**: `fangiobot.com` pasa a ser el dominio PRINCIPAL del producto. DNS en Squarespace → Vercel (apex A `76.76.21.21`, www CNAME `cname.vercel-dns.com`); `NEXTAUTH_URL` + `APP_URL` = `https://www.fangiobot.com` en Vercel; `APP_URL` parametrizado en `subscribe/route.ts` (afecta back_url/notification_url MercadoPago). Commit FangioCRM `283ea88`. Pendiente: redirect `fangiocrm.com → fangiobot.com` + rebrand visual UI "FangioCRM"→"FangioBot". Memoria `project_fangiobot_domain_migration`.
+- **DEMO landing** (`/api/demo/chat`): persona "derivador de lujo" + ajustes de tono/objeciones/permuta/sentido-común. LIVE en Vercel.
+- **BOT WhatsApp = ROLLBACK TEMPORAL** (sin commitear): `bot-service/` en working tree a `f1504a8` (single-tenant) + tweaks, sirviendo el WhatsApp del tenant `gerstner` vía Evolution. Mejoras: formato hablado, no-buscar-en-saludo, **recomendar por tipo+gama** (no marca; honesto si no hay nada a la altura), **fotos automáticas** (nuevo `send_image` por Evolution sendMedia), búsqueda insensible a acentos, velocidad (dólar cacheado, debounce 1.5s, max_tokens). Reversible con `git checkout 289be0c -- bot-service`.
+- **UI chat dashboard** (FangioCRM, LIVE): rediseño estilo WhatsApp-Web — burbuja única, hora dentro a la derecha, conversación a ancho completo (override cap 85% de chatscope), panel derecho siempre visible + ⓘ colapsable, sidebar con aire.
+- **Backlog explícito del usuario**: seguir mejorando la UI de FangioBot en general + seguir puliendo el bot. (También: stock sin fotos 47/54, decisión del rollback, fine-tune pausado.)
+
 ## [2026-05-24] build | FangioCRM SaaS MVP (cont.) — F2 auto-schema + F4 prompt caching + billing Shopify
 Continuación de la misma sesión. Se completó el **backend autónomo** del MVP.
 
