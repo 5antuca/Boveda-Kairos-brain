@@ -1,8 +1,8 @@
-# FangioCRM — Overhaul de UI + Demo del Agente (2026-05-24/25)
+# FangioBot — Overhaul de UI + Demo del Agente (2026-05-24/25)
 
 > Rework visual completo de la app pública (landing, auth, dashboard) a una estética
 > **grafito + glass + minimalista** y construcción de una **demo del agente en vivo**.
-> Todo LIVE en `www.fangiocrm.com` (Vercel, deploy automático en push a `main`).
+> Todo LIVE en `www.fangiobot.com` (Vercel, deploy automático en push a `main`).
 > Repo: `github.com/5antuca/FangioCRM` (clone en `/root/apps/FangioCRM`, NO en el VPS de bots).
 
 ## Estética canónica (aplicar a futuras pantallas)

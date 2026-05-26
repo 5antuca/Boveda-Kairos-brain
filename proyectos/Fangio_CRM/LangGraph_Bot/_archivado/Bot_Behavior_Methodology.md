@@ -83,7 +83,7 @@ Con 50-200 conversaciones reales curadas, fine-tunear gpt-4.1-mini para internal
 - **OpenAI evals** o framework custom Python: comparación bot output vs expected.
 - **Ragas / DeepEval**: métricas automáticas (relevancia, fidelidad, toxicidad).
 
-## Esta metodología aplica a multi-tenant FangioCRM
+## Esta metodología aplica a multi-tenant FangioBot
 
 Cuando se haga la migración a tenant-aware (ver [[../Fangio_CRM/Bot_LangGraph_Migration]]), los principios son globales (todos los tenants los heredan), el prompt template incluye los principios + slots para personalización por tenant, los few-shot pueden tener variantes por tenant (algunos prefieren tono más formal, otros más cómplice), y el eval suite tiene runs separados per-tenant + un suite común.
 

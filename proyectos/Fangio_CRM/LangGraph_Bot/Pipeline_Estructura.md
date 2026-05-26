@@ -7,9 +7,9 @@ branch: bot-rollback-2026-04-18
 base_commit: 7f1e5c2 (2026-04-18 16:00 UTC)
 ---
 
-# Pipeline y estructura del agente de respuestas — FangioCRM
+# Pipeline y estructura del agente de respuestas — FangioBot
 
-> Este doc describe la **estructura técnica exacta** del agente de respuestas que sirve hoy a Trebol/test y va a ser el motor de respuestas de FangioCRM. Es la fuente de verdad — leelo antes de proponer cambios. Si el código contradice este doc, el doc está desactualizado.
+> Este doc describe la **estructura técnica exacta** del agente de respuestas que sirve hoy a Trebol/test y va a ser el motor de respuestas de FangioBot. Es la fuente de verdad — leelo antes de proponer cambios. Si el código contradice este doc, el doc está desactualizado.
 
 ## Contexto histórico breve
 
@@ -359,7 +359,7 @@ bot-service/
 - **No tiene** `techo_usd_actual` como campo del state (solo string en `estado_calificacion`).
 - **No tiene** invitación a venir 5.B como modo de cierre dedicado.
 
-Si alguno de estos viene como pedido, evaluar si hay que reintroducirlo desde el v2 archivado o re-implementarlo desde cero según las necesidades de FangioCRM.
+Si alguno de estos viene como pedido, evaluar si hay que reintroducirlo desde el v2 archivado o re-implementarlo desde cero según las necesidades de FangioBot.
 
 ---
 

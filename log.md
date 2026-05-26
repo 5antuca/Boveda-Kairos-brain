@@ -2,13 +2,13 @@
 
 ## [2026-05-25] sesion | FangioBot — dominio nuevo, UI del chat, rollback del bot a WhatsApp
 Sesión larga multi-frente. Detalle completo + backlog en [[proyectos/Fangio_CRM/Sesion_2026-05-25_UI_y_Bot]].
-- **DOMINIO (LIVE)**: `fangiobot.com` pasa a ser el dominio PRINCIPAL del producto. DNS en Squarespace → Vercel (apex A `76.76.21.21`, www CNAME `cname.vercel-dns.com`); `NEXTAUTH_URL` + `APP_URL` = `https://www.fangiobot.com` en Vercel; `APP_URL` parametrizado en `subscribe/route.ts` (afecta back_url/notification_url MercadoPago). Commit FangioCRM `283ea88`. Pendiente: redirect `fangiocrm.com → fangiobot.com` + rebrand visual UI "FangioCRM"→"FangioBot". Memoria `project_fangiobot_domain_migration`.
+- **DOMINIO (LIVE)**: `fangiobot.com` pasa a ser el dominio PRINCIPAL del producto. DNS en Squarespace → Vercel (apex A `76.76.21.21`, www CNAME `cname.vercel-dns.com`); `NEXTAUTH_URL` + `APP_URL` = `https://www.fangiobot.com` en Vercel; `APP_URL` parametrizado en `subscribe/route.ts` (afecta back_url/notification_url MercadoPago). Commit FangioBot `283ea88`. Pendiente: redirect `fangiobot.com → fangiobot.com` + rebrand visual UI "FangioBot"→"FangioBot". Memoria `project_fangiobot_domain_migration`.
 - **DEMO landing** (`/api/demo/chat`): persona "derivador de lujo" + ajustes de tono/objeciones/permuta/sentido-común. LIVE en Vercel.
 - **BOT WhatsApp = ROLLBACK TEMPORAL** (sin commitear): `bot-service/` en working tree a `f1504a8` (single-tenant) + tweaks, sirviendo el WhatsApp del tenant `gerstner` vía Evolution. Mejoras: formato hablado, no-buscar-en-saludo, **recomendar por tipo+gama** (no marca; honesto si no hay nada a la altura), **fotos automáticas** (nuevo `send_image` por Evolution sendMedia), búsqueda insensible a acentos, velocidad (dólar cacheado, debounce 1.5s, max_tokens). Reversible con `git checkout 289be0c -- bot-service`.
-- **UI chat dashboard** (FangioCRM, LIVE): rediseño estilo WhatsApp-Web — burbuja única, hora dentro a la derecha, conversación a ancho completo (override cap 85% de chatscope), panel derecho siempre visible + ⓘ colapsable, sidebar con aire.
+- **UI chat dashboard** (FangioBot, LIVE): rediseño estilo WhatsApp-Web — burbuja única, hora dentro a la derecha, conversación a ancho completo (override cap 85% de chatscope), panel derecho siempre visible + ⓘ colapsable, sidebar con aire.
 - **Backlog explícito del usuario**: seguir mejorando la UI de FangioBot en general + seguir puliendo el bot. (También: stock sin fotos 47/54, decisión del rollback, fine-tune pausado.)
 
-## [2026-05-24] build | FangioCRM SaaS MVP (cont.) — F2 auto-schema + F4 prompt caching + billing Shopify
+## [2026-05-24] build | FangioBot SaaS MVP (cont.) — F2 auto-schema + F4 prompt caching + billing Shopify
 Continuación de la misma sesión. Se completó el **backend autónomo** del MVP.
 
 - **F2.1/F2.2 — auto-schema "de fábrica"**: `ingest/schema_mapping.py` (mapper LLM Excel→canónico que desambigua por valores, ej. "Año Modelo"→ANIO) + wired en el ingest con `columnMapping` persistido en `tenantinventories`. Verificado: el-trebol real, planilla sucia, planilla sin precio (genera pregunta del agente); dry-run reimport → 0 cambios (cero regresión). Commits `9e3cf0b`+`c917793`.
@@ -17,8 +17,8 @@ Continuación de la misma sesión. Se completó el **backend autónomo** del MVP
 - Docs: [[proyectos/Fangio_CRM/Roadmap_SaaS_MVP]] (vivo), [[proyectos/Fangio_CRM/Roadmap_Proxima_Sesion]] (empezar acá), spec `specs/2026-05-24-fangiocrm-saas-mvp.md`. Todo commiteado en `bot-rollback-2026-04-18` (pusheado a GitHub).
 - Próximo: F3 (Shopify — confirmar tienda + endurecer webhook), F2.3 (UI onboarding), F4 metering, F5/F6.
 
-## [2026-05-24] build | FangioCRM SaaS MVP — F0 auditoría + F1 bot multi-tenant + fix presupuesto
-Sesión con santi para arrancar el MVP de FangioCRM como **SaaS alquilable** (50k ARS/mes vía MercadoPago, público no-técnico, Excel-drop con auto-schema). Se escribió spec/roadmap, se auditó el scaffold (F0) y se completó F1 (bot multi-tenant), todo en test sobre `bot-rollback-2026-04-18`.
+## [2026-05-24] build | FangioBot SaaS MVP — F0 auditoría + F1 bot multi-tenant + fix presupuesto
+Sesión con santi para arrancar el MVP de FangioBot como **SaaS alquilable** (50k ARS/mes vía MercadoPago, público no-técnico, Excel-drop con auto-schema). Se escribió spec/roadmap, se auditó el scaffold (F0) y se completó F1 (bot multi-tenant), todo en test sobre `bot-rollback-2026-04-18`.
 
 - **F0** (auditoría): el scaffold ya tenía onboarding (`register`/`setup`), **zero-touch Evolution** por tenant, QR con self-heal, loop inbound (texto/audio→Whisper/imagen→Vision) y persistencia. Mock: el checkout (sin MercadoPago real).
 - **F1** (deployado a test, regresión 25-26/27): config del bot resuelta desde `Tenant` en Mongo (`fangio_crm.tenants`, fallback YAML), prompt parametrizado por tenant (template + `{NOMBRE_AGENCIA}`/etc.), stock aislado por `tenantId` en colección + `vector_index` compartidos. Aislamiento verificado.
@@ -27,8 +27,8 @@ Sesión con santi para arrancar el MVP de FangioCRM como **SaaS alquilable** (50
 - Docs: [[proyectos/Fangio_CRM/Roadmap_SaaS_MVP]] · spec `specs/2026-05-24-fangiocrm-saas-mvp.md` · update en [[proyectos/Fangio_CRM/Fangio_CRM]].
 - Próximo: **F2** — auto-schema "de fábrica" (Excel→canónico) + agente de onboarding.
 
-## [2026-05-04] design | Roadmap Stock Ingestion v1 + Trebol Bot Embedded en FangioCRM
-Diseño aprobado por santi para que cada concesionaria (tenant) suba su XLSX de inventario a FangioCRM, lo mapee a un schema canónico y se sincronice incremental a su colección Mongo privada con embeddings. En paralelo, Trebol Bot (Python LangGraph) absorbe el rol de motor de respuestas WhatsApp para todos los tenants — cada tenant configura nombre/vendedor/tono/financiación desde la UI. Reemplaza gradualmente el FangioBot v2 (n8n).
+## [2026-05-04] design | Roadmap Stock Ingestion v1 + Trebol Bot Embedded en FangioBot
+Diseño aprobado por santi para que cada concesionaria (tenant) suba su XLSX de inventario a FangioBot, lo mapee a un schema canónico y se sincronice incremental a su colección Mongo privada con embeddings. En paralelo, Trebol Bot (Python LangGraph) absorbe el rol de motor de respuestas WhatsApp para todos los tenants — cada tenant configura nombre/vendedor/tono/financiación desde la UI. Reemplaza gradualmente el FangioBot v2 (n8n).
 
 - Decisiones cerradas: A) bot embebido, B) colección por tenant, C) diff incremental tipo SheetsToMongo con fingerprint hash determinístico (sin AppScript), D) sin Paperclip.
 - Decisiones abiertas (D1-D6 en el roadmap): runtime workers, Redis aislado, persistencia XLSX, dolar referencia, formatos extra.
@@ -84,13 +84,13 @@ Sesión de testing real con audio (cliente + bot) detectó 4 bugs concretos. Tod
 - Otro pendiente: la voice_id elegida (`MjtZn5tagxL1RO6w9ER5`) come palabras en español. Probar Antoni (`ErXwobaYiN019PkySvjV`) o upgrade a plan Starter ($5) para acceso a voice library.
 - Status: feature funciona end-to-end pero calidad de audio aún no es production-ready. Commit del feature pendiente — sigue como WIP en branch `bot-rollback-2026-04-18`.
 
-## [2026-05-01] rollback | Vuelta al bot del 18-abril como base limpia para FangioCRM
+## [2026-05-01] rollback | Vuelta al bot del 18-abril como base limpia para FangioBot
 - Tras dos sesiones de testing real (2026-04-30 y 2026-05-01) con principios canónicos v1+v2, el usuario decidió rollbackear al estado del 18-abril (commit `7f1e5c2`, cutover prod LangGraph). Razón: la iteración del Sales Swarm + multi-LLM + principios canónicos había agregado complejidad sin convertir respuestas mejores en testing real con WhatsApp.
 - **Branch operativa nueva**: `bot-rollback-2026-04-18` (pusheada a origin). main intacto con WIP preservado en `db9055d` (snapshot pre-rollback).
 - **Patches sobre la base del 18-abril**:
   - `5d8f1a7` — `mongo_collection: propiedades-test` (no se revierte el inventario porque la colección `propiedades` quedó rota el 26-04).
   - `0f164cf` — identidad cambia a "Autos Norte" + ubicación ficticia "Av. Maipú 2380, Olivos" + reescritura CHARLA INICIAL para NO pedir presupuesto al inicio (orden estricto: modelo → estado → uso → presupuesto último recurso).
-- **Identidad**: este agente pasa a ser explícitamente "el motor de respuestas de FangioCRM". Trebol queda como tenant de test/referencia.
+- **Identidad**: este agente pasa a ser explícitamente "el motor de respuestas de FangioBot". Trebol queda como tenant de test/referencia.
 - **Limpieza del roadmap previo**: archivados a `_archivado/` los docs de Sales Swarm, principios canónicos v1/v2, multi-LLM (Groq/Gemini), Token Optimization, OpenAI quota fallback, sesiones 17-abril y 25-abril. También archivado `Fangio_CRM/Bot_LangGraph_Migration.md` (spec multi-tenant basado en el bot v2). Conservados con README explicativo.
 - **Doc canónica nueva**: [[proyectos/Fangio_CRM/LangGraph_Bot/Pipeline_Estructura]] — fuente de verdad técnica del agente actual (pipeline end-to-end, state, tools, memoria Redis, estructura archivos, comandos). Reescrita [[proyectos/Fangio_CRM/LangGraph_Bot/LangGraph_Bot]] como índice del proyecto.
 - **Próximo paso**: usuario va a definir roadmap de mejoras desde este punto.
@@ -109,14 +109,14 @@ Sesión de testing real con audio (cliente + bot) detectó 4 bugs concretos. Tod
 - Después de 8+ iteraciones de prompt en una sola sesión (saludo recíproco, max 2-3 fichas, filtro semántico, default "no hay", detector handoff canónico, etc.) se confirmó el techo del enfoque reactivo: cada caso edge nuevo agrega micro-reglas que se chocan entre sí.
 - Cambio de metodología documentado en [[proyectos/Fangio_CRM/LangGraph_Bot/Bot_Behavior_Methodology]]: 4 capas (principios + prompt limpio + few-shot + eval suite).
 - Fase 1 (definir 5 principios firmes con el usuario) iniciada al final de la sesión. Bloquea nuevas iteraciones de prompt hasta tener principios + reescritura.
-- Aplica también al diseño multi-tenant de FangioCRM (los principios son globales, los few-shot pueden ser per-tenant).
+- Aplica también al diseño multi-tenant de FangioBot (los principios son globales, los few-shot pueden ser per-tenant).
 - Banner agregado a [[infra/Roadmap]] al tope.
 
-## [2026-04-27] sesion | F3 Specialists deployed + Decisión bot LangGraph como motor FangioCRM
+## [2026-04-27] sesion | F3 Specialists deployed + Decisión bot LangGraph como motor FangioBot
 - F3 Sales Swarm deployado en test: 3 archivos `personas/explorador.md|work_machine.md|passion_drive.md` con tono, argumentos, ejemplos few-shot y frase de derivación específica por perfil. Refactor `profiler.render_psicoperfil_block()` para leer del archivo correspondiente. Smoke test: WORK_MACHINE responde con cold open profesional + TCO; PASSION_DRIVE con energía + urgencia. Diferencias visibles entre perfiles.
 - Fixes UX previos a F3 (mismo día): trim de fillers ("Perfecto." / "Listo." colgados), saludo recíproco no invasivo, max 2-3 fichas + cualificación, separación frase canónica handoff cierre vs derivación parcial (no fotos).
-- Decisión arquitectónica: el bot LangGraph (`trebol-test-bot`) pasa a ser el motor cognitivo de FangioCRM en vez de n8n LangChain. Reemplazo del cerebro AI Agent en el plano `Arquitectura_SaaS_Multitenant`. Spec creada en [[proyectos/Fangio_CRM/Bot_LangGraph_Migration]] con 6 fases (config dinámica, webhook Evolution directo, prompt template, tools por tenant, UI editor, F4 Closer per-tenant). Implementación pendiente — el usuario quiso seguir testeando F3 con Trebol antes de migrar.
-- WhatsApp sale temporalmente del bot: el usuario movió el phone (5491123809397) a la instance `el-trebol` de FangioCRM (status `open`). La instance `eltrebollll` que usaba el bot quedó en `close` (device_removed conflict). Para retomar tests del bot Trebol → re-conectar `eltrebollll` desde Evolution Manager UI.
+- Decisión arquitectónica: el bot LangGraph (`trebol-test-bot`) pasa a ser el motor cognitivo de FangioBot en vez de n8n LangChain. Reemplazo del cerebro AI Agent en el plano `Arquitectura_SaaS_Multitenant`. Spec creada en [[proyectos/Fangio_CRM/Bot_LangGraph_Migration]] con 6 fases (config dinámica, webhook Evolution directo, prompt template, tools por tenant, UI editor, F4 Closer per-tenant). Implementación pendiente — el usuario quiso seguir testeando F3 con Trebol antes de migrar.
+- WhatsApp sale temporalmente del bot: el usuario movió el phone (5491123809397) a la instance `el-trebol` de FangioBot (status `open`). La instance `eltrebollll` que usaba el bot quedó en `close` (device_removed conflict). Para retomar tests del bot Trebol → re-conectar `eltrebollll` desde Evolution Manager UI.
 
 ## [2026-04-26] ops | Apagado total de Trebol PROD — cliente en pausa indefinida
 - **Motivo**: El Trébol Automotores se dio de baja como cliente. Posibilidad futura de reactivación → no se elimina nada, solo se apaga.

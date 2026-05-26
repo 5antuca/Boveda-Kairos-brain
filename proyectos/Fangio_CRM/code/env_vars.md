@@ -1,6 +1,6 @@
 # Variables de entorno a agregar
 
-## Vercel (FangioCRM)
+## Vercel (FangioBot)
 
 ```
 N8N_INTERNAL_URL=https://n8n.fangiocrm.com
@@ -12,13 +12,13 @@ Agregar en: https://vercel.com/dashboard → tu proyecto → Settings → Enviro
 ## n8n worker (ya aplicado en VPS)
 
 ```
-FANGIOCRM_URL=https://www.fangiocrm.com
+FANGIOCRM_URL=https://www.fangiobot.com
 EVOLUTION_WEBHOOK_SECRET=a071e80e99427ab7dd7cfab3dfa0850cbcc47baada637493
 ```
 
 ---
 
-## Archivos a crear/modificar en FangioCRM
+## Archivos a crear/modificar en FangioBot
 
 | Archivo | Acción |
 |---|---|
@@ -50,7 +50,7 @@ async function toggleBot(leadId: string, currentlyActive: boolean) {
 
 ```bash
 # Simular mensaje entrante
-curl -X POST https://www.fangiocrm.com/api/webhook/evolution \
+curl -X POST https://www.fangiobot.com/api/webhook/evolution \
   -H "Content-Type: application/json" \
   -H "x-webhook-secret: a071e80e99427ab7dd7cfab3dfa0850cbcc47baada637493" \
   -d '{
@@ -65,7 +65,7 @@ curl -X POST https://www.fangiocrm.com/api/webhook/evolution \
   }'
 
 # Simular respuesta del bot
-curl -X POST https://www.fangiocrm.com/api/webhook/evolution \
+curl -X POST https://www.fangiobot.com/api/webhook/evolution \
   -H "Content-Type: application/json" \
   -H "x-webhook-secret: a071e80e99427ab7dd7cfab3dfa0850cbcc47baada637493" \
   -d '{

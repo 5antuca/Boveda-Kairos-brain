@@ -1,28 +1,28 @@
 ---
 tags: [fangiocrm, roadmap, ingesta, embeddings, multitenant, mongodb]
 fecha: 2026-05-05
-estado: PIVOT 2 — pendiente URI Mongo de FangioCRM para arrancar
+estado: PIVOT 2 — pendiente URI Mongo de FangioBot para arrancar
 autor: santi + claude
-relacionado: [[Fangio_CRM]], [[Arquitectura_Datos]], [[Trebol_Bot_Embedded]], [[SheetsToMongo_RAG_Inventario]]
+relacionado: [[FangioBot]], [[Arquitectura_Datos]], [[Trebol_Bot_Embedded]], [[SheetsToMongo_RAG_Inventario]]
 ---
 
-# Roadmap — Ingesta de Stock por Tenant (FangioCRM UI → MongoDB Vector Search)
+# Roadmap — Ingesta de Stock por Tenant (FangioBot UI → MongoDB Vector Search)
 
-> **PIVOT 2 (2026-05-05, post-investigación del repo FangioCRM)**: el approach Apps Script descrito abajo está **OBSOLETO**. El descubrimiento clave: FangioCRM ya tiene UI funcional de drag-XLSX → grid editable → persistencia en `TenantInventory.gridState` (cluster Mongo `fangiocrm`). No hace falta Apps Script ni Sheets API ni service account de Google.
+> **PIVOT 2 (2026-05-05, post-investigación del repo FangioBot)**: el approach Apps Script descrito abajo está **OBSOLETO**. El descubrimiento clave: FangioBot ya tiene UI funcional de drag-XLSX → grid editable → persistencia en `TenantInventory.gridState` (cluster Mongo `fangiocrm`). No hace falta Apps Script ni Sheets API ni service account de Google.
 >
-> **Plan vigente**: FangioCRM es la fuente de verdad del inventario. Bot Python lee `TenantInventory` del cluster `fangiocrm`, expande `gridState` a docs, normaliza headers, clasifica 8 campos LLM, embede, escribe a `RAGtrebol.propiedades-test`. Trigger live: agregar 3 líneas en `FangioCRM/src/app/api/inventory/route.ts` que llamen webhook al bot post-save.
+> **Plan vigente**: FangioBot es la fuente de verdad del inventario. Bot Python lee `TenantInventory` del cluster `fangiocrm`, expande `gridState` a docs, normaliza headers, clasifica 8 campos LLM, embede, escribe a `RAGtrebol.propiedades-test`. Trigger live: agregar 3 líneas en `FangioBot/src/app/api/inventory/route.ts` que llamen webhook al bot post-save.
 >
 > Detalle de la arquitectura nueva en [[Arquitectura_Datos]]. Lo que sigue debajo es el approach Apps Script que se descartó — se mantiene como referencia histórica hasta que reescribamos el roadmap completo en próxima sesión.
 
-Pipeline para que cada concesionaria (tenant) tenga su inventario en un Google Sheet propio y los cambios fluyan **en vivo** al RAG vía Apps Script onEdit instalable. Onboarding sin programadores: el cliente arrastra su XLSX en FangioCRM y el sistema convierte el archivo en un Sheet con trigger ya instalado.
+Pipeline para que cada concesionaria (tenant) tenga su inventario en un Google Sheet propio y los cambios fluyan **en vivo** al RAG vía Apps Script onEdit instalable. Onboarding sin programadores: el cliente arrastra su XLSX en FangioBot y el sistema convierte el archivo en un Sheet con trigger ya instalado.
 
 > **Decisiones del usuario (2026-05-05)**:
 > - **A)** Fuente de cambios = **Google Sheets + Apps Script onEdit instalable** (vivo) en lugar de XLSX upload manual. Reconciliación cron diaria como red de seguridad.
 > - **B)** Backend de ingesta = **módulo nuevo dentro de `bot-service`** (`bot-service/trebol_bot/ingest/`) + endpoint `webhook/sheets.py`. Separación de código sin separación de infra. Si la ingesta empieza a competir con el bot por CPU, escalar a servicio aparte (`inventory-sync-service`).
-> - **C)** Onboarding MVP = **Ruta 3 (drag XLSX → Sheet creado por FangioCRM en su propio Drive con Apps Script ya instalado)**. Upgrade futuro = Ruta 2 (OAuth del cliente + Drive watch sobre su propio sheet). Detalle en sección 4.
+> - **C)** Onboarding MVP = **Ruta 3 (drag XLSX → Sheet creado por FangioBot en su propio Drive con Apps Script ya instalado)**. Upgrade futuro = Ruta 2 (OAuth del cliente + Drive watch sobre su propio sheet). Detalle en sección 4.
 > - **D)** Aislamiento estricto: una **colección MongoDB por tenant** (`inventory_{tenantId}`). Stock por tenant, vector index por tenant.
 > - **E)** Schema canónico, clasificador LLM (8 campos: carroceria, traccion, transmision, combustible, es_clasico, es_deportivo, segmento, tags), modelo de embeddings (`text-embedding-3-small`) y page_content con sinónimos = **igual al pipeline actual de Trébol** (ver [[SheetsToMongo_RAG_Inventario]]).
-> - **F)** Sin Paperclip por ahora. Lógica de ingesta en `bot-service`. UI de onboarding/mapping en repo `FangioCRM`.
+> - **F)** Sin Paperclip por ahora. Lógica de ingesta en `bot-service`. UI de onboarding/mapping en repo `FangioBot`.
 
 ---
 
@@ -49,18 +49,18 @@ LLMs son muy buenos en schema mapping porque entienden similitudes semánticas q
 
 ```
                   ┌──────────────────────────────────────┐
-                  │  FangioCRM Frontend (Next.js)        │
+                  │  FangioBot Frontend (Next.js)        │
                   │  ┌────────────────────────────────┐  │
                   │  │ "Conectar inventario"          │  │
                   │  │   Drag XLSX → Sheet en Drive   │  │
-                  │  │   FangioCRM (Ruta 3 MVP)       │  │
+                  │  │   FangioBot (Ruta 3 MVP)       │  │
                   │  │ Mapping UI (det + LLM)         │  │
                   │  └─────────────┬──────────────────┘  │
                   └────────────────┼──────────────────────┘
                                    │ POST /api/inventory/connect
                                    ▼
                   ┌──────────────────────────────────────┐
-                  │  FangioCRM Backend (Node API Routes) │
+                  │  FangioBot Backend (Node API Routes) │
                   │   ├─ Drive API: subir XLSX → Sheet   │
                   │   ├─ Apps Script API: bind script    │
                   │   │   con trigger onEdit instalable  │
@@ -180,10 +180,10 @@ Cada documento en `inventory_{tenantId}` tiene esta forma. Idéntico al pipeline
 
 ### Pieza 1 — Trigger en Google Sheets (Apps Script)
 
-El sheet del cliente vive en Drive de FangioCRM (sección 4 explica cómo llega ahí). Tiene un script bound con esta lógica:
+El sheet del cliente vive en Drive de FangioBot (sección 4 explica cómo llega ahí). Tiene un script bound con esta lógica:
 
 ```javascript
-// Apps Script bound al sheet — auto-instalado por FangioCRM al onboarding
+// Apps Script bound al sheet — auto-instalado por FangioBot al onboarding
 const TENANT_TOKEN = "<inyectado al crear el script>";
 const TENANT_ID    = "<inyectado al crear el script>";
 const WEBHOOK_URL  = "https://test-trebol.bot.kairosaisolutions.com/webhook/sheets/edit";
@@ -225,7 +225,7 @@ El trigger se instala via Apps Script API al onboardear al cliente (sección 4) 
 
 ### Pieza 2 — Normalización de columnas (una vez por tenant)
 
-Al onboarding, FangioCRM lee headers + sample de filas y arma el mapping con dos capas:
+Al onboarding, FangioBot lee headers + sample de filas y arma el mapping con dos capas:
 
 #### Capa 1 — Diccionario determinístico (cubre el 80%)
 
@@ -332,10 +332,10 @@ Si en un webhook futuro `headers_signature` cambia (cliente agregó/borró colum
 
 El cliente jamás toca código. El flujo es:
 
-1. Cliente entra a FangioCRM → "Conectar inventario"
+1. Cliente entra a FangioBot → "Conectar inventario"
 2. Drag-and-drop de su `inventario.xlsx` (o pegar URL de un Google Sheet existente — fallback)
-3. **Backend de FangioCRM** (nodo Next.js):
-   a. Sube el XLSX a Drive en cuenta de servicio de FangioCRM, **convertido a Google Sheet** (vía Drive API `mimeType: application/vnd.google-apps.spreadsheet`)
+3. **Backend de FangioBot** (nodo Next.js):
+   a. Sube el XLSX a Drive en cuenta de servicio de FangioBot, **convertido a Google Sheet** (vía Drive API `mimeType: application/vnd.google-apps.spreadsheet`)
    b. Comparte el sheet con el email del cliente con permiso `writer`
    c. Genera `tenant_token` aleatorio (32 chars), persiste en `tenant_sheet_registry`
    d. Llama Apps Script API: crea proyecto bound al sheet, sube el código del trigger con `TENANT_TOKEN` y `TENANT_ID` inyectados como constantes
@@ -348,13 +348,13 @@ El cliente jamás toca código. El flujo es:
 
 ### Tradeoff explícito de la Ruta 3
 
-El sheet vive en Drive de FangioCRM, no en Drive del cliente. El cliente lo ve como "compartido conmigo". Pros: zero-touch, sin OAuth del cliente, sin scope `script.projects` que dispara warning de "unverified app", control total. Contras: si el cliente quiere usar ese sheet con otra integración propia (ej. su Zapier), el sheet no es de su Workspace.
+El sheet vive en Drive de FangioBot, no en Drive del cliente. El cliente lo ve como "compartido conmigo". Pros: zero-touch, sin OAuth del cliente, sin scope `script.projects` que dispara warning de "unverified app", control total. Contras: si el cliente quiere usar ese sheet con otra integración propia (ej. su Zapier), el sheet no es de su Workspace.
 
 ### Ruta 2 (upgrade futuro, sprint 7+)
 
 Cuando un cliente exija "mi sheet tiene que ser mío":
 1. OAuth del cliente con scopes `drive.file` + `spreadsheets.readonly`
-2. FangioCRM se suscribe a `files.watch` de Drive sobre el sheet del cliente
+2. FangioBot se suscribe a `files.watch` de Drive sobre el sheet del cliente
 3. Cada notificación de cambio → backend lee el sheet entero y diffea contra Mongo (mismo `content_hash`)
 4. Cron de renovación de watch channel (expiran cada 7 días)
 
@@ -455,11 +455,11 @@ bot-service/trebol_bot/
 └── main.py                          # registrar router de sheets.py
 ```
 
-### 8.2 En el repo `FangioCRM` (Next.js + Node)
+### 8.2 En el repo `FangioBot` (Next.js + Node)
 
 | Pieza | Tipo | Responsabilidad |
 |---|---|---|
-| `POST /api/inventory/connect` | API Route | Recibe XLSX, lo sube a Drive de FangioCRM como Sheet, instala Apps Script |
+| `POST /api/inventory/connect` | API Route | Recibe XLSX, lo sube a Drive de FangioBot como Sheet, instala Apps Script |
 | `POST /api/inventory/connect-existing` | API Route | (Ruta 2 futuro) recibe URL de sheet del cliente + OAuth |
 | `lib/google/driveClient.ts` | Lib | Service account + Drive API (upload, share) |
 | `lib/google/scriptClient.ts` | Lib | Apps Script API (create project, deploy, install trigger) |
@@ -472,9 +472,9 @@ bot-service/trebol_bot/
 
 | Pieza | Dónde |
 |---|---|
-| `tenant_schema_map` collection | Mongo Atlas (escribe FangioCRM al onboarding, lee bot-service en cada webhook) |
-| `tenant_sheet_registry` collection | Mongo Atlas (escribe FangioCRM, lee bot-service para validar X-Tenant-Token) |
-| `inventory_{tenantId}` collections | Mongo Atlas (lee/escribe bot-service, solo lee FangioCRM para UI de audit) |
+| `tenant_schema_map` collection | Mongo Atlas (escribe FangioBot al onboarding, lee bot-service en cada webhook) |
+| `tenant_sheet_registry` collection | Mongo Atlas (escribe FangioBot, lee bot-service para validar X-Tenant-Token) |
+| `inventory_{tenantId}` collections | Mongo Atlas (lee/escribe bot-service, solo lee FangioBot para UI de audit) |
 
 ---
 
@@ -489,7 +489,7 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 
 ```
 1. Lee tenant_sheet_registry → todos los sheets activos
-2. Por cada sheet, lee filas vía Sheets API (service account de FangioCRM)
+2. Por cada sheet, lee filas vía Sheets API (service account de FangioBot)
 3. Calcula content_hash de cada fila
 4. Diff vs Mongo (inventory_{tenantId})
 5. Aplica INSERT/UPDATE/DELETE/SKIP (en este caso DELETE = soft delete real)
@@ -511,7 +511,7 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 - [ ] Crear collections base en Mongo Atlas: `tenant_schema_map`, `tenant_sheet_registry`, `inventory_audit_template` (cómo crear las `inventory_{tenantId}` y sus indexes via script).
 - [ ] Decidir **dónde corre el reconciler cron**: A) APScheduler dentro del proceso del bot (más simple, riesgo de competir con el bot al correr) · B) Container `cron` aparte que invoca un endpoint del bot · **C) GitHub Actions cron que llama al endpoint** (más simple, sin nuevo container).
 - [ ] Decidir si el `tenant_token` se rota nunca o se rota cada 90 días.
-- [ ] Aprovisionar service account de Google para FangioCRM (Drive + Sheets + Apps Script API). Documentar scopes.
+- [ ] Aprovisionar service account de Google para FangioBot (Drive + Sheets + Apps Script API). Documentar scopes.
 
 ### Sprint 1 — Mapping engine en bot-service (1 semana)
 
@@ -522,14 +522,14 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 - [ ] `POST /ingest/confirm-mapping` endpoint (persiste en `tenant_schema_map`).
 - [ ] **Demo**: llamar al endpoint con headers de Trébol → ver mapping correcto sin tocar nada.
 
-### Sprint 2 — Drive + Apps Script onboarding desde FangioCRM (1 semana)
+### Sprint 2 — Drive + Apps Script onboarding desde FangioBot (1 semana)
 
 - [ ] `lib/google/driveClient.ts` (subir XLSX → Sheet, share con email).
 - [ ] `lib/google/scriptTemplate.ts` (template del trigger con placeholders).
 - [ ] `lib/google/scriptClient.ts` (Apps Script API: create project bound, deploy, install trigger).
 - [ ] `POST /api/inventory/connect` end-to-end: recibe XLSX → crea Sheet → instala script → llama a bot-service preview-mapping.
 - [ ] `ConnectFlow.tsx` + `MappingTable.tsx` funcionando.
-- [ ] **Demo**: arrastrar XLSX dummy → Sheet creado en Drive de FangioCRM → ver script instalado en el editor → editar una celda manualmente → ver el POST llegando a un endpoint de eco en bot-service.
+- [ ] **Demo**: arrastrar XLSX dummy → Sheet creado en Drive de FangioBot → ver script instalado en el editor → editar una celda manualmente → ver el POST llegando a un endpoint de eco en bot-service.
 
 ### Sprint 3 — Diff + Classifier + Embedder en bot-service (1 semana)
 
@@ -558,14 +558,14 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 
 ### Sprint 6 — UI de Audit + housekeeping (1 semana)
 
-- [ ] Vista en FangioCRM: histórico de uploads, qué cambió, errores.
+- [ ] Vista en FangioBot: histórico de uploads, qué cambió, errores.
 - [ ] Job cron diario: items con `estado: "no_en_agencia"` por más de 30 días → hard delete.
 - [ ] Job cron diario: detectar drift entre `tenant_schema_map.headers_signature` y headers reales (alert si cambió).
 - [ ] Métricas: `inventory_items_total{tenant_id}`, `inventory_sync_duration_seconds`, `inventory_embedding_cost_usd_total`.
 
 ### Sprint 7 — Cutover Trébol y deprecación SheetsToMongo (1 semana)
 
-- [ ] Crear sheet nuevo en Drive de FangioCRM con el inventario actual de Trébol (importado desde `RAGtrebol.propiedades-test`).
+- [ ] Crear sheet nuevo en Drive de FangioBot con el inventario actual de Trébol (importado desde `RAGtrebol.propiedades-test`).
 - [ ] Compartir con santi+admin del Trébol con permiso editor.
 - [ ] Apps Script instalado, mapping configurado, initial sync corrido.
 - [ ] Apuntar el bot Trébol test a `inventory_el-trebol`.
@@ -575,7 +575,7 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 
 ### Sprint 8 — Onboarding del segundo tenant (1 semana)
 
-- [ ] Crear tenant nuevo desde la UI de FangioCRM.
+- [ ] Crear tenant nuevo desde la UI de FangioBot.
 - [ ] Subir XLSX del cliente nuevo.
 - [ ] Conectar Evolution + bot.
 - [ ] Validar aislamiento (queries del tenant 1 jamás ven datos del tenant 2).
@@ -595,9 +595,9 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 |---|---|---|
 | D1 | ¿Reconciler en APScheduler / container cron / GitHub Actions? | **Pendiente Sprint 0** |
 | D2 | Schema canónico: ¿incluir `precio_ars` además de `precio_usd` desde día 1? | A) Solo USD (Trébol opera así) · B) Ambos con conversión automática |
-| D3 | ¿Soportar URL de sheet existente como fallback de "drag XLSX"? | A) MVP solo XLSX · B) Aceptar URL pero forzar copia al Drive de FangioCRM (no Ruta 2 todavía) |
+| D3 | ¿Soportar URL de sheet existente como fallback de "drag XLSX"? | A) MVP solo XLSX · B) Aceptar URL pero forzar copia al Drive de FangioBot (no Ruta 2 todavía) |
 | D4 | ¿Token validation del webhook = X-Tenant-Token simple o HMAC firmado? | Decisión del usuario (ver punto 4 de la conversación de planeo) |
-| D5 | ¿Trébol mantiene su sheet propio o se le crea uno nuevo en Drive de FangioCRM? | A) Nuevo sheet (consistencia con resto de tenants) · B) Conectar el actual via Ruta 2 anticipada |
+| D5 | ¿Trébol mantiene su sheet propio o se le crea uno nuevo en Drive de FangioBot? | A) Nuevo sheet (consistencia con resto de tenants) · B) Conectar el actual via Ruta 2 anticipada |
 
 ---
 
@@ -605,9 +605,9 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 
 | Riesgo | Probabilidad | Impacto | Mitigación |
 |---|---|---|---|
-| Apps Script API rompe al cambiar Google su política de scripts no verificados | Media | Alto | Service account de FangioCRM con verification → reduce alertas. Ruta 2 como plan B no depende de Apps Script API. |
+| Apps Script API rompe al cambiar Google su política de scripts no verificados | Media | Alto | Service account de FangioBot con verification → reduce alertas. Ruta 2 como plan B no depende de Apps Script API. |
 | Cliente edita el sheet desde mobile y el trigger no dispara | Baja | Bajo | Triggers instalables corren server-side, no dependen del cliente. Reconciler atrapa lo perdido. |
-| Cliente borra accidentalmente el sheet desde "compartido conmigo" | Media | Bajo | El sheet vive en Drive de FangioCRM, "borrar" del cliente solo lo saca de su lista. |
+| Cliente borra accidentalmente el sheet desde "compartido conmigo" | Media | Bajo | El sheet vive en Drive de FangioBot, "borrar" del cliente solo lo saca de su lista. |
 | Cliente cambia headers (renombra columna) y rompe el mapping | Alta | Medio | Webhook detecta `headers_signature` cambiado → marca tenant como `mapping_drift` → UI pide reconfirmación, sync pausado hasta confirmar. |
 | Token leak (Apps Script visible al cliente con permiso editor) | Media | Bajo | El cliente con permiso editor SÍ puede leer el script y ver el token. Mitigación: token es scoped a su tenant — un atacante con ese token solo puede inyectar filas como ese tenant, no leakear cross-tenant. Si hay incidente, rotar token desde la UI. |
 | LLM mapping devuelve mappings inestables turno a turno | Media | Medio | Confidence < 0.7 → confirmación humana obligatoria. Mapping aprobado se persiste y nunca se recalcula. |
@@ -627,8 +627,8 @@ Por eso, **1×/día** el reconciler corre por cada tenant activo:
 ## Referencias
 
 - [[SheetsToMongo_RAG_Inventario]] — pipeline actual de Trébol (lógica fuente, schema, sinónimos)
-- [[FangioBot_v2_Architecture]] — pipeline n8n actual de FangioCRM (a deprecar gradualmente)
-- [[Trebol_Bot_Embedded]] — cómo se embebe Trebol Bot dentro de FangioCRM
+- [[FangioBot_v2_Architecture]] — pipeline n8n actual de FangioBot (a deprecar gradualmente)
+- [[Trebol_Bot_Embedded]] — cómo se embebe Trebol Bot dentro de FangioBot
 - [[Arquitectura_SaaS_Multitenant]] — topología actual
 - [[Pipeline_v4]] — referencia de bot Trébol producción
 - [Apps Script installable triggers — docs](https://developers.google.com/apps-script/guides/triggers/installable)

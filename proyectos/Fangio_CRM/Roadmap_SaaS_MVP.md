@@ -2,16 +2,16 @@
 tags: [fangiocrm, roadmap, saas, mvp, multitenant, billing, onboarding]
 fecha: 2026-05-24
 estado: EN CURSO — F0 auditado, F1 completa
-relacionado: [[Fangio_CRM]], [[Arquitectura_SaaS_Multitenant]], [[Trebol_Bot_Embedded]], [[Roadmap_Stock_Ingestion_v1]], [[Roadmap_Proxima_Sesion]]
+relacionado: [[FangioBot]], [[Arquitectura_SaaS_Multitenant]], [[Trebol_Bot_Embedded]], [[Roadmap_Stock_Ingestion_v1]], [[Roadmap_Proxima_Sesion]]
 ---
 
-# Roadmap — FangioCRM como SaaS alquilable (MVP)
+# Roadmap — FangioBot como SaaS alquilable (MVP)
 
 > **Spec técnica viva**: `kairos-infrastructure/specs/2026-05-24-fangiocrm-saas-mvp.md` (decisiones + fases + follow-ups en detalle).
 
 ## 🎯 Visión
 
-Convertir FangioCRM en un **SaaS multi-tenant** que una concesionaria contrata y pone a andar **sola**, sin intervención técnica nuestra en el 90% de los casos:
+Convertir FangioBot en un **SaaS multi-tenant** que una concesionaria contrata y pone a andar **sola**, sin intervención técnica nuestra en el 90% de los casos:
 
 1. Se registra → 2. paga la suscripción → 3. **arroja su Excel de stock** → 4. conecta su WhatsApp (QR) → 5. queda con un **bot de respuestas** que entiende su planilla.
 
@@ -75,7 +75,7 @@ El scaffold estaba MÁS completo de lo asumido. Funcional y real: onboarding (`r
 
 Lo que queda **necesita input del usuario**:
 - **F3 — billing por Shopify** (decisión del usuario): configurar la tienda (producto 50k + MercadoPago como medio de pago + webhook → `SHOPIFY_WEBHOOK_SECRET` en Vercel). **Regla: registro OBLIGATORIO antes de pagar**, mismo email. El webhook ya activa el tenant; falta endurecer (baja/cancelación → pausar bot) + gate de pago. → bloqueado en la config de Shopify.
-- **F2.3 / UI** — agente de onboarding (mostrar `questions`, guardar override) + flujo registro→pago + sumar `ubicacion`/`horario` al Tenant. → frontend FangioCRM + UX.
+- **F2.3 / UI** — agente de onboarding (mostrar `questions`, guardar override) + flujo registro→pago + sumar `ubicacion`/`horario` al Tenant. → frontend FangioBot + UX.
 - **F4 metering** — enforcement de `limiteMensajes` + validar costos. → necesita tráfico real.
 - **F5/F6** — WhatsApp self-serve + seguridad/landing. → celular real + decisiones.
 

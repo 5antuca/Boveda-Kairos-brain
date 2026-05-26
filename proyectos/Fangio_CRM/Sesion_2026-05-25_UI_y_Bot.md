@@ -8,11 +8,11 @@ fecha: 2026-05-25
 Sesión larga y multi-frente. Resumen del estado y el **backlog vivo** (seguir puliendo UI + bot).
 
 ## 1. Dominio — FangioBot (LIVE)
-- **fangiobot.com** pasa a ser el dominio PRINCIPAL. DNS en Squarespace → Vercel (apex A `76.76.21.21`, `www` CNAME `cname.vercel-dns.com`). `NEXTAUTH_URL` + `APP_URL` = `https://www.fangiobot.com` en Vercel + redeploy. `APP_URL` parametrizado en `subscribe/route.ts` (commit FangioCRM `283ea88`).
-- Pendiente: redirect `fangiocrm.com → fangiobot.com`; rebrand visual UI "FangioCRM"→"FangioBot". Ver memoria `project_fangiobot_domain_migration`.
+- **fangiobot.com** pasa a ser el dominio PRINCIPAL. DNS en Squarespace → Vercel (apex A `76.76.21.21`, `www` CNAME `cname.vercel-dns.com`). `NEXTAUTH_URL` + `APP_URL` = `https://www.fangiobot.com` en Vercel + redeploy. `APP_URL` parametrizado en `subscribe/route.ts` (commit FangioBot `283ea88`).
+- Pendiente: redirect `fangiobot.com → fangiobot.com`; rebrand visual UI "FangioBot"→"FangioBot". Ver memoria `project_fangiobot_domain_migration`.
 
 ## 2. Demo de la landing (/api/demo/chat) — LIVE en Vercel
-- Persona "derivador de lujo" + ajustes (permuta, financiación afirmada, no muletillas, sentido común comprar-vs-entregar). Commits varios en `main` de FangioCRM (último ~`365c674`).
+- Persona "derivador de lujo" + ajustes (permuta, financiación afirmada, no muletillas, sentido común comprar-vs-entregar). Commits varios en `main` de FangioBot (último ~`365c674`).
 
 ## 3. ⚠️ Bot de WhatsApp = ROLLBACK TEMPORAL (sin commitear)
 **Decisión del usuario**: volver al bot LangGraph single-tenant de ~5 días atrás (`f1504a8`) porque el multi-tenant/derivador no estaba listo. **El working tree de `bot-service/` está en `f1504a8` + tweaks, SIN commitear** (reversible con `git checkout 289be0c -- bot-service`).
@@ -27,7 +27,7 @@ Sesión larga y multi-frente. Resumen del estado y el **backlog vivo** (seguir p
   - **Búsqueda insensible a acentos** ("citroen" ↔ "Citroën") — `_ai_regex` en tools.py.
   - **Velocidad**: dólar blue cacheado 1h (no fetch por turno), debounce 3→1.5s, `max_tokens=600`. Latencia en caliente ~3.7s (era ~13s).
 
-## 4. UI del chat del dashboard (FangioCRM, LIVE) — rediseño WhatsApp-Web
+## 4. UI del chat del dashboard (FangioBot, LIVE) — rediseño WhatsApp-Web
 Componentes: `ChatLayout`, `MessageWindow`, `ConversationList`, `CustomerPanel`. Commits en `main` (último `e78ea62`/`d4f3767`).
 - Burbuja única (sin doble borde), **hora gris dentro a la derecha**, texto off-white.
 - Conversación ocupa **todo el ancho** entre columnas (override del cap `85%` de chatscope en `.cs-message-list__scroll-wrapper > .cs-message`). Outgoing pega a la derecha, incoming a la izquierda.
@@ -40,6 +40,6 @@ Componentes: `ChatLayout`, `MessageWindow`, `ConversationList`, `CustomerPanel`.
 - **Stock sin fotos**: 47/54 autos de gerstner sin fotos → la recomendación visual cojea. Ver ingesta de fotos (URLs ML → re-host R2), spec en memoria `project_fangiobot_domain_migration` / idea de "ingesta de fotos" charlada.
 - **Decisión pendiente del rollback**: ¿hacer permanente el bot single-tenant (commitear) o volver a multi-tenant/derivador y portar estas mejoras? Hoy está en working tree sin commitear.
 - **Fine-tune del derivador**: dataset semilla (11 arquetipos) en `specs/2026-05-25-finetune-plan-derivador.md` + `bot-service/finetune/`. Pausado.
-- **Rebrand UI** FangioCRM→FangioBot + redirect fangiocrm.com.
+- **Rebrand UI** FangioBot→FangioBot + redirect fangiobot.com.
 
 Memorias relacionadas: [[project_fangiobot_domain_migration]] · [[feedback_derivador_conversation_rules]] · [[reference_bot_rebuild_required]] · [[reference_bot_multitenant]].

@@ -6,20 +6,20 @@ relacionado: [[Arquitectura_Datos]], [[Roadmap_Stock_Ingestion_v1]], [[project_i
 ---
 
 > [!success] EJECUTADO 2026-05-23
-> Ingesta de stock LIVE. Módulo `bot-service/trebol_bot/ingest/` (fangiocrm_reader · transform · classifier · embedder · mongo · pipeline) + endpoints `POST /ingest/reimport-tenant` y `POST /webhook/inventory-changed`. Reimport real corrido: **54 autos del Trébol** (67 leídos, 13 excluidos por señado/no-en-agencia), 0 fallos de clasificación. `propiedades-test` pasó de 59 docs viejos (Sheets) → 54 nuevos (FangioCRM). Backups en `kairos-infrastructure/backups/propiedades-test{,-FULL}-2026-05-23.json`.
+> Ingesta de stock LIVE. Módulo `bot-service/trebol_bot/ingest/` (fangiocrm_reader · transform · classifier · embedder · mongo · pipeline) + endpoints `POST /ingest/reimport-tenant` y `POST /webhook/inventory-changed`. Reimport real corrido: **54 autos del Trébol** (67 leídos, 13 excluidos por señado/no-en-agencia), 0 fallos de clasificación. `propiedades-test` pasó de 59 docs viejos (Sheets) → 54 nuevos (FangioBot). Backups en `kairos-infrastructure/backups/propiedades-test{,-FULL}-2026-05-23.json`.
 >
 > **Hallazgos vs el plan:**
 > - DB real = `fangio_crm` (guión bajo), no `fangiocrm`.
 > - `gridState`: headers en la FILA 0 (no en `columns`), `data` sparse keyed `rowId-colId`. Ver `reference_fangiocrm_gridstate_shape`.
 > - `build_sheetstomongo_v2_test.py` es un builder de workflow, no transform reusable → el transform se porteó del JS del nodo "Classify & Prepare" del workflow prod. `backfill_classify_inventario.py` sí se reusó (clasificador).
 > - Decisiones del usuario: excluir señado **+** no-en-agencia; `14 M` = 14M ARS; TC blue **en vivo** (Bluelytics) al ingestar (≈1425); `PRECIO_AL_CONTADO` numérico USD.
-> - Campo FECHA del XLSX = serial de Excel (bug cosmético del importador FangioCRM, el bot no lo usa).
+> - Campo FECHA del XLSX = serial de Excel (bug cosmético del importador FangioBot, el bot no lo usa).
 >
-> **PENDIENTE**: B.7 (trigger live en `FangioCRM/src/app/api/inventory/route.ts` post-save → POST a `/webhook/inventory-changed`) + commitear el módulo `ingest/`. NO es multi-tenant real aún (escribe siempre a `propiedades-test`).
+> **PENDIENTE**: B.7 (trigger live en `FangioBot/src/app/api/inventory/route.ts` post-save → POST a `/webhook/inventory-changed`) + commitear el módulo `ingest/`. NO es multi-tenant real aún (escribe siempre a `propiedades-test`).
 
-# Next Session Checklist — Ingesta de Stock vía FangioCRM
+# Next Session Checklist — Ingesta de Stock vía FangioBot
 
-Sesión del 2026-05-05 cerró con plan aprobado y pivot al approach **FangioCRM-as-source**. Documentación completa en [[Arquitectura_Datos]]. Antes de codear nada, leer eso.
+Sesión del 2026-05-05 cerró con plan aprobado y pivot al approach **FangioBot-as-source**. Documentación completa en [[Arquitectura_Datos]]. Antes de codear nada, leer eso.
 
 ## A — Lo que TIENE QUE HACER EL USUARIO antes de la sesión próxima
 
@@ -33,12 +33,12 @@ Sesión del 2026-05-05 cerró con plan aprobado y pivot al approach **FangioCRM-
   - **A.1.b** — registrarlo en `Kairos_Brain/secrets/inventario.md` (gitignored) y avisar a Claude que está ahí
 - Verificar que sea readable: `docker exec trebol-test-bot env | grep FANGIOCRM_MONGODB_URI`
 
-### A.2 Cargar un XLSX de prueba en FangioCRM y darle SAVE
+### A.2 Cargar un XLSX de prueba en FangioBot y darle SAVE
 
 Snapshot 2026-05-05: `tenantinventories` tiene 0 docs. El usuario hizo drag de XLSX pero no le dio guardar (o no quedó persistido).
 
 Pasos:
-1. Abrir FangioCRM en Vercel (URL del deploy)
+1. Abrir FangioBot en Vercel (URL del deploy)
 2. Login con la cuenta que usás (la del tenant Trébol — `tenantId` probablemente `eltrebollll` o similar)
 3. Ir a sección Inventario
 4. Drag XLSX con autos de prueba (no usar el de prod)
@@ -106,7 +106,7 @@ bot-service/trebol_bot/ingest/
 
 ### B.4 Endpoints en `bot-service/trebol_bot/webhook/inventory.py` (nuevo archivo)
 
-- `POST /webhook/inventory-changed` — body `{tenantId}`, dispara reimport en background. Lo llama FangioCRM post-save.
+- `POST /webhook/inventory-changed` — body `{tenantId}`, dispara reimport en background. Lo llama FangioBot post-save.
 - `POST /ingest/reimport-tenant` — body `{tenantId, dry_run?}`, invocación manual.
 
 Registrar router en `main.py`.
@@ -122,7 +122,7 @@ res = c['RAGtrebol']['propiedades-test'].delete_many({})
 print(f'Deleted: {res.deleted_count}')
 "
 
-# Reimportar desde FangioCRM
+# Reimportar desde FangioBot
 curl -X POST http://localhost:8000/ingest/reimport-tenant \
   -H 'Content-Type: application/json' \
   -d '{"tenantId":"<TENANT_ID_DE_A.2>"}'
@@ -139,7 +139,7 @@ docker exec trebol-test-bot curl -s -X POST http://localhost:8000/test/message \
   -d '{"phone":"5491150635028","message":"tienen Toyota?"}'
 ```
 
-### B.7 Trigger live (agregar a FangioCRM)
+### B.7 Trigger live (agregar a FangioBot)
 
 En `/root/apps/FangioCRM/src/app/api/inventory/route.ts`, después de `findOneAndUpdate`:
 

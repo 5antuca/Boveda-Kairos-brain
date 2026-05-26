@@ -1,12 +1,12 @@
-# Arquitectura SaaS: Fangio CRM & N8N Multitenant
+# Arquitectura SaaS: FangioBot & N8N Multitenant
 
-*Este documento describe la topología de la infraestructura híbrida (Vercel + VPS Independiente) diseñada para que FangioCRM opere como un SaaS escalable para múltiples concesionarias, previniendo cuellos de botella.*
+*Este documento describe la topología de la infraestructura híbrida (Vercel + VPS Independiente) diseñada para que FangioBot opere como un SaaS escalable para múltiples concesionarias, previniendo cuellos de botella.*
 
 ---
 
 ## 1. Topología del Servidor (VPS)
 
-Para evitar que una caída de `Trebol` afecte a `FangioCRM` y permitir escalabilidad pura, se creó un ecosistema aislado en el Servidor Virtual.
+Para evitar que una caída de `Trebol` afecte a `FangioBot` y permitir escalabilidad pura, se creó un ecosistema aislado en el Servidor Virtual.
 
 - **Ruta de Infraestructura:** `/root/apps/fangiocrm-infra`
 - **Dominio Asociado:** `https://n8n.fangiocrm.com` (Redirección segura vía Traefik en red `traefik_public`).
@@ -24,7 +24,7 @@ El `docker-compose.yml` despliega 4 contenedores:
 
 ## 2. Topología de Vercel (Next.js)
 
-FangioCRM está programado en Next.js alojado en Vercel. Su dominio forzado 301 es `fangiocrm.com`.
+FangioBot está programado en Next.js alojado en Vercel. Su dominio forzado 301 es `fangiobot.com`.
 Sirve como el "**Cerebro Verdadero / Fuente de la Verdad**". En vez de guardar variables secretas de cada concesionaria en N8N, guardamos todo en **MongoDB**, y N8N simplemente le consulta al código a través de los Custom Endpoints construidos:
 
 ### Endpoints Vitales de RAG y Control
@@ -48,7 +48,7 @@ Dado que un único `Canvas` en n8n administrará potencialmente a 100 concesiona
 2. **Identificación de Cliente:**
    - Del JSON recibido, el nodo inicial debe extraer la propiedad identificativa: `instance`. Ejemplo: `"fangio-cordoba"`.
 3. **Fetching de Variables:**
-   - Nodo HTTP. Método: `GET`. URL: `https://fangiocrm.com/api/agent/context?instance={{$json.instance}}`.
+   - Nodo HTTP. Método: `GET`. URL: `https://fangiobot.com/api/agent/context?instance={{$json.instance}}`.
 4. **Agente IA (LangChain / OpenAI Node):**
    - El *System Prompt* del agente es inyectado desde la respuesta del nodo HTTP `InstruccionesVenta`, al igual que el Catálogo Automotor.
 5. **Trigger de Envío:**

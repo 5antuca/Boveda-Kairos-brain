@@ -33,10 +33,10 @@ Los repos de `sales-chatbot` más populares son genéricos (ej: `Gen_AI_for_Chat
 | `@n8n/n8n-nodes-langchain.memoryBufferWindow` | Memory | Simple Memory (en-RAM, no Postgres). Window size = 3. ⚠️ No persiste entre reinicios — compensamos con Context Compression como Trebol. |
 | `@n8n/n8n-nodes-langchain.toolWorkflow` | Tool | **Sub-workflows como tools**. Usar para `calcular_cuotas` (sub-workflow separado). |
 | `@n8n/n8n-nodes-langchain.toolCode` | Tool | Custom Code como tool del agent. Usar para `buscar_vehiculos` (query MongoDB) y `opciones_financiacion`. |
-| `@n8n/n8n-nodes-langchain.toolHttpRequest` | Tool | HTTP tool nativa. Usar para llamadas a la API de FangioCRM desde dentro del Agent. |
+| `@n8n/n8n-nodes-langchain.toolHttpRequest` | Tool | HTTP tool nativa. Usar para llamadas a la API de FangioBot desde dentro del Agent. |
 | `n8n-nodes-base.redis` | Node | Debounce, state machine, locks, cache de ficha. |
 | `n8n-nodes-base.code` | Node | `typeVersion: 1` ⚠️ (v2 crashea workers en 2.2.4 — confirmado en Trebol). |
-| `n8n-nodes-base.httpRequest` | Node | Llamadas a FangioCRM API, Evolution API, Dólar Blue. |
+| `n8n-nodes-base.httpRequest` | Node | Llamadas a FangioBot API, Evolution API, Dólar Blue. |
 | `n8n-nodes-base.wait` | Node | Debounce: `Wait` 3s entre LPUSH y LRANGE. |
 | `n8n-nodes-base.if` | Node | Validación de guardias, bot_off flag, estado CRM. Usar `loose` para booleans de Code nodes. |
 
@@ -189,7 +189,7 @@ RAMA B: AI AGENT
         Input: {precio_contado, anticipo} → sub-workflow cálculo
     - derivar_a_vendedor (Code Tool):
         Sets Redis {chat_id}:bot_off = true
-        POST /api/leads → FangioCRM
+        POST /api/leads → FangioBot
         Returns: mensaje de cierre
 
 ══════════════════════════════════════
@@ -206,7 +206,7 @@ RAMA B: AI AGENT
 [13] LLM nano: Extraer Datos Lead
      Input: textoCompleto + respuesta del bot
      Output JSON: {nombre, interes, vehiculoInteres, vehiculoPermuta, presupuesto, financia}
-     POST /api/leads → MongoDB FangioCRM (upsert por phone+tenantId)
+     POST /api/leads → MongoDB FangioBot (upsert por phone+tenantId)
 
 [14] HTTP POST: Evolution API /message/sendText/{instance}
      Body: {number: phone, text: respuesta_final}
@@ -250,7 +250,7 @@ Configurar como Environment Variables en n8n (`Settings → Variables`):
 
 | Variable | Valor |
 |---|---|
-| `FANGIOCRM_API_URL` | `https://fangiocrm.com` |
+| `FANGIOCRM_API_URL` | `https://fangiobot.com` |
 | `EVOLUTION_URL` | `https://test-trebol.evo.kairosaisolutions.com` *(migrar a instancia propia después)* |
 | `EVOLUTION_API_KEY` | La global key de Evolution |
 | `ALERTAS_GROUP_ID` | ID del grupo WA de vendedores por concesionaria (¿en MongoDB Tenant?) |
@@ -284,7 +284,7 @@ Configurar como Environment Variables en n8n (`Settings → Variables`):
 - [x] Nodo 12: Post-processing (ficha detection, dedup)
 - [x] Nodo 13: Extractor nano → Estructura lista para POST /api/leads
 - [x] Nodo 14: Preparación para envío vía Evolution API
-- [/] Verificar integración final con dashboard de FangioCRM (Pendiente conexión real)
+- [/] Verificar integración final con dashboard de FangioBot (Pendiente conexión real)
 
 ### ✅ Sprint 5 — Hardening (Completado)
 - [x] Sincronización dinámica de **Dólar Blue** (vía `dolarapi.com`).
@@ -375,7 +375,7 @@ Ver rediseño completo en [[FangioBot_v2_Architecture]] — Sprints 6-10 pendien
 
 ## 9. Interfaz de Usuario — El Chat Dashboard Profesional
 
-Para garantizar una experiencia de monitoreo y gestión de leads de primer nivel, la interfaz de chat en el dashboard de FangioCRM ha sido profesionalizada utilizando componentes estándar de la industria.
+Para garantizar una experiencia de monitoreo y gestión de leads de primer nivel, la interfaz de chat en el dashboard de FangioBot ha sido profesionalizada utilizando componentes estándar de la industria.
 
 ### 9.1 Stack de UI (Dashboard)
 - **Framework**: `@chatscope/chat-ui-kit-react`.
@@ -400,7 +400,7 @@ Para garantizar una experiencia de monitoreo y gestión de leads de primer nivel
 
 ## 9. Interfaz de Usuario — El Chat Dashboard Profesional
 
-Para garantizar una experiencia de monitoreo y gestión de leads de primer nivel, la interfaz de chat en el dashboard de FangioCRM ha sido profesionalizada utilizando componentes estándar de la industria.
+Para garantizar una experiencia de monitoreo y gestión de leads de primer nivel, la interfaz de chat en el dashboard de FangioBot ha sido profesionalizada utilizando componentes estándar de la industria.
 
 ### 9.1 Stack de UI (Dashboard)
 - **Framework**: `@chatscope/chat-ui-kit-react`.

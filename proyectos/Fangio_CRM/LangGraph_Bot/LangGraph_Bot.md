@@ -7,13 +7,13 @@ estado: vigente — branch operativa `bot-rollback-2026-04-18`
 
 # LangGraph Bot — Índice del proyecto
 
-Servicio Python con LangGraph que sirve hoy de motor de respuestas WhatsApp para Trebol/test y va a ser **el agente de respuestas de FangioCRM** desde acá en adelante.
+Servicio Python con LangGraph que sirve hoy de motor de respuestas WhatsApp para Trebol/test y va a ser **el agente de respuestas de FangioBot** desde acá en adelante.
 
 ## Estado actual (2026-05-01)
 
 - **Branch**: `bot-rollback-2026-04-18` (basada en `7f1e5c2`, cutover prod del 18-abril).
 - **Cliente activo**: Trebol/test (`Autos Norte`, ubicación ficticia Olivos). Trebol/prod apagado desde 2026-04-26.
-- **Identidad**: agente de respuestas multi-tenant para FangioCRM. Trebol queda como tenant test/de referencia.
+- **Identidad**: agente de respuestas multi-tenant para FangioBot. Trebol queda como tenant test/de referencia.
 - **LLM**: OpenAI `gpt-4.1-mini` directo (sin factory multi-provider).
 - **Pipeline**: webhook Chatwoot → debounce → LangGraph (agent + tools) → send Chatwoot → CRM async.
 
@@ -44,7 +44,7 @@ Ver [[_archivado/README]] — Sales Swarm, principios canónicos v1/v2, multi-LL
 ## Próximos pasos abiertos (sin priorizar)
 
 - Roadmap de mejoras técnicas (a definir por el usuario desde este punto).
-- Multi-tenant real para FangioCRM (parametrizar prompt con `{NOMBRE_AGENCIA}`, `{UBICACION}`, etc.).
+- Multi-tenant real para FangioBot (parametrizar prompt con `{NOMBRE_AGENCIA}`, `{UBICACION}`, etc.).
 - Eval suite (no hay tests automáticos del agente actual).
 - Sincronía bot ↔ admin tras handoff (alertas, dossier).
 

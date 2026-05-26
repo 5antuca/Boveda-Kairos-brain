@@ -65,7 +65,7 @@ Si los tres chequeos dan así → es hairpinning, no DNS, no firewall externo, n
 
 ## Casos donde ya nos pasó
 
-### Caso 1 — Evolution API → n8n FangioCRM (2026-04-15)
+### Caso 1 — Evolution API → n8n FangioBot (2026-04-15)
 - **Evolution**: `trebol-test-evolution-api` intentando postear webhook de mensajes a `https://n8n.fangiocrm.com/webhook/fangiobot-master`.
 - **Resultado**: `Tentativa N/10 falhou: Timeout da requisição`, `ECONNABORTED`. El workflow nunca se disparaba aunque Evolution recibía los mensajes de WhatsApp.
 - **Fix**: ambos containers compartían `traefik_public`. Cambiar el webhook en Evolution a `http://fangiocrm-n8n-master:5678/webhook/fangiobot-master` resolvió instantáneamente.

@@ -124,7 +124,7 @@ Webhook Evolution API
                                                                                                   └─► Guardar Contexto (Code)
                                                                                                         └─► IF Bot Off?
                                                                                                               └─► Redis SET Bot Off
-                                                                                                        └─► POST Lead → FangioCRM
+                                                                                                        └─► POST Lead → FangioBot
                                                                                                         └─► Enviar Mensaje (Evolution)
                                                                                                               └─► Redis DEL Lock
 ```
@@ -301,7 +301,7 @@ Post-processing después del Agent. Code node que:
 2. Detecta si el Agent usó `derivar_a_vendedor` → actualiza `estado`
 3. Detecta si el Agent mostró una ficha con precio → guarda en lead para no repetir
 4. Guarda `{chat_id}:lead` en Redis con TTL 72h
-5. Hace POST a `/api/leads` en FangioCRM (upsert)
+5. Hace POST a `/api/leads` en FangioBot (upsert)
 
 ---
 
@@ -353,7 +353,7 @@ Post-processing después del Agent. Code node que:
 
 - [ ] Nuevo nodo: `Guardar Contexto` (reemplaza `Post AI Agent` + `Preparar Lead Data`)
 - [ ] POST a `/api/leads` con el lead estructurado del turno
-- [ ] Verificar upsert en dashboard FangioCRM
+- [ ] Verificar upsert en dashboard FangioBot
 
 ### 🔄 Sprint 10 — Testing end-to-end
 

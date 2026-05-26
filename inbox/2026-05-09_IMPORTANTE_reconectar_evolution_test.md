@@ -81,12 +81,12 @@ Querías probar otro agente sobre el mismo número físico de WhatsApp. WhatsApp
 
 ## Contexto que estábamos siguiendo (NO PERDER)
 
-Antes de la pausa estábamos trabajando en el **MVP de FangioCRM Inventory Sync**. Estado:
+Antes de la pausa estábamos trabajando en el **MVP de FangioBot Inventory Sync**. Estado:
 
 - Roadmap real: `Kairos_Brain/proyectos/Fangio_CRM/Next_Session_Checklist.md` (no el `Roadmap_Stock_Ingestion_v1.md` que está obsoleto).
 - Pendiente del usuario antes de codear:
   - **A.1**: pegar `FANGIOCRM_MONGODB_URI` en `bot-service/.env` (o en `Kairos_Brain/secrets/inventario.md`).
-  - **A.2**: cargar XLSX de prueba en FangioCRM (Vercel) y darle Save → confirmar que `tenantinventories` tiene 1 doc, anotar `tenantId`.
+  - **A.2**: cargar XLSX de prueba en FangioBot (Vercel) y darle Save → confirmar que `tenantinventories` tiene 1 doc, anotar `tenantId`.
   - **A.3** (opcional): anotar columnas que `detectColType` posicionó mal.
 - Decisiones del MVP cerradas en §C del checklist (schema MAYÚSCULAS, ada-002, vector_index reuse, sin multi-tenant collections, sin cron de reconciliación todavía).
 

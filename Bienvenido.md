@@ -17,7 +17,7 @@ Cualquier LLM que opere bajo este usuario debe entender este archivo como la rut
 - 🚀 **Proyectos Activos (`proyectos/`):**
   - [[LangGraph_Bot]] — **Bot Trébol en Python/LangGraph** (Fases 0-10 ✅ · cutover test + PROD activos) · [[Prod_Deploy|deploy prod 2026-04-18]] · [[Operar_Bot|runbook apagar/prender]] · [[OpenAI_Quota_Fallback|alerta OpenAI 429]] · [[Observabilidad_Langfuse]] · [[Sesion_2026-04-17_Bugs_y_Observabilidad|sesión 2026-04-17]]
   - *(cliente histórico — Trébol Automotores, ex-producción)* — El Trébol Automotores (dashboard del proyecto en `proyectos/Trebol/Trebol.md`)
-  - [[Fangio_CRM]] — CRM de Ventas automotor · Bot: [[FangioBot_v2_Architecture]] (diseño activo) · [[FangioBot_Blueprint]] (v1 descartada)
+  - [[FangioBot]] — CRM de Ventas automotor · Bot: [[FangioBot_v2_Architecture]] (diseño activo) · [[FangioBot_Blueprint]] (v1 descartada)
     - Workflows: [[Workflow_v4_Reference]] (test v4) · [[Trebol_Prod_Architecture]] (prod) · [[Pipeline_v4]] · [[SheetsToMongo_RAG_Inventario]]
     - Testing: [[Testing_Harness]]
     - Bugs: `proyectos/Trebol/bugs/`

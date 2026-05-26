@@ -6,7 +6,7 @@ tags: [langgraph, multi-tenant, onboarding, fangio]
 
 Agregar un cliente nuevo al bot-service no requiere cambios de código. Solo archivos de config + un nuevo servicio Docker.
 
-## Checklist completo (ejemplo: Fangio CRM)
+## Checklist completo (ejemplo: FangioBot)
 
 ### 1. Config YAML del cliente
 
@@ -15,7 +15,7 @@ Crear `bot-service/configs/fangio.yaml` copiando `trebol.yaml` y editando:
 ```yaml
 client_id: fangio
 nombre_agente: Facundo           # Nombre del asesor virtual
-nombre_agencia: Fangio CRM
+nombre_agencia: FangioBot
 ubicacion: ""                    # dirección de la agencia
 horario: "L-V 9-18"
 
@@ -137,7 +137,7 @@ docker logs fangio-test-bot --follow
 
 El log de startup debe mostrar:
 ```json
-{"client_id": "fangio", "nombre_agente": "Facundo", "nombre_agencia": "Fangio CRM", "llm_model": "gpt-4.1-mini", ...}
+{"client_id": "fangio", "nombre_agente": "Facundo", "nombre_agencia": "FangioBot", "llm_model": "gpt-4.1-mini", ...}
 ```
 
 ### 10. Test rápido
@@ -168,5 +168,5 @@ curl -X POST https://test-fangio.bot.kairosaisolutions.com/webhook/chatwoot \
 ## Links
 
 - [[LangGraph_Bot]] — arquitectura del bot
-- [[Fangio_CRM]] — contexto del segundo cliente
+- [[FangioBot]] — contexto del segundo cliente
 - `bot-service/configs/trebol.yaml` — referencia de YAML

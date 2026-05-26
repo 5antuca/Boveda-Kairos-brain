@@ -2,31 +2,31 @@
 tags: [fangiocrm, arquitectura, mongodb, vercel, modelos]
 fecha: 2026-05-05
 estado: documentado a partir del repo /root/apps/FangioCRM
-relacionado: [[Fangio_CRM]], [[Roadmap_Stock_Ingestion_v1]], [[Trebol_Bot_Embedded]]
+relacionado: [[FangioBot]], [[Roadmap_Stock_Ingestion_v1]], [[Trebol_Bot_Embedded]]
 ---
 
-# Arquitectura de Datos — FangioCRM
+# Arquitectura de Datos — FangioBot
 
-Mapa de cómo se conectan FangioCRM (Next.js, Vercel) y Trebol Bot (Python, VPS), qué Mongo usa cada uno, y qué shape tienen los datos.
+Mapa de cómo se conectan FangioBot (Next.js, Vercel) y Trebol Bot (Python, VPS), qué Mongo usa cada uno, y qué shape tienen los datos.
 
 ## Repos y deploy
 
 | Pieza | Path / URL | Donde corre |
 |---|---|---|
-| FangioCRM (Next.js) | `/root/apps/FangioCRM` (local clone) · repo `github.com/5antuca/FangioCRM` | **Vercel** (no en VPS) — el VPS solo tiene el clone para developer experience |
-| FangioCRM n8n stack | `/root/apps/fangiocrm-infra/docker-compose.yml` | VPS — solo `fangiocrm-n8n-master`, `fangiocrm-n8n-worker-1`, `fangiocrm-n8n-redis`, `fangiocrm-n8n-db` (Postgres del propio n8n) |
+| FangioBot (Next.js) | `/root/apps/FangioCRM` (local clone) · repo `github.com/5antuca/FangioCRM` | **Vercel** (no en VPS) — el VPS solo tiene el clone para developer experience |
+| FangioBot n8n stack | `/root/apps/fangiocrm-infra/docker-compose.yml` | VPS — solo `fangiocrm-n8n-master`, `fangiocrm-n8n-worker-1`, `fangiocrm-n8n-redis`, `fangiocrm-n8n-db` (Postgres del propio n8n) |
 | Trebol Bot (Python) | `/root/kairos-infrastructure/bot-service/` | VPS — container `trebol-test-bot` |
 
-**FangioCRM web NO corre en el VPS**. Vive en Vercel. El stack de fangiocrm-infra en el VPS es solo el n8n del cliente, sin la app Next.js.
+**FangioBot web NO corre en el VPS**. Vive en Vercel. El stack de fangiocrm-infra en el VPS es solo el n8n del cliente, sin la app Next.js.
 
 ## Dos clusters Mongo separados
 
 | Cluster | DB | Quién la usa | Para qué |
 |---|---|---|---|
 | Atlas — RAGtrebol | `RAGtrebol` | Trebol Bot (`bot-service`) | Inventario y RAG del bot. Collection `propiedades-test` (test) y `propiedades` (prod, apagada) |
-| Atlas — FangioCRM | `fangiocrm` | App Next.js de FangioCRM (Vercel) | Datos del CRM: leads, messages, tenants, users, vehicles, tenantinventories |
+| Atlas — FangioBot | `fangiocrm` | App Next.js de FangioBot (Vercel) | Datos del CRM: leads, messages, tenants, users, vehicles, tenantinventories |
 
-**Son dos clusters distintos**. El bot Python no tiene acceso al cluster de FangioCRM por default; hay que abrir conexión explícita desde `bot-service` con la URI del cluster `fangiocrm` cuando llegue el momento de leer inventario desde ahí.
+**Son dos clusters distintos**. El bot Python no tiene acceso al cluster de FangioBot por default; hay que abrir conexión explícita desde `bot-service` con la URI del cluster `fangiocrm` cuando llegue el momento de leer inventario desde ahí.
 
 ## Collections en `fangiocrm` (snapshot 2026-05-05)
 
@@ -39,7 +39,7 @@ Mapa de cómo se conectan FangioCRM (Next.js, Vercel) y Trebol Bot (Python, VPS)
 | `users` | 1 | Usuarios del CRM (User.ts) |
 | `vehicles` | 0 | Schema canónico de auto individual (Vehicle.ts) — **nadie lo está poblando hoy** |
 
-> **0 docs en `tenantinventories` y `vehicles`** = el flujo de inventario en FangioCRM no se ha guardado todavía a la base. Hay UI (`InventoryGrid.tsx`) y hay endpoint (`/api/inventory`), pero el usuario no le ha dado save aún (o no quedó persistido).
+> **0 docs en `tenantinventories` y `vehicles`** = el flujo de inventario en FangioBot no se ha guardado todavía a la base. Hay UI (`InventoryGrid.tsx`) y hay endpoint (`/api/inventory`), pero el usuario no le ha dado save aún (o no quedó persistido).
 
 ## Modelos clave
 
@@ -60,7 +60,7 @@ Mapa de cómo se conectan FangioCRM (Next.js, Vercel) y Trebol Bot (Python, VPS)
 }
 ```
 
-**El bridge clave**: `Tenant.botClientId` = `client_id` que usa `bot-service`. Si no está seteado, FangioCRM cae a un mapeo defensivo (`lib/ai.ts` línea 22):
+**El bridge clave**: `Tenant.botClientId` = `client_id` que usa `bot-service`. Si no está seteado, FangioBot cae a un mapeo defensivo (`lib/ai.ts` línea 22):
 
 ```ts
 const TREBOL_TENANT_ALIASES = new Set(['eltrebollll', 'el-trebol', 'eltrebol', 'trebol']);
@@ -69,7 +69,7 @@ const botClientId =
   (TREBOL_TENANT_ALIASES.has(tenant.tenantId) ? 'trebol' : tenant.tenantId);
 ```
 
-**FangioCRM llama al bot Python via HTTP**:
+**FangioBot llama al bot Python via HTTP**:
 - URL default: `https://test-trebol.bot.kairosaisolutions.com`
 - Override en dev local: `TREBOL_BOT_URL=http://trebol-bot:8000`
 - Body: `{ client_id: botClientId, ... }`
@@ -142,17 +142,17 @@ for row_id in grid["rows"][1:]:           # filas 1..N (saltar header)
   marca: string, modelo: string, año?: number, km?: number,
   precio?: number, anticipo?: number, combustible?: string,
   detalles?: string, fotos?: string[],
-  embedding?: number[],          // ← campo previsto para vector search desde FangioCRM
+  embedding?: number[],          // ← campo previsto para vector search desde FangioBot
   rowId?: string,                // referencia a row en gridState
   createdAt, updatedAt
 }
 ```
 
-**Estado**: 0 docs. La idea original parece haber sido que FangioCRM expandiera `gridState` → `Vehicle[]` al guardar y embedeara ahí. Hoy no pasa nada de eso. Hay dos approaches viables (D-Approach1 y D-Approach2 en sección Decisiones abiertas del [[Roadmap_Stock_Ingestion_v1]]).
+**Estado**: 0 docs. La idea original parece haber sido que FangioBot expandiera `gridState` → `Vehicle[]` al guardar y embedeara ahí. Hoy no pasa nada de eso. Hay dos approaches viables (D-Approach1 y D-Approach2 en sección Decisiones abiertas del [[Roadmap_Stock_Ingestion_v1]]).
 
 ## XLSX Upload (cómo funciona hoy)
 
-1. Usuario va a la sección de Inventario en FangioCRM
+1. Usuario va a la sección de Inventario en FangioBot
 2. Drag XLSX → `xlsx.utils.sheet_to_json(worksheet, { header: 1 })` lo parsea client-side (browser)
 3. Los datos se cargan en el reducer del grid via `IMPORT_DATA`
 4. Detección automática de tipo por nombre de header (`detectColType`)
@@ -161,7 +161,7 @@ for row_id in grid["rows"][1:]:           # filas 1..N (saltar header)
 7. Backend (`/api/inventory/route.ts`) hace `findOneAndUpdate({ tenantId }, { gridState }, { upsert: true })` en `tenantinventories`
 8. **Aquí termina el flow hoy.** No notifica a nadie, no expande a `Vehicle`, no embede.
 
-## Cómo se conectan hoy FangioCRM ↔ Bot Python (mensajes, no inventario)
+## Cómo se conectan hoy FangioBot ↔ Bot Python (mensajes, no inventario)
 
 ```
 WhatsApp → Evolution API → bot Python (/webhook/chatwoot o /webhook/fangiocrm)
@@ -170,16 +170,16 @@ WhatsApp → Evolution API → bot Python (/webhook/chatwoot o /webhook/fangiocr
                                 ↓
                          persiste mensaje
                                 ↓
-              FangioCRM lee `messages` collection
+              FangioBot lee `messages` collection
               de Mongo y muestra en UI
 ```
 
-Para **inventario** todavía no hay conexión bidireccional. El bot Python lee de `RAGtrebol.propiedades-test` (cluster del bot, poblado por workflow n8n SheetsToMongo v2 desde Google Sheet de Trebol). FangioCRM tiene `tenantinventories` y `vehicles` vacíos.
+Para **inventario** todavía no hay conexión bidireccional. El bot Python lee de `RAGtrebol.propiedades-test` (cluster del bot, poblado por workflow n8n SheetsToMongo v2 desde Google Sheet de Trebol). FangioBot tiene `tenantinventories` y `vehicles` vacíos.
 
 ## Cuándo importa esto
 
-- **Plan de ingesta de stock** (ver [[Roadmap_Stock_Ingestion_v1]]): el pivot post-pivot del 2026-05-05 propone que **FangioCRM sea la UI de inventario** y el bot Python lea de `tenantinventories` o `vehicles` cluster `fangiocrm`. Eso requiere que el bot tenga la URI del cluster de FangioCRM.
-- **Multi-tenant del bot**: el `client_id` que usa el bot tiene que mapear al `tenantId` de FangioCRM. Hoy hay un alias hardcodeado para `trebol`. Cuando llegue tenant 2, hay que setear `Tenant.botClientId` o expandir aliases.
+- **Plan de ingesta de stock** (ver [[Roadmap_Stock_Ingestion_v1]]): el pivot post-pivot del 2026-05-05 propone que **FangioBot sea la UI de inventario** y el bot Python lea de `tenantinventories` o `vehicles` cluster `fangiocrm`. Eso requiere que el bot tenga la URI del cluster de FangioBot.
+- **Multi-tenant del bot**: el `client_id` que usa el bot tiene que mapear al `tenantId` de FangioBot. Hoy hay un alias hardcodeado para `trebol`. Cuando llegue tenant 2, hay que setear `Tenant.botClientId` o expandir aliases.
 
 ## Referencias
 
@@ -188,5 +188,5 @@ Para **inventario** todavía no hay conexión bidireccional. El bot Python lee d
 - `/root/apps/FangioCRM/src/app/api/inventory/route.ts`
 - `/root/apps/FangioCRM/src/lib/ai.ts`
 - `/root/apps/fangiocrm-infra/docker-compose.yml` (solo n8n stack)
-- [[Fangio_CRM]] — overview general
+- [[FangioBot]] — overview general
 - [[Roadmap_Stock_Ingestion_v1]] — roadmap de ingesta (post-pivot 2026-05-05)

@@ -110,7 +110,7 @@ curl -X POST -H "Authorization: Bearer $ADMIN_TOKEN" \
 | **D2** | **LLM: OpenAI gpt-4.1-mini**. Consistencia con Trebol bot, costo despreciable (~$0.30/mes a 50 q/día). |
 | **D3** | **Matcher de carpetas: LLM ve folder_tree y elige** (no difflib). |
 | **D4** | **Auth de la app: tokens por persona** (Mongo `users` + endpoints admin + `Authorization: Bearer` o `?t=` para magic-links iniciales). |
-| **D5** | **Mongo: container local mongo:7** (no Atlas, no cluster compartido con FangioCRM). Aislamiento físico. |
+| **D5** | **Mongo: container local mongo:7** (no Atlas, no cluster compartido con FangioBot). Aislamiento físico. |
 | **D6** | **Streaming: JSON completo** (no SSE) en v1. |
 | **D7** | **Indexer: manual via `POST /admin/index-drive`** en v1. Cron en v2. |
 | **D8** | **Dominio: `ai.kairosaisolutions.com`**. Subdominio del existente, $0 extra. |

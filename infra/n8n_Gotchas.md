@@ -153,7 +153,7 @@ Snapshots del estado del VPS:
 }
 ```
 
-**Dónde nos pasó**: nodo `Extractor LLM Nano` en FangioBot v2 (Sprint 6, 2026-04-15). Mismo bug en `Enviar Mensaje Evolution` y `POST Lead a FangioCRM` del mismo workflow — `404 Cannot GET /message/sendText/el-trebol` desde Evolution API. Afecta a TODOS los nodos HTTP construidos via script/JSON si no se pone `method` explícito.
+**Dónde nos pasó**: nodo `Extractor LLM Nano` en FangioBot v2 (Sprint 6, 2026-04-15). Mismo bug en `Enviar Mensaje Evolution` y `POST Lead a FangioBot` del mismo workflow — `404 Cannot GET /message/sendText/el-trebol` desde Evolution API. Afecta a TODOS los nodos HTTP construidos via script/JSON si no se pone `method` explícito.
 
 ---
 

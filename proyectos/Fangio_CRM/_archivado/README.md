@@ -7,7 +7,7 @@ fecha_archivado: 2026-05-01
 
 ## Contenido
 
-- **`Bot_LangGraph_Migration.md`** — spec del 27-abril para migrar el bot Trebol a multi-tenant FangioCRM, **basado en el bot v2 (Sales Swarm + Profiler + multi-LLM)**. Rollbackeado el 1-mayo. El rumbo multi-tenant sigue válido pero las premisas técnicas (Profiler, factory LLM, prompts con `{PSICOPERFIL_BLOQUE}`) ya no aplican al agente actual.
+- **`Bot_LangGraph_Migration.md`** — spec del 27-abril para migrar el bot Trebol a multi-tenant FangioBot, **basado en el bot v2 (Sales Swarm + Profiler + multi-LLM)**. Rollbackeado el 1-mayo. El rumbo multi-tenant sigue válido pero las premisas técnicas (Profiler, factory LLM, prompts con `{PSICOPERFIL_BLOQUE}`) ya no aplican al agente actual.
 
 ## Si querés rehacer el roadmap multi-tenant
 

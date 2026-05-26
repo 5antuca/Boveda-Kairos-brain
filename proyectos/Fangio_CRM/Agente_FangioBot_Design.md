@@ -27,7 +27,7 @@
 | **`O6`: mensajes durante processing se pierden** | Si el bot tarda 20-30s y llega otro mensaje, se descarta | **Queue Redis FIFO**: todos los mensajes entrantes se encolan. El worker los procesa en orden, sin perder ninguno. |
 | **Chatwoot como intermediario** | Agrega latencia y complejidad. El webhook viene de Chatwoot, no de Evolution directo. | **Evolution API directo → Webhook n8n**. Menos saltos = menos latencia. |
 | **Regex `esPosibleNombre` frágil** | Muchos falsos positivos ("si por favor" detectado como nombre) | **NER liviano**: el LLM clasificador puede extraer nombre como intención en la misma pasada. |
-| **Sheets como CRM** | Delay de 5-10s en Sheets, race conditions, sticky pollution | **MongoDB directo** (colección `leads` en el mismo cluster de FangioCRM). Sin delay, sin race. |
+| **Sheets como CRM** | Delay de 5-10s en Sheets, race conditions, sticky pollution | **MongoDB directo** (colección `leads` en el mismo cluster de FangioBot). Sin delay, sin race. |
 
 ---
 
@@ -83,7 +83,7 @@ Evolution API
   ↓
 [10] EXTRAER DATOS LEAD (gpt-4.1-nano)
   Extrae: nombre, interés (compra/venta/permuta/consulta), auto_interés, auto_permuta, presupuesto
-  POST /api/leads → MongoDB colección leads de FangioCRM (aparece en el CRM del dashboard)
+  POST /api/leads → MongoDB colección leads de FangioBot (aparece en el CRM del dashboard)
   ↓
 [11] SEND (Evolution API /message/sendText/{instanceName})
 ```
@@ -116,7 +116,7 @@ derivado → noResponder (bot_off)
 
 ---
 
-## 5. Lead Data → FangioCRM Dashboard
+## 5. Lead Data → FangioBot Dashboard
 
 Cuando el agente extrae datos del lead (Paso 10), hace `POST /api/leads` con el struct:
 
@@ -135,7 +135,7 @@ Cuando el agente extrae datos del lead (Paso 10), hace `POST /api/leads` con el 
 }
 ```
 
-Ese Lead aparece automáticamente en la tabla del Dashboard de FangioCRM para ese tenant.
+Ese Lead aparece automáticamente en la tabla del Dashboard de FangioBot para ese tenant.
 
 ---
 
@@ -178,8 +178,8 @@ Para que el prompt sea personalizable en lo superficial pero irrompible en lo fu
 | Clasificador | Regex 171 líneas frágil | LLM nano (más robusto, <300 tokens) |
 | State machine | Regex sobre texto del bot (rompe con acentos) | Redis state key explícita (determinístico) |
 | Mensajes perdidos | ❌ O6: mensajes durante processing descartados | ✅ Queue FIFO Redis: ningún mensaje se pierde |
-| CRM | Google Sheets (5-10s delay, race conditions) | MongoDB directo + API FangioCRM (instantáneo) |
-| Datos del lead en dashboard | ❌ Solo Sheets externo | ✅ Aparece en tiempo real en FangioCRM |
+| CRM | Google Sheets (5-10s delay, race conditions) | MongoDB directo + API FangioBot (instantáneo) |
+| Datos del lead en dashboard | ❌ Solo Sheets externo | ✅ Aparece en tiempo real en FangioBot |
 | Interfaz de Usuario (UX/UI) | ❌ Básica / Custom | ✅ **@chatscope UI Kit** (Professional Standard) |
 | Observabilidad | Drift detector Postgres (F3) | Mantener + agregar log de estado Redis en cada turno |
 
@@ -192,9 +192,9 @@ asegurate de incluir estos datos de contexto:
 
 - **Webhook trigger**: Evolution API → `POST /webhook/fangiocrm-master`
 - **Redis host**: `fangiocrm-n8n-redis` (red Docker interna)
-- **API context endpoint**: `GET https://fangiocrm.com/api/agent/context?instance={{instance}}`
-- **API leads endpoint**: `POST https://fangiocrm.com/api/leads`
-- **MongoDB**: cluster de FangioCRM (URI en `.env.local`), colección `vehicles` filtrada por `tenantId`
+- **API context endpoint**: `GET https://fangiobot.com/api/agent/context?instance={{instance}}`
+- **API leads endpoint**: `POST https://fangiobot.com/api/leads`
+- **MongoDB**: cluster de FangioBot (URI en `.env.local`), colección `vehicles` filtrada por `tenantId`
 - **LLM**: gpt-4.1-nano para clasificador/extractor, gpt-4.1-mini para AI Agent
 - **Code nodes**: usar `typeVersion: 1` (typeVersion 2 crashea workers en n8n 2.2.4)
 - **IF nodes**: usar `loose` validation para booleans de Code nodes

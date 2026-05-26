@@ -31,7 +31,7 @@ El bot recibe mensajes de WhatsApp via Evolution API, los procesa con el pipelin
 - ✅ **EVOLUTION_URL NAT hairpin**: `Enviar Mensaje Evolution` hacía HTTP al URL público desde el worker → timeout → fix: `EVOLUTION_URL=http://trebol-test-evolution-api:8080` + worker en red `traefik_public`
 - ✅ **`docker restart` no aplica env vars**: hay que usar `docker compose up -d` para recrear el container con nuevas variables
 - ✅ **`Enviar Mensaje Evolution`: method GET**: faltaba `"method": "POST"` en el nodo → `404 Cannot GET /message/sendText/el-trebol` → fijo
-- ✅ **`POST Lead a FangioCRM`: JSON inválido**: body malformado + endpoint no existe → desconectado (pendiente spec separada)
+- ✅ **`POST Lead a FangioBot`: JSON inválido**: body malformado + endpoint no existe → desconectado (pendiente spec separada)
 - ✅ **`Tool: opciones_financiacion`: referencia rota**: `$('Preparar System Prompt')` → `$('Construir Prompt Block')` → fijo
 - ✅ **DEL Processing Lock**: solo conectado desde `Enviar Mensaje Evolution` → si falla, lock queda pegado → fix: conectado desde todos los nodos terminales
 
@@ -61,14 +61,14 @@ n8n-worker:
 
 ---
 
-## Próximo sprint: Chat Monitor en FangioCRM
+## Próximo sprint: Chat Monitor en FangioBot
 
 Spec creada: `specs/2026-04-15-fangiocrm-chat-evolution-integration.md`
 
 Resumen de lo que hay que construir:
-1. `POST /api/webhook/evolution` en FangioCRM — recibe mensajes de n8n, guarda en MongoDB
+1. `POST /api/webhook/evolution` en FangioBot — recibe mensajes de n8n, guarda en MongoDB
 2. Adaptar `PATCH /api/leads/[id]/bot` — llama webhook n8n al toglear
-3. Nuevo workflow n8n `FangioBot BotToggle` — recibe de FangioCRM, setea Redis
+3. Nuevo workflow n8n `FangioBot BotToggle` — recibe de FangioBot, setea Redis
 4. Dos nodos nuevos en FangioBot Master: `Forward Mensaje` + `Forward Respuesta`
 
 La UI `/chats` ya existe y consume los endpoints de leads/messages. Solo faltan los datos reales llegando vía Evolution API.

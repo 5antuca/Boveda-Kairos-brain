@@ -187,7 +187,7 @@ Excepciones: cierre P5.A (puerta abierta sin pregunta) y handoff P5.C (frase can
 1. **Few-shot examples** (Fase 3 de la metodología) — escribir 8-10 conversaciones ideales que anclen la nueva 5.B y la derivación parcial cálida de fotos. Vivirían en `bot-service/configs/prompts/trebol_fewshot.md` o como bloque al final de `trebol.txt`.
 2. **Eval suite ampliada** — los 70 checks actuales del `test_bot.sh` no testean específicamente "5.B aparece cuando hay interés en UN auto sin cierre fuerte". Agregar 3-4 escenarios para esto.
 3. **Alerta admin para fotos no cargadas** — disparador automático cuando el bot promete "te las mando" pero las fotos no estaban en MongoDB. Sin esto, el cliente espera fotos que nunca llegan.
-4. **Multi-tenant migration** — los principios de este doc son globales para todos los tenants de FangioCRM ([[../Fangio_CRM/Bot_LangGraph_Migration]]). Cuando se haga la migración Fase 3 (prompt template con slots), hay que parametrizar el bloque P5.B (algunos tenants pueden no tener showroom físico).
+4. **Multi-tenant migration** — los principios de este doc son globales para todos los tenants de FangioBot ([[../Fangio_CRM/Bot_LangGraph_Migration]]). Cuando se haga la migración Fase 3 (prompt template con slots), hay que parametrizar el bloque P5.B (algunos tenants pueden no tener showroom físico).
 
 ---
 

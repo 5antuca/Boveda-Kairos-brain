@@ -2,10 +2,10 @@
 tags: [fangiocrm, roadmap, next-session, saas, multitenant, billing, shopify]
 fecha: 2026-05-24
 estado: ABRIR AL EMPEZAR LA PRÓXIMA SESIÓN
-relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Next_Session_Checklist]]
+relacionado: [[FangioBot]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Next_Session_Checklist]]
 ---
 
-# Roadmap Próxima Sesión — FangioCRM SaaS MVP (post 2026-05-24)
+# Roadmap Próxima Sesión — FangioBot SaaS MVP (post 2026-05-24)
 
 > 📍 Roadmap detallado y vivo: **[[Roadmap_SaaS_MVP]]**. Spec técnica: `specs/2026-05-24-fangiocrm-saas-mvp.md`.
 
@@ -24,7 +24,7 @@ relacionado: [[Fangio_CRM]], [[Roadmap_SaaS_MVP]], [[Trebol_Bot_Embedded]], [[Ne
 Probando el flujo de **onboarding de usuario nuevo de punta a punta** (register → prueba gratis → wizard → Excel+agente → QR). Para que cada test arranque limpio:
 
 - **Reset de un comando**: `bash scripts/reset-fangiocrm-test.sh` (commit `57726a7`) → backup de `fangio_crm` (→ `backups/fangio_reset_last.json`) + wipe total de `fangio_crm` + borra TODAS las instancias de Evolution TEST (logout+delete). **Solo test, no toca prod.**
-- **Loop**: `reset` → `fangiocrm.com/register` (usuario nuevo) → wizard → repetir.
+- **Loop**: `reset` → `fangiobot.com/register` (usuario nuevo) → wizard → repetir.
 - **Estado AHORA: todo en 0** — `el-trebol` (tenant + inventario + instancia Evolution) borrado. Backup original completo en `backups/fangio_full_backup_20260524.json` (el-trebol real: 67 autos + `columnMapping` + usuario), restaurable con `bson.json_util`.
 - ⚠️ **El WhatsApp del bot test (+5491123809397) quedó desconectado** (se borró su instancia Evolution); se reconecta re-escaneando en el wizard.
 - 🐞 **Bug resuelto** "QR en blanco y al instante ya conectado" = el `tenantId` nuevo colisiona con una instancia de Evolution vieja todavía `state=open` → el `poll()` la detecta CONNECTED. Fix = borrar la instancia vieja (lo hace el script). Procedimiento de reset de Evolution test documentado en `scripts/reset-fangiocrm-test.sh`.
@@ -32,9 +32,9 @@ Probando el flujo de **onboarding de usuario nuevo de punta a punta** (register 
 ## 🟢 EMPEZAR ACÁ (lo que queda — necesita input/config o frontend)
 
 ### 1. F3 — billing por MercadoPago Suscripciones *(pivote desde Shopify; IMPLEMENTADO+DEPLOYADO 2026-05-24)*
-- ✅ **Construido + deployado** (FangioCRM `4cd29bb`): `GET /api/billing/subscribe` (preapproval 50k/mes, `external_reference=tenantId`, redirige al checkout MP) + `POST /api/webhooks/mercadopago` (activa `pro` / pausa `basic` por status). `MERCADOPAGO_ACCESS_TOKEN` en Vercel ✅ (webhook responde 200). Shopify descartado (pedía pagar plan propio + app de suscripciones + gateway MP incierto en AR).
+- ✅ **Construido + deployado** (FangioBot `4cd29bb`): `GET /api/billing/subscribe` (preapproval 50k/mes, `external_reference=tenantId`, redirige al checkout MP) + `POST /api/webhooks/mercadopago` (activa `pro` / pausa `basic` por status). `MERCADOPAGO_ACCESS_TOKEN` en Vercel ✅ (webhook responde 200). Shopify descartado (pedía pagar plan propio + app de suscripciones + gateway MP incierto en AR).
 - ✅ **Verificado** (diag 2026-05-24): token producción OK + subscribe crea preapproval + webhook lee/mapea/actualiza el tenant (probado con preapproval real). ⏳ **Falta el flip `authorized→pro`** con un pago autorizado real. ⚠️ **OJO: MP no deja que el dueño de la cuenta MP se suscriba a sí mismo** (401) → testear con un comprador de OTRA cuenta MP (2da cuenta del usuario o el primer cliente real). El `SUBSCRIPTION_PRICE_ARS=100` se usó para el test → **borrarlo en Vercel para volver a 50k**.
-- ✅ **Prueba gratis 7 días (sin MP) + gate del bot HECHOS** (FangioCRM `22e6724`): `register` arranca la prueba (`trialEndsAt = +7d`); el bot responde si paga / está en prueba / es exento (sin `trialEndsAt`, como el-trebol); pausa si la prueba venció sin suscripción. ⏳ Falta: **botón "Suscribirme"** en el dashboard (hoy se dispara visitando `/api/billing/subscribe`).
+- ✅ **Prueba gratis 7 días (sin MP) + gate del bot HECHOS** (FangioBot `22e6724`): `register` arranca la prueba (`trialEndsAt = +7d`); el bot responde si paga / está en prueba / es exento (sin `trialEndsAt`, como el-trebol); pausa si la prueba venció sin suscripción. ⏳ Falta: **botón "Suscribirme"** en el dashboard (hoy se dispara visitando `/api/billing/subscribe`).
 
 ### 2. F2.3 — Wizard de onboarding post-registro *(idea del usuario 2026-05-24; el diferenciador UX)*
 Modal multi-paso que se abre al registrarse y deja TODO configurado con preguntas simples. **El backend de cada paso YA EXISTE** → es básicamente frontend que orquesta APIs existentes:
@@ -43,8 +43,8 @@ Modal multi-paso que se abre al registrarse y deja TODO configurado con pregunta
 3. **¿Qué financiación tenés?** → `Tenant.detallesFinanciacion`/`tasaFinanciacion` (settings). ✅ backend.
 4. **Redes sociales** (omitible) → `Tenant.instagramUrl`/`facebookUrl` (settings). ✅ backend.
 5. **Escaneá el QR de WhatsApp Business** → `whatsapp/status` (POST=QR) + `whatsapp/activate` (gate al conectar). ✅ backend (zero-touch Evolution).
-→ **✅ HECHO 2026-05-24** (FangioCRM `20a2e56`+`bf33db4`, bot `f330092`): wizard de 4 pasos (sin la pregunta del nombre) con **agente de schema en el paso 1**. Tras subir el Excel, el wizard llama a `POST /api/inventory/analyze` (proxy a `POST /ingest/propose-mapping` del bot): mapea columnas→canónico y **solo pregunta** por los requeridos ambiguos (MARCA/MODELO/PRECIO) con dropdown de columnas; el mapping final (auto+respuestas) se persiste en `TenantInventory.columnMapping` y recién ahí se embebe (`reimport:false` difiere el reembed). Si el agente falla/no hay dudas, no bloquea (fallback: el reembed auto-mapea). Financiación = 1 textarea omitible (el texto libre lo lee el bot en su prompt, incluido "se habla con administración"). QR endurecido (route solo base64; sin imagen → `NO_QR`; botón Reintentar). **Verificado**: el-trebol mapea 67 autos sin preguntar; planilla con precio "sobre consulta" → 1 pregunta `options=["Valor"]`. Hace realidad el *"tirá el Excel y funciona"*. Para probar fresco sin pisar el-trebol (inventario real compartido con el bot test): registrar un tenant throwaway. **También 2026-05-24**: fix crash dashboard (recharts con data vacía/ceros, `a2fbf31`) + `error.tsx` temporal removido.
-- ✅ Sumar `ubicacion`/`horario` al Tenant + Settings — HECHO (FangioCRM `75f6af6`). ✅ Botón "Suscribirme" + banner de prueba — HECHO (`1861057`).
+→ **✅ HECHO 2026-05-24** (FangioBot `20a2e56`+`bf33db4`, bot `f330092`): wizard de 4 pasos (sin la pregunta del nombre) con **agente de schema en el paso 1**. Tras subir el Excel, el wizard llama a `POST /api/inventory/analyze` (proxy a `POST /ingest/propose-mapping` del bot): mapea columnas→canónico y **solo pregunta** por los requeridos ambiguos (MARCA/MODELO/PRECIO) con dropdown de columnas; el mapping final (auto+respuestas) se persiste en `TenantInventory.columnMapping` y recién ahí se embebe (`reimport:false` difiere el reembed). Si el agente falla/no hay dudas, no bloquea (fallback: el reembed auto-mapea). Financiación = 1 textarea omitible (el texto libre lo lee el bot en su prompt, incluido "se habla con administración"). QR endurecido (route solo base64; sin imagen → `NO_QR`; botón Reintentar). **Verificado**: el-trebol mapea 67 autos sin preguntar; planilla con precio "sobre consulta" → 1 pregunta `options=["Valor"]`. Hace realidad el *"tirá el Excel y funciona"*. Para probar fresco sin pisar el-trebol (inventario real compartido con el bot test): registrar un tenant throwaway. **También 2026-05-24**: fix crash dashboard (recharts con data vacía/ceros, `a2fbf31`) + `error.tsx` temporal removido.
+- ✅ Sumar `ubicacion`/`horario` al Tenant + Settings — HECHO (FangioBot `75f6af6`). ✅ Botón "Suscribirme" + banner de prueba — HECHO (`1861057`).
 
 ### 3. F4 metering
 - Enforcement de `limiteMensajes` + dashboard de consumo por tenant + **validar costos reales con Langfuse** (confirmar que 50k cubre a ~600 conv/mes).
@@ -53,7 +53,7 @@ Modal multi-paso que se abre al registrarse y deja TODO configurado con pregunta
 - F5: WhatsApp self-serve hardening (probar con **celular real**, reconexión, sesión fantasma).
 - F6: seguridad multi-tenant — ✅ `agent/context` asegurado (Bearer secret, `33e9708`); falta auditar aislamiento general (que cada ruta filtre por `session.tenantId`) + landing/pricing.
 
-### 5. Rebrand FangioCRM → FangioBot (dominio + UI) — DNS EN VIVO 2026-05-25 *(pedido 2026-05-24)*
+### 5. Rebrand FangioBot → FangioBot (dominio + UI) — DNS EN VIVO 2026-05-25 *(pedido 2026-05-24)*
 Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es un dominio **NUEVO** (no se renombra el viejo: se apunta la app). **fangiobot.com pasa a ser el dominio PRINCIPAL.**
 
 **Parte del usuario (dashboards — Claude no tiene acceso):**
@@ -61,35 +61,35 @@ Decisión del usuario: **dominio + rebrand de UI completo**. `fangiobot.com` es 
 2. ✅ Vercel → proyecto `fangio-crm` (`prj_hPmY5ZHrknXxaKVCHziqMXNP0qn3`) → dominios agregados y `verified`: `fangiobot.com` (redirect→www) + `www.fangiobot.com` (sirve la app).
 3. ✅ **DNS en Squarespace** (confirmado contra NS autoritativo 2026-05-25): apex `@` A → `76.76.21.21`; `www` CNAME → `cname.vercel-dns.com`. TTL 4h (la propagación del apex puede tardar). Presets de email (SPF `v=spf1 -all` + DMARC `p=reject`) = el dominio NO manda mail → revisar si se agregan magic links.
 4. ✅ **`NEXTAUTH_URL=https://www.fangiobot.com`** seteado en Vercel (prod/preview/dev) + redeploy de prod (commit `fde6e99`) 2026-05-25. Verificado: home/login/`api/auth/csrf` = 200. `APP_URL` NO existe como env var → está hardcodeado en código (ver Parte de código).
-5. ✅ **MercadoPago / APP_URL** (commit `283ea88` en FangioCRM `main` 2026-05-25): `subscribe/route.ts:16` parametrizado → `process.env.APP_URL || process.env.NEXTAUTH_URL || "https://www.fangiobot.com"` (back_url + notification_url dejan de apuntar al dominio muerto). Env `APP_URL=https://www.fangiobot.com` seteado en Vercel. `reason` del preapproval ya decía "FangioBot". ⚠️ Revisar si en el **dashboard de MP** hay una notification URL global apuntando a fangiocrm.com (lado usuario).
-6. ⏳ Decidir: ¿`fangiocrm.com` se redirige a fangiobot o se deja morir? (login en fangiocrm.com YA no anda — NEXTAUTH_URL apunta a fangiobot).
+5. ✅ **MercadoPago / APP_URL** (commit `283ea88` en FangioBot `main` 2026-05-25): `subscribe/route.ts:16` parametrizado → `process.env.APP_URL || process.env.NEXTAUTH_URL || "https://www.fangiobot.com"` (back_url + notification_url dejan de apuntar al dominio muerto). Env `APP_URL=https://www.fangiobot.com` seteado en Vercel. `reason` del preapproval ya decía "FangioBot". ⚠️ Revisar si en el **dashboard de MP** hay una notification URL global apuntando a fangiobot.com (lado usuario).
+6. ⏳ Decidir: ¿`fangiobot.com` se redirige a fangiobot o se deja morir? (login en fangiobot.com YA no anda — NEXTAUTH_URL apunta a fangiobot).
 
 **Parte de código (Claude, ~10 min — NO empezado, cero cambios aplicados):**
-- Reemplazar marca visible "FangioCRM" → "FangioBot":
+- Reemplazar marca visible "FangioBot" → "FangioBot":
   - `src/app/layout.tsx:9` (title de la pestaña)
   - `src/app/page.tsx:34` (logo) y `:233` (footer ©)
   - `src/app/login/page.tsx:62` (h1) · `src/app/register/page.tsx:75` (h1)
   - `src/app/api/billing/subscribe/route.ts:39` (reason del preapproval MP)
-- Parametrizar dominio: `subscribe/route.ts:16` `const APP_URL = "https://www.fangiocrm.com"` → `process.env.APP_URL || "https://www.fangiocrm.com"`.
+- Parametrizar dominio: `subscribe/route.ts:16` `const APP_URL = "https://www.fangiobot.com"` → `process.env.APP_URL || "https://www.fangiobot.com"`.
 - **NO** tocar el env var `FANGIOCRM_BOT_SHARED_SECRET` (nombre interno de secret; renombrarlo rompe bot + Vercel). Los comentarios con "fangiocrm" se pueden dejar.
 
 ### 🛡️ Hardening Evolution — HECHO 2026-05-24 (5 capas + monitor)
-Tras el bug "el bot no responde" (la sesión WhatsApp se deslogueaba 401 y el envío fallaba en silencio). FangioCRM `0caf631`+`964de6f`, bot `20a2b33`. Detalle: memoria `reference_evolution_hardening`.
+Tras el bug "el bot no responde" (la sesión WhatsApp se deslogueaba 401 y el envío fallaba en silencio). FangioBot `0caf631`+`964de6f`, bot `20a2b33`. Detalle: memoria `reference_evolution_hardening`.
 - **C1 detección**: instancias suscritas a `CONNECTION_UPDATE`; el receptor marca `whatsappConnected`/`needsReconnect`/`lastDisconnect*` y reconnecta al toque si no es 401.
 - **C2 bot**: si el envío a Evolution falla, marca el tenant desconectado (no en silencio).
 - **C3 UI**: banner "WhatsApp desconectado — reconectá" en el dashboard (poll 30s).
 - **C4 monitor**: `wa_health.monitor_loop` en el bot cada 150s → auto-reconecta tenants caídos; tras 3 fallos → `needsReconnect`. Envs `WA_MONITOR_INTERVAL_S`/`WA_MONITOR_MAX_DOWN`.
 - **C5 timeouts**: `lib/evo.ts::evoFetch` (AbortController) en las llamadas a Evolution.
-- ✅ **Multi-tenant REAL — RESUELTO 2026-05-24** (FangioCRM `8f2d2bc`+`390fe64`, bot `77e85ba`+`25ad444`): sacado el alias el-trebol→trebol (cada tenant usa su config de Mongo); identidad parametrizada (`{NOMBRE_AGENTE}`=`nombreBot` del wizard, `{NOMBRE_AGENCIA}`=`nombre`); stock etiquetado por `tenantId`; envío por la instancia del tenant (`instance=client_id`); reset limpia memoria del bot. Verificado: "Lucho de El Trébol Automotores". `el-trebol` ya es un tenant self-serve más. Pendiente menor: cache `lru_cache` de config requiere restart del bot al editar un Tenant (F4 invalidación).
+- ✅ **Multi-tenant REAL — RESUELTO 2026-05-24** (FangioBot `8f2d2bc`+`390fe64`, bot `77e85ba`+`25ad444`): sacado el alias el-trebol→trebol (cada tenant usa su config de Mongo); identidad parametrizada (`{NOMBRE_AGENTE}`=`nombreBot` del wizard, `{NOMBRE_AGENCIA}`=`nombre`); stock etiquetado por `tenantId`; envío por la instancia del tenant (`instance=client_id`); reset limpia memoria del bot. Verificado: "Lucho de El Trébol Automotores". `el-trebol` ya es un tenant self-serve más. Pendiente menor: cache `lru_cache` de config requiere restart del bot al editar un Tenant (F4 invalidación).
 
 ## ⚠️ Deuda / decisiones
 - **Rama `bot-rollback-2026-04-18`**: ~25 commits adelante de `main`, 15 atrás → decidir estrategia (merge/rebase a `main`) en algún momento.
-- **Trebol = tenant de dogfooding** (`trebol.yaml`); su data de FangioCRM (`el-trebol`) fue **borrada en la fase de prueba** (backup `backups/fangio_full_backup_20260524.json`). El bot cae al fallback `trebol.yaml`; el stock embebido en RAGtrebol persiste (cluster aparte). Prod de Trébol sigue apagado.
+- **Trebol = tenant de dogfooding** (`trebol.yaml`); su data de FangioBot (`el-trebol`) fue **borrada en la fase de prueba** (backup `backups/fangio_full_backup_20260524.json`). El bot cae al fallback `trebol.yaml`; el stock embebido en RAGtrebol persiste (cluster aparte). Prod de Trébol sigue apagado.
 - Cache de config del bot es `lru_cache` por proceso → editar un `Tenant` requiere restart (invalidación = parte de F4).
 - Untracked ajenos sin commitear en el repo (gerstner specs, scripts sheetstomongo) — no son de este laburo.
 
 ## ⏳ Verificación pendiente del trabajo previo (grilla — independiente del SaaS)
-- Grid estilo Excel + columna FECHA (dd/mm/yyyy) + dropdowns dark/bordes rectos — verificar **visualmente** en `www.fangiocrm.com/dashboard`. Specs `2026-05-23-fangiocrm-grid-excel-controls.md`.
+- Grid estilo Excel + columna FECHA (dd/mm/yyyy) + dropdowns dark/bordes rectos — verificar **visualmente** en `www.fangiobot.com/dashboard`. Specs `2026-05-23-fangiocrm-grid-excel-controls.md`.
 
 ## 🔧 Comandos útiles
 ```bash
@@ -104,7 +104,7 @@ docker exec trebol-test-bot curl -s -X POST http://localhost:8000/ingest/reimpor
   -H 'Content-Type: application/json' -d '{"tenant_id":"el-trebol","dry_run":true}'
 
 # ¿Está el secret de Shopify en Vercel? (401 = sí; 400 = no)
-curl -s -o /dev/null -w "%{http_code}\n" -X POST https://www.fangiocrm.com/api/webhooks/shopify \
+curl -s -o /dev/null -w "%{http_code}\n" -X POST https://www.fangiobot.com/api/webhooks/shopify \
   -H "x-shopify-hmac-sha256: x" -d '{}'
 
 # Rebuild + recreate del bot (los .txt/.py se hornean en la imagen)

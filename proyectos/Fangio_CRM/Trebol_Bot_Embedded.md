@@ -5,9 +5,9 @@ estado: DISEÑO — pendiente implementación
 relacionado: [[Roadmap_Stock_Ingestion_v1]], [[FangioBot_v2_Architecture]], [[../LangGraph_Bot/LangGraph_Bot]]
 ---
 
-# Trebol Bot Embebido en FangioCRM
+# Trebol Bot Embebido en FangioBot
 
-Decisión del usuario (2026-05-04): el bot Trebol (LangGraph Python, hoy corriendo como `trebol-test-bot`) será **el motor unificado de respuestas WhatsApp para todos los tenants de FangioCRM**, reemplazando el pipeline n8n de FangioBot v2. Cada tenant tiene una sección de configuración propia en la UI.
+Decisión del usuario (2026-05-04): el bot Trebol (LangGraph Python, hoy corriendo como `trebol-test-bot`) será **el motor unificado de respuestas WhatsApp para todos los tenants de FangioBot**, reemplazando el pipeline n8n de FangioBot v2. Cada tenant tiene una sección de configuración propia en la UI.
 
 ---
 
@@ -23,7 +23,7 @@ Decisión del usuario (2026-05-04): el bot Trebol (LangGraph Python, hoy corrien
 
 ## Configuración personalizable por tenant
 
-Cada tenant en FangioCRM tiene una sección **"Configuración del Asistente"** con estos campos:
+Cada tenant en FangioBot tiene una sección **"Configuración del Asistente"** con estos campos:
 
 ### Campos editables
 
@@ -67,7 +67,7 @@ Los bloques `tono_block`, `horarios_block` etc se generan en código según los 
 ### Where lives the config
 
 ```jsonc
-// MongoDB: tenants collection (ya existe en FangioCRM)
+// MongoDB: tenants collection (ya existe en FangioBot)
 {
   "_id": "el-trebol",
   "nombre": "El Trébol Automotores",
@@ -118,7 +118,7 @@ Hoy el bot carga `configs/trebol.yaml` hardcoded. Necesita:
 ### 4. Resolución de tenant desde el webhook
 
 `webhook/chatwoot.py` y `webhook/fangiocrm.py` (NUEVO) deben:
-- Recibir el payload (Chatwoot o FangioCRM).
+- Recibir el payload (Chatwoot o FangioBot).
 - Extraer `instance` (Evolution) o `inbox_id`.
 - Resolver `tenant_id` vía un mapa `instance → tenant_id` (cargado al boot desde Mongo).
 - Inyectar `tenant_id` en el `AgentState`.
@@ -138,14 +138,14 @@ NUNCA hables de otra concesionaria que no sea {concesionaria_nombre}.
 
 ```
 ┌──────────────────────────────────────┐
-│  FangioCRM Frontend (Next.js)        │
+│  FangioBot Frontend (Next.js)        │
 │   ⚙️ Configuración del Asistente     │
 │   (CRUD bot_config en tenant doc)    │
 └────────────────┬─────────────────────┘
                  │
                  ▼ (POST /api/tenants/:id/bot-config)
 ┌──────────────────────────────────────┐
-│  FangioCRM API → MongoDB tenant doc  │
+│  FangioBot API → MongoDB tenant doc  │
 │  Al guardar: invalida cache Redis    │
 └──────────────────────────────────────┘
 
@@ -205,7 +205,7 @@ NUNCA hables de otra concesionaria que no sea {concesionaria_nombre}.
 ## Referencias
 
 - [[Roadmap_Stock_Ingestion_v1]] — pipeline de inventario que el bot consume
-- [[FangioBot_v2_Architecture]] — bot actual de FangioCRM (a reemplazar)
+- [[FangioBot_v2_Architecture]] — bot actual de FangioBot (a reemplazar)
 - [[../LangGraph_Bot/LangGraph_Bot]] — arquitectura del bot Python actual
 - [[../Trebol/Pipeline_v4]] — pipeline de referencia
 - `Kairos_Brain/proyectos/Fangio_CRM/LangGraph_Bot/Bot_Principios_Canonicos.md` (si existe)

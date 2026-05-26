@@ -7,8 +7,8 @@
 
 ## 🤖 Proyectos
 
-### Fangio CRM (SaaS plataforma + Bot Python)
-> El bot LangGraph (Python) es el motor de IA central de FangioCRM. Antes llamado "Trebol Bot" o "LangGraph Bot", ahora está embebido como agente dentro del SaaS.
+### FangioBot (SaaS plataforma + Bot Python)
+> El bot LangGraph (Python) es el motor de IA central de FangioBot. Antes llamado "Trebol Bot" o "LangGraph Bot", ahora está embebido como agente dentro del SaaS.
 
 - [[proyectos/Fangio_CRM/Fangio_CRM|Fangio_CRM]] - Plataforma multi-tenant Next.js + Mongo.
 - [[proyectos/Fangio_CRM/Roadmap_Stock_Ingestion_v1|Roadmap_Stock_Ingestion_v1]] - 🆕 XLSX → Mapping → Diff → Embeddings por tenant.

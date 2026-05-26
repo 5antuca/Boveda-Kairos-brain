@@ -1,4 +1,4 @@
-# 🚀 Fangio CRM — Roadmap Backend Completo
+# 🚀 FangioBot — Roadmap Backend Completo
 
 > Stack: Next.js (API Routes) + MongoDB Atlas + NextAuth + Twilio + OpenAI
 > Deploy: Vercel (frontend + api) + MongoDB Atlas
