@@ -26,7 +26,17 @@ Estado del plan de pulido **A→B→C** (detalle en [[../proyectos/Fangio_CRM/Se
 - ✅ **B** — guardas mecánicas **log-only** en `graph.py` (commit `d147d9e`): frases prohibidas + anti-alucinación de precios/URLs; solo loggea (`guard_*`), no altera el output. D (modelo más fuerte) descartado.
 - 🔜 **Escribir los tests** (acá estamos): `ConverBuenas.md` ya reescrito desde cero con 14 situaciones-plantilla (CB-01..14). Pendiente: el usuario rellena diálogos → regenerar asserts. `ConverMalas.md` todavía en formato viejo (n8n), reescribir igual.
 - ⏳ **C** — fine-tune del derivador (pendiente; plan + dataset en `specs/2026-05-25-finetune-plan-derivador.md`).
-- Aparte: rollback single-tenant del bot (revierte multi-tenant) sin commitear; bot sirve gerstner. Carga de fotos por vendedor no-técnico sin diseñar.
+- Aparte: rollback single-tenant del bot (revierte multi-tenant) sin commitear; bot sirve gerstner.
+
+### 🖼️ Subproyecto: carga de fotos del stock (EN DISEÑO, 2026-05-26)
+
+Problema: hoy 7/54 autos con foto → el bot cae seguido en "no tengo fotos → handoff" (CB-11). Resolver cobertura sube la calidad percibida más que tocar el prompt. Insight: **las fotos ya existen** (casi todo concesionario publica en MercadoLibre/Marketplace; las 7 actuales son URLs `mlstatic.com`). El vendedor no re-fotografía 54 autos.
+
+Dirección propuesta (separar **origen** de **envío**):
+- **Origen.** Base universal = drag&drop en la grilla → **Cloudflare R2** (no Vercel Blob: R2 no cobra egress, clave porque WhatsApp baja la URL en cada envío) → **descargar+rehostear** (no hotlinkear ML; la URL muere si borran la publicación). Capa de alto leverage = **integración oficial ML (API/OAuth)** para auto-importar publicaciones+fotos (no scraping). Empezar por drag&drop (más simple), ML después.
+- **Envío (código, independiente del origen).** (1) `caption` descriptivo en Evolution `sendMedia` (hoy van fotos separadas del texto); (2) garantía **determinística en `graph.py`** (estilo B, NO prompt): "si recomiendo auto en stock con fotos → adjuntar siempre". (3) schema canónico `fotos: [url]` por auto que la ingesta poblé.
+
+Preguntas abiertas (a charlar): proactivo vs on-request (1 foto líder + álbum a pedido para no spamear/egress); cuál es la foto líder y cómo la ordena el vendedor; matching publicación-ML↔fila del Excel; UX mobile real (el vendedor sube desde el celu); que el caption no duplique la burbuja de texto.
 
 ---
 
