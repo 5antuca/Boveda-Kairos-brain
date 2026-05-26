@@ -13,6 +13,21 @@ Estado: Fase 1 (definir principios) en curso con el usuario. Spec completa en [[
 
 Bloquea: nuevas iteraciones de comportamiento del bot hasta que estén los principios + reescritura del prompt + eval suite. Los fixes deployados durante la sesión 2026-04-27 (saludo recíproco, max 2-3 fichas, filtro semántico por segmento, frase canónica vs derivación parcial, mapeo utilitario→pickup, default "no hay" si no hay match real) quedan vigentes hasta que se reescriba el prompt limpio.
 
+### 🧪 Test-driven con conversaciones modelo (2026-05-26) — operacionaliza el punto 4
+
+**Para seguir mejorando el bot hay que ESCRIBIR LOS TESTS.** Regla operativa: en vez de sumar líneas al prompt (alucina pasado cierto largo), sumar conversaciones modelo + asserts. La **conversación es la fuente de verdad**; `scripts/test_bot.sh` es un derivado.
+
+- `docs/ConverBuenas.md` — cómo DEBE responder el bot (situaciones ideales, prosa hablada de hoy).
+- `docs/ConverMalas.md` — errores a no repetir (cada uno → `assert_no_match`).
+- Flujo: el usuario escribe/edita los `.md` → Claude infiere los asserts (regex de comportamiento, NO valores exactos para no romper con el drift de stock) → regenera `test_bot.sh` → corre `bash scripts/test_bot.sh all` (debe quedar verde antes de cualquier cambio de comportamiento).
+
+Estado del plan de pulido **A→B→C** (detalle en [[../proyectos/Fangio_CRM/Sesion_2026-05-26_Bot_Prompt]]):
+- ✅ **A** — comprimir prompt 455→167 líneas, mismo comportamiento (commit `499dd6b`).
+- ✅ **B** — guardas mecánicas **log-only** en `graph.py` (commit `d147d9e`): frases prohibidas + anti-alucinación de precios/URLs; solo loggea (`guard_*`), no altera el output. D (modelo más fuerte) descartado.
+- 🔜 **Escribir los tests** (acá estamos): `ConverBuenas.md` ya reescrito desde cero con 14 situaciones-plantilla (CB-01..14). Pendiente: el usuario rellena diálogos → regenerar asserts. `ConverMalas.md` todavía en formato viejo (n8n), reescribir igual.
+- ⏳ **C** — fine-tune del derivador (pendiente; plan + dataset en `specs/2026-05-25-finetune-plan-derivador.md`).
+- Aparte: rollback single-tenant del bot (revierte multi-tenant) sin commitear; bot sirve gerstner. Carga de fotos por vendedor no-técnico sin diseñar.
+
 ---
 
 ## ⏸ Trebol PROD en pausa (2026-04-26)

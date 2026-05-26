@@ -18,7 +18,7 @@ El prompt se hizo gigante (~455 líneas) → a partir de cierto punto **alucina*
 
 También en este bloque (ya commiteado `aba92d2`): regla **">3 resultados del mismo modelo/tipo → CUALIFICAR** (0km/usado/presupuesto/año) en vez de dumpear la lista". Verificado live (Hilux → "¿Buscás 0km o usada?"). El assert H1 de test_bot.sh se actualizó para aceptar listar-O-cualificar.
 
-## 🟡 B — Reglas mecánicas a código (EN CURSO — decisiones tomadas, falta IMPLEMENTAR)
+## ✅ B — Reglas mecánicas a código (HECHO — commit `d147d9e`)
 Hook: `_parse_agent_response()` en `bot-service/trebol_bot/agent/graph.py` (ya parsea el JSON mensajeN/fotos_mensajeN y ya dedupea "¡Hola!" determinístico). Ahí van las guardas.
 
 **Decisiones del usuario (2026-05-26):**
@@ -29,6 +29,22 @@ Hook: `_parse_agent_response()` en `bot-service/trebol_bot/agent/graph.py` (ya p
 1. **Detector de frases prohibidas** (log-only): en `_parse_agent_response`, detectar en el output frases como "¿cuál te interesa?", muletillas de apertura ("Perfecto,"/"Buenísimo,"/"Dale,"/"Genial,"), y formas de "tú" (tienes/puedes/dime…) → loggear la violación (structlog + quizás tabla tipo `llm_drift_events`). NO alterar el mensaje.
 2. **Anti-alucinación precios/URLs** (log-only por ahora, dado que la acción es loggear): validar que cada `U$S <n>` y cada URL de foto del output haya salido de la última respuesta de `buscar_inventario_autos` de ESE turno; si el LLM inventó un número/URL → loggear (base: el detector de drift de USD F3 existente, `llm_drift_events` en Postgres test, `scripts/apply_f3_drift_detector.py`).
 - Una vez con telemetría, decidir si se sube de "log" a "strip/regenerar".
+
+**✅ Implementado 2026-05-26 (commit `d147d9e`, junto al refactor CRM-inline de `prompts.py`):**
+- `_audit_output()` en `graph.py` audita el output final SIN alterarlo y loggea `guard_frase_prohibida` / `guard_precio_no_respaldado` / `guard_url_no_respaldada`.
+- `_GUARD_PHRASES`: "¿cuál te interesa?", muletillas de apertura ("Perfecto,"/"Buenísimo,"/"Dale,"/"Genial,"/"Bárbaro,"), formas de "tú" (tienes/puedes/dime…). **Ojo calibración**: "tu/tus" posesivo es voseo VÁLIDO → NO se flaguea (solo "tú" con acento + conjugaciones).
+- Anti-alucinación: la fuente de respaldo es TODA la conversación previa (`result["messages"][:-1]`), no solo el turno actual → un precio/URL reusado de la "ficha ya mostrada" no es falso positivo.
+- Verificado: las guardas disparan (probado con "tu") y `test_bot.sh` queda 35/35 (no alteran el output). Falsos positivos corregidos en el camino.
+
+## 🧪 Escribir los tests (golden conversations → test_bot.sh) — EN CURSO 2026-05-26
+
+**Decisión del usuario**: para seguir mejorando el bot, escribir las conversaciones modelo y derivar los asserts de ahí. La conversación es la **fuente de verdad**; `scripts/test_bot.sh` pasa a ser un derivado.
+
+- `docs/ConverBuenas.md` (repo principal, NO el vault) — cómo DEBE responder el bot hoy.
+- `docs/ConverMalas.md` — errores a no repetir.
+- Derivación: Claude **infiere** los asserts de la prosa (no tags explícitos) y los muestra para aprobar. Asserts de **comportamiento, no valores exactos** (el inventario de hoy es gerstner/"Autos Norte", no el Trébol viejo de los docs) → así el drift de stock no rompe el test.
+- **Estado**: `ConverBuenas.md` reescrito desde cero (2026-05-26) con 14 situaciones-plantilla vacías (CB-01..14, agrupadas, con `Situación`/`Qué prueba`). Se descartó todo el contenido n8n viejo (fichas emoji, catálogo ML); solo se conservaron las *situaciones*. **Pendiente**: el usuario rellena los diálogos `Cliente:`/`Bot:` → me dice "regenerá" → reescribo `test_bot.sh`. `ConverMalas.md` sigue en formato viejo, reescribir igual.
+- Situaciones core (10): búsqueda c/presupuesto, no-sabe-qué-quiere, >3 resultados→cualificar, sin-stock+alternativa, permuta, señal-presupuesto-sin-número, simulación cuotas, objeción de precio, pide fotos, cierre/"lo pienso". Extra (4): anotar pedido, financiación, fuera de alcance, tono espejo+ráfaga.
 
 ## ⏳ C — Fine-tune (PENDIENTE)
 Objetivo de fondo: bakear el comportamiento en los pesos → prompt corto y consistente. Plan + dataset semilla (11 arquetipos) en `specs/2026-05-25-finetune-plan-derivador.md` + `bot-service/finetune/`. Pausado; retomar después de B.
