@@ -1,5 +1,11 @@
 # Operation Log
 
+## [2026-05-26] build | FangioBot — chat del dashboard 100% nativo (sin chatscope/chatcn)
+Rework iterativo del chat del dashboard. Detalle en [[proyectos/Fangio_CRM/Sesion_2026-05-26_Chat_UI]].
+- Sacado **chatscope** (parpadeo al enviar + `flex-shrink` exprimía la burbuja a 1 letra) y **chatcn** probado+revertido (rama `feat/chat-chatcn`). Chat ahora custom/nativo en `components/Chat/MessageWindow.tsx`.
+- Hora estilo WhatsApp (flow-root + float), álbum 2×2 con `+N`, input `<textarea>` nativo, envío optimista sin parpadeo (key estable del temp), spinner de carga al abrir chat.
+- Gotcha: los previews de Vercel no sirven para validar UI (SSO + NEXTAUTH a prod + Mongo compartida) → validar en prod, revert-able. Memoria `reference_fangiobot_chat_ui`.
+
 ## [2026-05-25] sesion | FangioBot — dominio nuevo, UI del chat, rollback del bot a WhatsApp
 Sesión larga multi-frente. Detalle completo + backlog en [[proyectos/Fangio_CRM/Sesion_2026-05-25_UI_y_Bot]].
 - **DOMINIO (LIVE)**: `fangiobot.com` pasa a ser el dominio PRINCIPAL del producto. DNS en Squarespace → Vercel (apex A `76.76.21.21`, www CNAME `cname.vercel-dns.com`); `NEXTAUTH_URL` + `APP_URL` = `https://www.fangiobot.com` en Vercel; `APP_URL` parametrizado en `subscribe/route.ts` (afecta back_url/notification_url MercadoPago). Commit FangioBot `283ea88`. Pendiente: redirect `fangiobot.com → fangiobot.com` + rebrand visual UI "FangioBot"→"FangioBot". Memoria `project_fangiobot_domain_migration`.
