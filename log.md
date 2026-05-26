@@ -1,5 +1,11 @@
 # Operation Log
 
+## [2026-05-26] build | FangioBot bot — plan A→B→C para pulir sin inflar el prompt
+Detalle en [[proyectos/Fangio_CRM/Sesion_2026-05-26_Bot_Prompt]].
+- A (comprimir prompt 455→167, mismo comportamiento, test_bot.sh 35/35, live) HECHO. Commit `499dd6b`.
+- B (reglas mecánicas a código): decidido log-only + filtro frases prohibidas + anti-alucinación precios/URLs. FALTA implementar en `_parse_agent_response`.
+- C (fine-tune) pendiente. D (gpt-4.1 full) descartado.
+
 ## [2026-05-26] build | FangioBot — chat del dashboard 100% nativo (sin chatscope/chatcn)
 Rework iterativo del chat del dashboard. Detalle en [[proyectos/Fangio_CRM/Sesion_2026-05-26_Chat_UI]].
 - Sacado **chatscope** (parpadeo al enviar + `flex-shrink` exprimía la burbuja a 1 letra) y **chatcn** probado+revertido (rama `feat/chat-chatcn`). Chat ahora custom/nativo en `components/Chat/MessageWindow.tsx`.
