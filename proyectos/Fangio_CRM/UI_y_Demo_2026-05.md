@@ -14,7 +14,7 @@
 - Tipografía Inter. Sin subrayado en `<a>` que son botones.
 
 ## Landing (`src/app/page.tsx` + `landing.css`)
-ULTRA-minimal: **"Fangio Bot"** gigante (gradiente blanco) + tagline "El Agente de IA para tu concesionaria." + CTA blanco "Probar el agente" + `© 2026 fangiocrm` al pie. Nav arriba a la derecha: **Registrarse** (glass) + **Iniciar sesión** (ghost). Sin secciones, sin footer separado. (Hubo una versión multi-sección que se descartó.)
+ULTRA-minimal: **"FangioBot"** gigante (gradiente blanco) + tagline "El Agente de IA para tu concesionaria." + CTA blanco "Probar el agente" + `© 2026 fangiocrm` al pie. Nav arriba a la derecha: **Registrarse** (glass) + **Iniciar sesión** (ghost). Sin secciones, sin footer separado. (Hubo una versión multi-sección que se descartó.)
 
 ## Demo del agente en vivo (`src/components/DemoAgent.tsx` + `/api/demo/chat` + `/api/demo/transcribe`)
 El CTA "Probar el agente" abre un overlay: wizard compacto ("¿Cómo se llama tu concesionaria?") → chat que **abre el usuario**. Autocontenido (OpenAI `gpt-4.1-mini` streaming, NO usa el bot Python del VPS), reusa `OPENAI_API_KEY` ya en Vercel. Audio: mic → `/api/demo/transcribe` (Whisper `whisper-1`) → mensaje. Botón "Registrarse" blanco (solo en el chat; se oculta cuando aparece la tarjeta de cierre). IG/FB no aplica acá.
