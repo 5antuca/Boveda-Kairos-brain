@@ -58,9 +58,30 @@ Tres causas, en capas:
 - Textarea del chat **auto-expandible hasta ~5 renglones** y después scroll vertical.
 - Toda la UI de **rojo → verde** (marca emerald `#10b981`; base gris/glass intacta).
 
+## 7. Decisión de método de fine-tune (2026-05-27, tarde)
+
+Al revisar los **10 ejemplos ya archivados** (Claude los inspeccionó en Mongo) salió una distinción clave: hay **dos voces** en `bot_examples`:
+- `rol: bot` (#1–#4) = **trazas reales del bot** con `nota` de qué hizo mal.
+- `rol: vendedor` (#5–#10) = **el usuario escribiendo a mano la respuesta ideal** (jugando de vendedor desde Fangio mientras se hace pasar por cliente por WhatsApp).
+
+El usuario quería usar las trazas malas como **negativos** ("cómo NO tiene que funcionar") y su texto a mano como **positivos**. Análisis y **decisión final**:
+
+- **Método = SFT (fine-tune supervisado) sobre el gold escrito a mano. NO DPO.** Es el método que mejor instala el comportamiento ("dejar el bot funcionando exactamente como quiero") Y el que mejor calza con el workflow cómodo del usuario (escribir conversaciones ideales enteras durante el día). SFT = clonado de comportamiento: le mostrás N conversaciones perfectas y aprende a producirlas.
+- **Por qué NO DPO** (aunque era la idea inicial de "negativos"): el SFT normal **no puede aprender de negativos** — solo imita los `assistant` que le das; meter una respuesta mala enseña a repetirla. El método que sí usa pos/neg es **DPO (preference)**, pero necesita el bueno **y** el malo *en el mismo punto exacto* de la charla. El workflow del usuario produce **conversaciones buenas completas**, no pares alineados turno-a-turno (una corrida mala y una buena del mismo caso *se desvían* tras el primer turno → no se parean mecánicamente). Por eso DPO no encaja sin cambiar a un flujo incómodo (dejar que el bot conteste mal y corregir ese turno puntual).
+- **Los negativos NO se tiran**: cambian de rol → **set de evaluación** (tras entrenar, reproducir esos escenarios y verificar que el modelo nuevo los resuelve) + **checklist** de qué casos cubrir con gold.
+
+**Workflow diario validado** (seguir así): cliente por WhatsApp + vendedor a mano desde Fangio. Tres recordatorios para que cada charla sume:
+1. Cubrir la **matriz**, sin repetir caso: compra · permuta · financiación · objeción precio · "lo pienso" · no-sabe · sin-stock · multi-vehículo · fuera de horario · insistente · **spam** (ahora que está el anti-spam guard, una charla que termina sin respuesta es ejemplo válido).
+2. **Variar nombres** (Santi/Gerstner, otra agencia/vendedor) → que el modelo lea el nombre del prompt, no hardcodee "Santi" (multi-tenant safe).
+3. Cada respuesta `vendedor` **es la verdad que el modelo copia** → escribirla ya canónica (frase de derivación exacta, sin "Perfecto/Te entiendo").
+
+**Detalle de formato (lo maneja el export):** el bot real responde en **JSON multi-burbuja** (`{"mensaje1","mensaje2",...}`) y decide tools; el gold a mano es texto plano. El script de export envuelve el gold en el contrato del bot (drop-in, sin tocar el parser). Para casos con stock, ver cómo reconstruir el resultado de la tool en el contexto (alcance "estilo"/opción A de la spec, no tool-calling).
+
+**Próximo paso concreto:** Claude arma el script `bot_examples → JSONL OpenAI` en el repo kairos (no toca prod): toma solo los `vendedor` (positivos) como targets, los mapea al formato del bot, manda los `bot`-traces a un archivo de eval aparte, y valida el JSONL. El usuario sigue archivando gold hasta ~30-50 cubriendo la matriz. Ver memoria `project_fangiobot_finetune_dataset` (actualizada) y `specs/2026-05-25-finetune-plan-derivador.md` §6 (decisiones, ahora resueltas).
+
 ## Pendientes
 - Commitear los cambios del bot (fast-path/debounce/prompt) en el repo kairos.
-- Fine-tune: re-hacer ejemplos contaminados, llegar a ~30-50, export JSONL.
+- Fine-tune: **(decidido: SFT sobre gold)** re-hacer ejemplos contaminados, llegar a ~30-50 cubriendo la matriz, armar el script de export a JSONL.
 - Dedup del eco fromMe de Evolution (mensaje saliente aparece 2x: vendedor + bot).
 - Que `(archivar` sin paréntesis de cierre también dispare.
 - Soporte de **reproducir audios**: el player `<audio>` ya está; faltó un audio de prueba para diagnosticar (0 en la base). Definir si además se pueden **mandar** audios desde la UI.

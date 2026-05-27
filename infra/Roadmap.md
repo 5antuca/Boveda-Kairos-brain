@@ -25,7 +25,11 @@ Estado del plan de pulido **A→B→C** (detalle en [[../proyectos/Fangio_CRM/Se
 - ✅ **A** — comprimir prompt 455→167 líneas, mismo comportamiento (commit `499dd6b`).
 - ✅ **B** — guardas mecánicas **log-only** en `graph.py` (commit `d147d9e`): frases prohibidas + anti-alucinación de precios/URLs; solo loggea (`guard_*`), no altera el output. D (modelo más fuerte) descartado.
 - 🔜 **Escribir los tests** (acá estamos): `ConverBuenas.md` ya reescrito desde cero con 14 situaciones-plantilla (CB-01..14). Pendiente: el usuario rellena diálogos → regenerar asserts. `ConverMalas.md` todavía en formato viejo (n8n), reescribir igual.
-- ⏳ **C** — fine-tune del derivador (pendiente; plan + dataset en `specs/2026-05-25-finetune-plan-derivador.md`).
+- ⏳ **C** — fine-tune del derivador. **Método decidido (2026-05-27): SFT (supervisado) sobre gold escrito a mano** — NO DPO. Plan + dataset en `specs/2026-05-25-finetune-plan-derivador.md`; detalle de la decisión en [[../proyectos/Fangio_CRM/Sesion_2026-05-27_Dataset_Media_Orden]] §7.
+    - **Positivos = los `vendedor` del chat** (el usuario se hace pasar por cliente por WhatsApp y responde a mano desde Fangio) → son el target que el modelo clona. Su workflow produce conversaciones ideales completas, que es justo lo que come SFT.
+    - **Negativos = las trazas `bot` con nota** → NO se entrenan (SFT solo imita lo que le das; entrenar un negativo enseña a repetirlo). Pasan a ser el **set de eval** + checklist de cobertura.
+    - DPO descartado: serviría para "entrenar con negativos" pero necesita par bueno/malo en el MISMO contexto, y el workflow del usuario produce conversaciones buenas enteras, no pares alineados turno-a-turno.
+    - Next: script `bot_examples → JSONL` (toma solo `vendedor`, los mapea al contrato JSON multi-burbuja del bot, separa los `bot`-traces a un archivo de eval, valida). Vive en el repo kairos (no toca prod). Llegar a ~30-50 cubriendo la matriz (incl. **spam**, ahora que está el guard).
 - Aparte: rollback single-tenant del bot (revierte multi-tenant) sin commitear; bot sirve gerstner.
 
 ### 🖼️ Subproyecto: carga de fotos del stock (EN DISEÑO, 2026-05-26)
