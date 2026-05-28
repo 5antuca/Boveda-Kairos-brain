@@ -1,7 +1,7 @@
 ---
 tags: [gerstner-studio, configurador-911, optimizacion, 3d, en-progreso]
 fecha-inicio: 2026-05-28
-estado: EN PROGRESO - falta TurboSmooth en body + re-export v5
+estado: Configurador LIVE con v4_HIQ (2026-05-28) · PENDIENTE TurboSmooth→v5 para fenders smooth
 ---
 
 # Optimización 3D del Porsche Singer — Sesión 2026-05-28
@@ -275,6 +275,29 @@ npx -y @gltf-transform/cli optimize /root/INPUT.glb /root/OUTPUT_TINY.glb \
 5. **Material `paint`** — sigue teniendo su `baseColorTexture` de 4096×2048 (era 8192×4096 original, ya bajamos). El configurador la override con color dinámico en código vía Three.js material override.
 
 ---
+
+## Integración al configurador — 2026-05-28 (LIVE con v4_HIQ)
+
+El configurador (`/root/apps/gerstnersinger911`, Next 16 + R3F, deploy **Vercel** en **studio.gerstnerwerks.com**) ya tiene el Singer propio reemplazando al 911 gratis. Commit `d042818` en `main` → Vercel auto-deploy. El repo en el VPS es solo un checkout; el código fuente vive en el Mac y el deploy lo hace Vercel desde GitHub (`5antuca/gerstnersinger911`).
+
+**Qué se hizo:**
+- `public/models/PorscheSinger.glb` = copia de `Porsche_v4_HIQ.glb` (13MB). Se borró `Porsche911.glb`.
+- `src/components/3d/Car.tsx` reescrito como **loader genérico** (`<primitive object={gltf.scene}/>`, model-agnostic) en vez de gltfjsx. **Cambiar a v5 = cambiar `MODEL_URL`, nada más.**
+  - Escala `0.0254` (pulgadas→m) + auto-centrado y apoyo al piso vía `Box3` (robusto al origen interno del modelo).
+  - Override de materiales por nombre real del GLB: `Paint_ext` (pintura, color dinámico), `Fuchs_1/Fuchs_2/Fuchs_cap` (llantas: color+metalness+roughness).
+- `src/components/3d/Scene.tsx`: `OrbitControls` con `enableDamping` + `dampingFactor 0.04` + `rotateSpeed 0.45` + `autoRotate 0.35` → cámara suave/lenta estilo Porsche. Se sacó la `position` hardcodeada del `<Car>` (ahora autocentra).
+- Build local OK (Next 16 Turbopack, TS pasa). Deps instaladas en el checkout del VPS.
+
+**Materiales del Singer (66 total, los útiles):**
+- Pintura: `Paint_ext` · Llantas: `Fuchs_1/Fuchs_2/Fuchs_cap` · neumáticos: `Tire_extrude/rough/base`
+- Interior (futuro): `Leather_BK_*`, `Leather_BR_*`, `Leather_BG_*`, `Carpet_in`, `Alu_int`, `Momo_*`
+- Otros: `Chrome`, `Brake_*`, `Glass_*`, `Headlamp_glass`, `Emblem_*`
+
+**Caveats / pendientes:**
+- ⚠️ **Fenders traseros facetados** (es v4, falta TurboSmooth → v5). Cuando esté v5: copiar a `public/models/PorscheSinger.glb`, commit, push.
+- Pestaña **Interior** sigue mostrando imágenes estáticas (no toca el 3D). Para cuero real: override `Leather_*` (TODO).
+- **Pintura**: si `Paint_ext` tiene baseColorTexture fuerte, el color dinámico puede verse atenuado. Verificar en vivo; si pasa, anular `.map` del material.
+- Verificar en vivo: encuadre de cámara (fov/target), orientación del auto, y que las llantas Fuchs tomen el color.
 
 ## Próximos pasos (después de re-export v5)
 
