@@ -66,6 +66,11 @@ SSAO (AO), Bloom (highlights), SMAA (antialias), tone mapping / color grading.
 
 ---
 
+## ✅ Ajustes adicionales (2026-05-29, parte 3)
+- **Llantas two-tono real:** `Fuchs_1` (rayos + labio) = color del selector; `Fuchs_2` (valles/fondo recesado) = gunmetal oscuro fijo (`#262626`); `Fuchs_cap` = color. Matchea la Fuchs real (rayos claros + valles oscuros).
+- **Fondo de estudio:** `Environment background` con `backgroundBlurriness 0.6` + `backgroundIntensity 0.28` → estudio 360° desenfocado y atenuado (gradiente, no negro plano).
+- **Intermitente delantero tapado por el guardabarros:** la lente (`Glass_orange`) comparte mesh con el panel pintado (submeshes coplanares → z-fighting). Fix: `polygonOffset` negativo en las lentes (`LENS_GLASS`) → quedan como capa superior. (Verificar de cerca; si persiste es geometría → Blender.)
+
 ## ✅ Estado de aplicación (2026-05-29)
 - **P1 (Scene.tsx) — HECHO:** HDRI estudio real (`/env/MR_INT-005_WhiteNeons_NAD1K.hdr`, `environmentIntensity 1`, background oscuro) → reflejos de estudio estirados. Cámara cinematográfica (`fov 24` ≈ focal larga, ángulo bajo, target 0.55, dist 5-12). Luces de contraste (key 1.5 + fill 0.35 + spot rim 0.7, ambient 0.22). `ContactShadows` marcadas (scale 16, blur 2.6, opacity 0.9, far 2.2) → ancla el auto. Fondo `#15171a` = gradiente.
 - **P2 (Car.tsx materiales) — HECHO:** Pintura `MeshPhysicalMaterial` con clearcoat profundo (`clearcoatRoughness 0.06`), `sheen` (profundidad basecoat), `envMapIntensity 1.5`. Metales/chrome `envMapIntensity 1.3` (reflejos largos). Ventanas `Glass_ext` con tinte frío + reflejos fuertes (`roughness 0.03`, `envMapIntensity 2.2`, opacity 0.62, interior oscurecido). Gomas charcoal `#1b1b1b` (no negro puro) + roughness ~0.8 (no uniforme total) con normal map.
