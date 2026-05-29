@@ -83,6 +83,23 @@ SSAO (AO), Bloom (highlights), SMAA (antialias), tone mapping / color grading.
 - **P3:** Post-procesado (instalar postprocessing) → SSAO + Bloom + SMAA + grading.
 - **P4:** Texturas de detalle (orange peel, scratches, dust) — opcional, máximo realismo.
 
+## 🎨 Ajuste final de look (2026-05-29, aprobado + DEPLOYADO a prod)
+Commit `gerstnersinger911@26fd2db` pusheado a `main` → live en studio.gerstnerwerks.com.
+- **Pintura:** metálica profunda (metalness 0.85, flake) + clearcoat de laca (`clearcoatRoughness 0.035`, `envMapIntensity 1.7`) → navy metálico tipo el auto real, reflejos largos/nítidos (wet look).
+- **Llantas Fuchs (decisión final):** SIN negro. Radios + labio/aro exterior = aluminio satinado (color del selector, default plata); valles = aluminio satinado un toque más oscuro; centro = aluminio. El contraste interno lo da el **disco de freno** en metal OPACO/mate oscuro (`#525252`, roughness 0.8). Pinzas de freno ROJAS (`Brake_caliper`, metalness 0).
+- **Vidrios:** ventanas (`Glass_ext`) tinte claro + reflejos (opacity 0.42); ópticas (`Headlamp_glass`) casi clear (opacity 0.25) con `envMapIntensity 2.4` (reflejo deforme por la curvatura, look real); guiños (`Glass_orange`) opacity 0.4. Faros sin transmission (no desaparecen a distancia).
+- **Esquina parachoques/faro:** `polygonOffset -8` en lentes (`LENS_GLASS`) + en el aro `Lamp_chrome` → el faro queda sobre el parachoques. (Si queda un hilo de z-fighting = geometría coplanar → Blender.)
+- **Fondo:** estudio 360° desenfocado/atenuado (`backgroundBlurriness 0.6`, `backgroundIntensity 0.28`).
+
+## ⭐ Importar una VERSIÓN NUEVA del 3D base (ej. con butacas nuevas)
+Todo el look es **model-agnostic** y se aplica solo si el modelo nuevo respeta los nombres de material. Pasos:
+1. Exportar/optimizar el nuevo `.blend` con el MISMO pipeline (`export_glb.py` + gltf-transform; ver [[SPEC_Photoreal_Pipeline]] y [[Optimizacion_3D]]). Mantener los nombres de material (`Paint_ext`, `Fuchs_1/Fuchs_2/Fuchs_cap`, `Glass_ext`, `Headlamp_glass`, `Glass_orange/red/parking_light`, `Lamp_chrome`, `Brake_caliper`, `Brake_disc`, `Tire_*`/`Rubber`, `Carpet_*`, `Plastic_int_matt`, etc.).
+2. Reemplazar el GLB en `public/models/` y apuntar `MODEL_URL` en `Car.tsx`.
+3. **La escena** (`Scene.tsx`: HDRI, cámara, luces, contact shadows, fondo) se aplica 100% sin tocar nada.
+4. **Los materiales** (`Car.tsx`: pintura, llantas, vidrios, faros, gomas, piso) se aplican por NOMBRE vía `applyToMaterials()` → si los nombres coinciden, hereda todo automáticamente.
+5. Si el modelo nuevo trae nombres distintos (ej. butacas nuevas con material nuevo), agregar/mapear esos nombres en los overrides correspondientes (`FINISH_MATS`/`COLOR_MATS`/`METAL_MATS`/`LENS_GLASS`). Las butacas nuevas: si usan `Leather_*` existentes, heredan; si no, agregar el nombre nuevo a `FINISH_MATS` (acabado) y/o `COLOR_MATS`.
+6. Re-verificar grounding (`FLOOR_MATS` = `Tire_base`) y escala (`SCALE`; el pack original venía en metros = 1.0).
+
 ## Model-agnostic
 - `Scene.tsx` (HDRI, Lightformers, cámara, shadows, post) = 100% independiente del modelo.
 - `Car.tsx` aplica calidad de material por NOMBRE (`Paint_ext`, `Glass_ext`, `Rubber`/`Tire_*`, `Chrome`, etc.) → otro modelo con esos nombres hereda el look; si difieren, se hereda parcial y se mapean los nombres nuevos.
