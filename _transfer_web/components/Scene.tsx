@@ -59,7 +59,7 @@ export function Scene() {
         {/* HDRI forest.exr (studiolight de Blender) SOLO para iluminación y
             reflejos. environmentIntensity 1.0 = strength 1.0 del World. */}
         <Environment
-          files="/env/forest.exr"
+          files="/env/forest.hdr"
           environmentIntensity={1.0}
         />
       </Suspense>
