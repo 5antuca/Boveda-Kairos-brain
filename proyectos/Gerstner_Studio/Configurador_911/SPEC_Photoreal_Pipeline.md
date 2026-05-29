@@ -1,7 +1,7 @@
 ---
 tags: [gerstner-studio, configurador-911, photoreal, spec, handoff, blender]
 fecha: 2026-05-29
-estado: ACTIVO — Fase 1 (base limpia) lista para arrancar en la Mac
+estado: ACTIVO — Fase 1 HECHA (local, sin pushear). Pendiente: decidir puerta cerrada + Fase 2 (bake)
 entry-point: true
 ---
 
@@ -65,8 +65,25 @@ Que el configurador en **studio.gerstnerwerks.com** se vea **fotorrealista** (ca
 - **No romper** el loader genérico, la escala `0.0254` ni el grounding.
 - El modelo se commitea a git (Vercel lo sirve de `/public`). Vigilar tamaño (<25MB ideal).
 
+## ✅ Resultado Fase 1 (2026-05-29) — HECHO en local, NO pusheado
+- Pack en `~/Documents/gerstner_singer_pack/`. El `.blend` venía como zip anidado (`911_blend_2.82_packed.zip` → 107MB blend). Scripts de export/inspección quedaron ahí (`export_glb.py`, `inspect*.py`).
+- **Export**: Blender 4.5.3 headless. Pipeline en `export_glb.py`:
+  1. Renombrar materiales `espacio→_` y `punto→_` (ej. `Paint ext`→`Paint_ext`, `Emblem gold.bump`→`Emblem_gold_bump`). Reproduce EXACTO el contrato de nombres que espera `Car.tsx` (METAL_MATS/FINISH_MATS/PAINT_MAT/FLOOR_MATS) → **código intacto, no se tocó nada de materiales**.
+  2. Borrar 3 meshes helper SIN material (`Plane.052/.014/.433`, cages de `Lattice_&_deformers`) que renderizaban como **planos blancos** flotando sobre el auto. NO son parte del auto.
+  3. Export GLB: `+Y up`, apply modifiers, materiales + texturas de detalle.
+- **Optimize** (gltf-transform): `optimize --texture-compress webp --texture-size 4096 --simplify false --palette false --join false` + `draco --quantize-* 14`. **219MB → 21MB** (bajo target 25MB). `--join/--palette/--simplify false` para preservar materiales por nombre.
+- **Integración** (`Car.tsx`): `MODEL_URL = '/models/SingerClean.glb'` y **`SCALE = 1.0`** (¡el pack original viene en METROS, ~4.9m de largo — NO en pulgadas como el degradado, por eso ya NO va 0.0254!). El modelo viejo `PorscheSinger.glb` quedó en `public/models/` para rollback.
+- **Verificado** en `npm run build` (OK) + `npm run dev`: carrocería suave sin facetas, pintura clearcoat dinámica funcionando (probado cambio de color), asientos pepita con textura real, ruedas Fuchs apoyadas (grounding por `Tire_base` OK), cero errores de consola. Salto enorme de calidad. ✔
+
+### ⚠️ Hallazgos para resolver (no bloquean Fase 1)
+1. **Puerta del conductor modelada ABIERTA** (~70°) en el pack fuente (colección `Door`, 14 meshes). Para el configurador conviene cerrarla por default → rotar los objetos de `Door` a posición cerrada en Blender y re-exportar. Decisión pendiente del usuario.
+2. **Bahía de motor / radiador se ve verde-azulado**: material procedural `Internals`/`Radiator` (TEX_WAVE+EMISSION) que no exporta a glTF → se ve plano. Territorio de **Fase 2 (bake)**.
+3. **Encuadre de cámara** un toque cerrado con el modelo nuevo; el usuario puede zoom out (maxDistance 8). Eventual ajuste fino en Fase 3.
+
 ## ▶️ Próximo paso inmediato
-Abrir `911 by Singer (2.82 packed).blend` en Blender → export glTF → optimizar → drop en `public/models/` → `MODEL_URL` → `npm run dev` → comparar contra el actual. Si mejora, push a `main`.
+1. Revisar el modelo nuevo en el browser y decidir: ¿cerrar la puerta? ¿pushear a `main` (= deploy LIVE)?
+2. Si OK → `git add public/models/SingerClean.glb src/components/3d/Car.tsx` + push.
+3. Después: Fase 2 (bake de procedurales) o Fase 3 (HDRI estudio + post-procesado).
 
 ## 🔗 Relacionado
 [[Optimizacion_3D]] (detalle de la sesión + recetas gltf-transform + quirks) · [[ROADMAP]] (fases del producto) · [[ROADMAP_Modelo_Singer_3D]] · [[README]]
