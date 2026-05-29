@@ -299,7 +299,7 @@ El configurador (`/root/apps/gerstnersinger911`, Next 16 + R3F, deploy **Vercel*
 - ⚠️ **Fenders traseros facetados** (es v4, falta TurboSmooth → v5). Cuando esté v5: copiar a `public/models/PorscheSinger.glb`, commit, push.
 - Pestaña **Interior** sigue mostrando imágenes estáticas (no toca el 3D). Para cuero real: override `Leather_*` (TODO).
 - Texturas/normal-maps finos = round-trip por **Blender** (importar RAW → editar Principled BSDF → export glTF). Reglas: mantener nombres de material (`Paint_ext`, `Fuchs_*`, `Tire_base`), bakear procedurales. Blender `Subdivision Surface` puede hacer el smoothing de fenders en lugar de volver a Max.
-- ✅ Resuelto 2026-05-28/29: grounding (apoya en piso) + pintura con clearcoat reflectante + color del selector real.
+- ✅ Resuelto 2026-05-28/29: grounding (apoya en piso) + pintura con clearcoat reflectante + color del selector real + **metales PBR reales** (`METAL_MATS` en `Car.tsx`: el GLB traía todo `metalness=0`; ahora cromo/alu/oro/escape reflejan). Tintes placeholder de `Chrome` (rosado) y `Mirror` (verde-agua) neutralizados.
 
 ## Próximos pasos (después de re-export v5)
 
