@@ -100,6 +100,26 @@ Todo el look es **model-agnostic** y se aplica solo si el modelo nuevo respeta l
 5. Si el modelo nuevo trae nombres distintos (ej. butacas nuevas con material nuevo), agregar/mapear esos nombres en los overrides correspondientes (`FINISH_MATS`/`COLOR_MATS`/`METAL_MATS`/`LENS_GLASS`). Las butacas nuevas: si usan `Leather_*` existentes, heredan; si no, agregar el nombre nuevo a `FINISH_MATS` (acabado) y/o `COLOR_MATS`.
 6. Re-verificar grounding (`FLOOR_MATS` = `Tire_base`) y escala (`SCALE`; el pack original venía en metros = 1.0).
 
+## ⚡ Performance web (60fps) — aplicado
+- **DPR adaptativo** (`PerformanceMonitor` en `Scene.tsx`): 1.25 base, baja a 1 si caen FPS, sube a 1.5 si sobra. En retina, dpr 2 = 4× píxeles = lo que más traba.
+- **ContactShadows `frames={1}`**: el auto está QUIETO (solo orbita la cámara) → la sombra se calcula una vez, no por frame. Gran ahorro.
+- `powerPreference: 'high-performance'`. Cámara `minDistance 2.4` (más zoom).
+- **Si sigue pesado** (modelo 1.7M tris): opciones — (a) re-export con `--simplify` moderado en gltf-transform (baja tris, leve pérdida de calidad); (b) LOD; (c) bajar dpr base a 1. NO aplicado aún para no perder calidad.
+
+## 🪑 Cambiar la BUTACA en el 3D — guía
+**Archivos** (en `~/Documents/gerstner_singer_pack/`):
+- `.blend` fuente editable: `Porsche 911 reimagined by Singer free pack/blend_extracted/911 by Singer (2.82 packed).blend` (107MB) ← editar acá la geometría.
+- `export_glb.py` (5.6KB): pipeline de export (renombra materiales, normaliza Diffuse/Glossy→Principled, borra emblemas Singer + acrílico, reasigna piso). 
+- `singer_raw.glb` (215MB, full quality) / `singer_final.glb` (23MB, optimizado) = salidas.
+
+**Qué tener en cuenta:**
+1. Las butacas están en la colección **`Recaro base`** (38 mesh) del `.blend`. Reemplazar/editar esos meshes.
+2. **MANTENER los nombres de material** (clave para que el código aplique el look). Los asientos usan `Leather_*`, `Recaro_paint`, `Carpet_*`, etc. Si la butaca nueva trae un material nuevo, agregar su nombre a `FINISH_MATS`/`COLOR_MATS` en `Car.tsx` (1 línea).
+3. **Conservar UVs** en la geometría nueva (sin UV no entran texturas).
+4. Re-exportar con `export_glb.py` (mismo pipeline) → optimizar (webp 4k + draco, ver [[Optimizacion_3D]]) → `public/models/` → `MODEL_URL` en `Car.tsx`.
+5. Re-verificar **escala** (`SCALE=1.0`, el pack viene en metros) y **grounding** (`FLOOR_MATS=Tire_base`).
+6. Si viene un `.blend` NUEVO del artista (no editar el actual): importarlo, correr el mismo `export_glb.py` (ajustando nombres si difieren) → hereda todo el look de escena + materiales.
+
 ## Model-agnostic
 - `Scene.tsx` (HDRI, Lightformers, cámara, shadows, post) = 100% independiente del modelo.
 - `Car.tsx` aplica calidad de material por NOMBRE (`Paint_ext`, `Glass_ext`, `Rubber`/`Tire_*`, `Chrome`, etc.) → otro modelo con esos nombres hereda el look; si difieren, se hereda parcial y se mapean los nombres nuevos.
