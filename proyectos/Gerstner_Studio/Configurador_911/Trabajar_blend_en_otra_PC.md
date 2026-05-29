@@ -8,6 +8,7 @@ relacionado: "[[SPEC_Photoreal_Pipeline]]"
 
 > Cómo continuar editando el 3D del configurador 911 en Blender desde otra computadora.
 > Pipeline y look completo en [[SPEC_Photoreal_Pipeline]] · [[ROADMAP_Fase3_Photoreal]].
+> 🪟 **Setup específico para Windows** (PC `toroj`, carpeta `Santi 3D`): [[Setup_Windows_Santi3D]].
 
 ## Concepto clave (importante)
 Hay DOS partes separadas:
