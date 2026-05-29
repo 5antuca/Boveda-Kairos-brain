@@ -50,6 +50,17 @@ relacionado: "[[SPEC_Photoreal_Pipeline]]"
 - ✅ Relojes → vidrio oscuro transparente (se ve el dial), no blanco.
 - ⏳ "Más anodizado": metales de interior (`Alu_int`, `Metal_ext_rough`) aún algo claros → opción de bajarlos a charcoal satinado.
 
+### 5. Tapas oil/fuel — letras descentradas (UV)
+- **Síntoma:** la tapa quedó metal pero las letras FUEL/OIL no están centradas en el domo; la de OIL mapea mal.
+- **Causa:** UV de los meshes `Sphere.000` (fuel) y `Sphere.026` (oil) no alinea el label al centro del domo. La textura `fuel_cap_2` tiene FUEL (arriba) + OIL (abajo) en una sola imagen; cada tapa debe mapear su mitad centrada.
+- **Referencia real:** domo cromado pulido con FUEL grabado, centrado, en anillo negro moleteado (ver `Vistas/.../Tapa De Combustible`).
+- **Solución (Blender):** reproyectar/centrar la UV de cada tapa sobre su label; mantener metal (`Fuel_oil_caps` metal + normal map). En código ya se dejó metal con `normalScale` alto.
+
+### 6. Deformidad en el guardabarros delantero izquierdo
+- **Síntoma:** abolladura/deformación en el guardabarro izq. delantero (visible en el configurador).
+- **Causa:** NO está en el `.blend` original (render directo del pack = liso) → se introduce en el **pipeline de export**: candidatos = `weld` del `optimize` (fusiona vértices y pellizca superficies suaves), `apply_modifiers` (lattice), o cuantización draco.
+- **Solución a probar (orden):** (a) re-exportar con `optimize ... --weld 0` (desactivar weld); (b) si persiste, subir `--quantize-position` o exportar sin draco para aislar; (c) revisar si un lattice deforma ese panel al aplicar modifiers.
+
 ## ▶️ Orden sugerido
 1. Fase 2 bake de procedurales (`Plexi_bubbles`, `Internals`, `Radiator`, reflectores de luces) → mata el verde y baja z-fighting.
 2. Convertir Diffuse→Principled en `export_glb.py` (CR1) → elimina los "blancos" de raíz, sin overrides en código.
