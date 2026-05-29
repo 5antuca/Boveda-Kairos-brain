@@ -81,6 +81,8 @@ Que el configurador en **studio.gerstnerwerks.com** se vea **fotorrealista** (ca
   - `Scene.tsx`: `toneMappingExposure 1.6→1.0`, `ambientLight 1.2→0.5`, `directionalLight` key 0.8→0.6 / fill 0.9→0.5 / rim 0.4→0.3, `Environment environmentIntensity 1.3→1.0`.
   - `Car.tsx`: pintura `clearcoatRoughness 0.06→0.10` y `envMapIntensity 1.25→1.0`; `METAL_MATS` envMapIntensity `1.3→1.0`; agregadas gomas a `FINISH_MATS` (`Rubber/Tire_rough/Tire_base/Tire_extrude/Wiper_rubber ~0.9`, `Plastic_ext_matt 0.85`) — el pack las traía en roughness 0.5 (plásticas).
   - Resultado: navy se lee profundo (antes lavado a celeste), reflejos de estudio realistas, gomas mate. ✔
+- **Acrílico verde de la rejilla se veía bugueado** (clipeaba al bajarlo + verde por material procedural): borrado `Circle.011` (`Plexi_bubbles`) en `export_glb.py`. Queda la rejilla metálica recesada limpia.
+- **Eliminados emblemas "Singer"** (pedido del usuario): `Plane.394` (`Emblem_gold`, script "Singer" trasero) + `Plane.393` (`Emblem_sticker`, "reimagined") + `Plane.245` (`Chrome`, badge del tablero). Los emblemas **Porsche** se mantienen.
 
 ### ⚠️ Hallazgos pendientes (no bloquean Fase 1)
 1. **Puerta del conductor modelada ABIERTA** (~70°) en el pack fuente (colección `Door`, 14 meshes). Para el configurador conviene cerrarla por default → rotar los objetos de `Door` a posición cerrada en Blender y re-exportar. Decisión pendiente del usuario.
