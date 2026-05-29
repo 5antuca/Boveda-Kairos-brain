@@ -30,15 +30,14 @@ relacionado: "[[SPEC_Photoreal_Pipeline]]"
 - **Causa probable:** caras solapadas entre labio (`Fuchs_1`) y cara (`Fuchs_2`), o entre llanta y disco/campana; posible amplificación por cuantización draco de posición.
 - **Solución:** revisar geometría de la Fuchs en Blender (merge/offset de caras coplanares); validar contra export sin draco; ya se subió `--quantize-position` 14→16 para mitigar.
 
-### 3. Ópticas / faros delanteros — z-fighting
-- **Síntoma:** parpadeo en el faro.
-- **Causa:** capas muy cercanas — `Headlamp_glass` (lente) + `Lamp_chrome`/reflector + `Headlamp_bulb` — casi coplanares y transparentes.
-- **Solución:** offsetear las capas (lente vs reflector) unos mm en Blender; asegurar transparencia correcta del vidrio (no opaco); bakear el reflector si es procedural.
+### 3. Ópticas / faros delanteros — ✅ mitigado en código
+- **Síntomas reportados:** de lejos los cristales DESAPARECEN y aparecen CUADRADOS NEGROS en los marcos.
+- **Causas (confirmadas):** (a) `Lamp_chrome` + `Headlamp_bulb` venían en metalness 1 / **roughness 0 = espejo perfecto** → aliasing especular a distancia = cuadrados negros. (b) `Headlamp_glass` usaba **transmission (refracción) + alpha baja** → la transmission no se renderiza a distancia y el cristal desaparece.
+- **Fix en `Car.tsx`:** `Lamp_chrome`/`Headlamp_bulb` → METAL_MATS roughness 0.3. Vidrios de faro (`LENS_GLASS`) → `transmission=0`, transparencia simple, opacidad piso 0.6, `depthWrite=false`. + filtrado anisotrópico (mipmaps).
+- **Pendiente fino (Fase 2):** si quedan z-fighting de capas lente/reflector muy cercanas, separarlas unos mm en Blender.
 
-### 4. Faros traseros — z-fighting
-- **Síntoma:** parpadeo en el cluster trasero.
-- **Causa:** lentes coloreadas solapadas (`Glass_red`, `Glass_orange`, `Glass_parking_light`) + housing.
-- **Solución:** igual que #3 — separar capas de lente, transparencia correcta, revisar normales.
+### 4. Faros traseros — ✅ mismo fix que #3
+- Lentes coloreadas (`Glass_red`, `Glass_orange`, `Glass_parking_light`) estaban en el set `LENS_GLASS` → transmission off + transparencia estable. Verificar de lejos.
 
 ## 🆕 Resueltos (sesión 2026-05-29, parte 2)
 - **"Cuadrados"/baja resolución de lejos** (faros, metales, acrílico) = **aliasing de mipmaps**. ✅ Fix en `Car.tsx`: filtrado **anisotrópico máximo + trilineal** (`LinearMipmapLinearFilter`) en TODAS las texturas (`map/normalMap/roughnessMap/metalnessMap/aoMap/emissiveMap`) vía `gl.capabilities.getMaxAnisotropy()`.
