@@ -66,6 +66,12 @@ SSAO (AO), Bloom (highlights), SMAA (antialias), tone mapping / color grading.
 
 ---
 
+## ✅ Estado de aplicación (2026-05-29)
+- **P1 (Scene.tsx) — HECHO:** HDRI estudio real (`/env/MR_INT-005_WhiteNeons_NAD1K.hdr`, `environmentIntensity 1`, background oscuro) → reflejos de estudio estirados. Cámara cinematográfica (`fov 24` ≈ focal larga, ángulo bajo, target 0.55, dist 5-12). Luces de contraste (key 1.5 + fill 0.35 + spot rim 0.7, ambient 0.22). `ContactShadows` marcadas (scale 16, blur 2.6, opacity 0.9, far 2.2) → ancla el auto. Fondo `#15171a` = gradiente.
+- **P2 (Car.tsx materiales) — HECHO:** Pintura `MeshPhysicalMaterial` con clearcoat profundo (`clearcoatRoughness 0.06`), `sheen` (profundidad basecoat), `envMapIntensity 1.5`. Metales/chrome `envMapIntensity 1.3` (reflejos largos). Ventanas `Glass_ext` con tinte frío + reflejos fuertes (`roughness 0.03`, `envMapIntensity 2.2`, opacity 0.62, interior oscurecido). Gomas charcoal `#1b1b1b` (no negro puro) + roughness ~0.8 (no uniforme total) con normal map.
+- **P3 (post-procesado) — BLOQUEADO:** `@react-three/postprocessing` v3 + `postprocessing` v6 con R3F v9 / three 0.184 → `EffectComposer` renderiza NEGRO (SSAO pide NormalPass y aun habilitándolo queda negro; Bloom+SMSAA solos también negro, sin error claro). Probable incompat de versiones. Desinstalado por ahora. **Pendiente:** resolver combo de versiones compatible (o usar `pmndrs/postprocessing` directo / `N8AO`) → SSAO + Bloom + SMAA + grading. El `antialias` MSAA del renderer ya está activo mientras tanto.
+- **P4 (texturas de detalle)** — pendiente: orange peel, micro scratches, dust, roughness maps (máximo realismo).
+
 ## Orden de ejecución
 - **P1 (sin instalar nada, máximo impacto):** Scene.tsx → HDRI + Lightformers + cámara cinematográfica + contraste de luces + ContactShadows/piso reflectante.
 - **P2:** Car.tsx → pintura (clearcoat + micro roughness + flake), vidrio (tinte/reflejo), neumáticos (menos negro + micro bump + roughness irregular), chrome (reflejos largos).
