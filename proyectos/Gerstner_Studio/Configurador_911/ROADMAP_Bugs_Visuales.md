@@ -41,6 +41,13 @@ relacionado: "[[SPEC_Photoreal_Pipeline]]"
 - **Causa:** lentes coloreadas solapadas (`Glass_red`, `Glass_orange`, `Glass_parking_light`) + housing.
 - **Solución:** igual que #3 — separar capas de lente, transparencia correcta, revisar normales.
 
+## 🆕 Resueltos (sesión 2026-05-29, parte 2)
+- **"Cuadrados"/baja resolución de lejos** (faros, metales, acrílico) = **aliasing de mipmaps**. ✅ Fix en `Car.tsx`: filtrado **anisotrópico máximo + trilineal** (`LinearMipmapLinearFilter`) en TODAS las texturas (`map/normalMap/roughnessMap/metalnessMap/aoMap/emissiveMap`) vía `gl.capabilities.getMaxAnisotropy()`.
+- **Acrílico verde glitcheaba** (transparente + textura de huecos procedural). ✅ Workaround en código: `Plexi_bubbles` → plexi ahumado liso (`#1c1f1c`, opacity 0.6, sin textura, `depthWrite=false`). El look perforado "de serie" exacto requiere el bake (Fase 2).
+- **Pinzas rojas**: el `dedup` borraba `Brake_caliper` → hecho rojo/distinto en Blender (CR4). ✅
+- **Tapas oil/fuel**: metal con letras (textura invertida en canvas para letras grises sutiles + normal map). ✅ Pendiente: centrar UV (item 5).
+- **Guardabarros izq.**: re-export con `weld 0` (a verificar por el usuario).
+
 ## 🎨 Ajustes de color/material (estado)
 - ✅ Piso interno (`Plastic_int_matt`) → oscuro. Alfombras (`Carpet_*`) → negro. Gomas → negro mate.
 - ✅ Llantas → plata satinada + labio pulido (default).
