@@ -85,6 +85,17 @@ Que el configurador en **studio.gerstnerwerks.com** se vea **fotorrealista** (ca
 - **Eliminados emblemas "Singer"** (pedido del usuario): `Plane.394` (`Emblem_gold`, script "Singer" trasero) + `Plane.393` (`Emblem_sticker`, "reimagined") + `Plane.245` (`Chrome`, badge del tablero). Los emblemas **Porsche** se mantienen.
 - **Rejilla trasera: decisión FINAL del usuario = dejarla DE SERIE** (posición original del pack, con el acrílico verde "flotando" tal cual venía). Probamos bajarla (clipeaba/bugueaba) y quitarla, pero el usuario prefiere el estado stock. `export_glb.py` `REMOVE` = solo los 3 emblemas Singer; la rejilla NO se toca. El verde del acrílico es material procedural → se corrige en **Fase 2** (bake).
 - **Alfombras del piso → negras** (pedido del usuario; venían claras: `Carpet_out` casi blanco 0.8, `Carpet_in` gris 0.38). `Car.tsx`: nuevo `COLOR_MATS` setea `Carpet_in`/`Carpet_out` a `#141414`. Además `Footwell_plate` se corrigió (lo había aclarado a gris metálico; ahora `#1c1c1c` casi mate — el pack lo traía negro).
+- **Coloreado según fotos de referencia** (carpeta `~/Downloads/Porsche Gerstner Singer/Presentacion Porsche Gerstner/Vistas/`):
+  - Referencias confirman: alfombra coordina con el cuero (build cognac→marrón, build azul→azul); el modelo usa pepita negra → alfombra negra OK. Llantas Fuchs = cara satinada + **labio pulido** brillante (dos-tonos). Salidas de escape = acero inox pulido. Silenciador/cobertor real = caja blanca/crema (pero el modelo no tiene material separado para esa caja — desde el configurador solo se ven las salidas).
+  - `Car.tsx` `METAL_MATS`: `Exhaust_matt` → acero pulido (`metalness 1, roughness 0.28, #c2c2c2`).
+  - `Car.tsx` loop de llantas: ahora **Fuchs dos-tonos** — `Fuchs_2` (cara) + `Fuchs_cap` toman el color del store; `Fuchs_1` (labio) fijo en plata pulida (`#cfd2d6`, roughness 0.14).
+  - Estos son overrides de material en código (HMR) → NO requieren re-export del GLB. El GLB deployado sigue siendo el de la rejilla de serie + Singer eliminado.
+- **Decisiones de color confirmadas por el usuario** (eligió desde las refs, vía pregunta):
+  - **Pinzas de freno → ROJAS** (`Car.tsx`: `Brake_caliper` color `#b01515`, roughness 0.38 pintura semi-brillo). Se ven a través de los rayos.
+  - **Llantas Fuchs → ANODIZADO NEGRO + labio pulido**: `useConfiguratorStore.ts` default `rimStyle` = preset `Anodized Black` (`#141414`, metalness 0.85, roughness 0.4). El labio (`Fuchs_1`) sigue plata pulida → dos-tonos.
+  - **Salidas de escape → acero pulido** (ya estaba: `Exhaust_matt #c2c2c2` roughness 0.28).
+  - **Alfombras → negras** (confirmado: `#141414`).
+  - Regla de trabajo del usuario: ante duda de color, PREGUNTAR (las refs tienen varios builds de distinto color).
 - **Metales/grises/interiores/gomas reflejaban demasiado** (env "city" brillante + roughness bajos):
   - `Scene.tsx`: `environmentIntensity 1.0→0.65`.
   - `Car.tsx` `METAL_MATS`: subido roughness (Alu/Metal_ext/Wiper/Brake/Footwell ~0.5-0.55, antes 0.3-0.35) + color gris neutro (`#9a9a9a`-`#a0a0a0`) donde el GLB traía base blanca → leen acero cepillado, no cromo blanco. Chrome/Mirror siguen brillantes (son cromo) pero con color algo más bajo.
