@@ -75,9 +75,16 @@ Que el configurador en **studio.gerstnerwerks.com** se vea **fotorrealista** (ca
 - **Integración** (`Car.tsx`): `MODEL_URL = '/models/SingerClean.glb'` y **`SCALE = 1.0`** (¡el pack original viene en METROS, ~4.9m de largo — NO en pulgadas como el degradado, por eso ya NO va 0.0254!). El modelo viejo `PorscheSinger.glb` quedó en `public/models/` para rollback.
 - **Verificado** en `npm run build` (OK) + `npm run dev`: carrocería suave sin facetas, pintura clearcoat dinámica funcionando (probado cambio de color), asientos pepita con textura real, ruedas Fuchs apoyadas (grounding por `Tire_base` OK), cero errores de consola. Salto enorme de calidad. ✔
 
-### ⚠️ Hallazgos para resolver (no bloquean Fase 1)
+### 🔧 Ajustes post-feedback (2026-05-29, misma sesión)
+- **Rejilla/stone-guard trasera LEVITABA** ~0.2m sobre los louvers del motor (assembly `Group.001`+`Group.002`: `Plane`,`Plane.015`,`Plane.027`,`Circle.011`,`Bolt.019/020`,`Lattice.001`). Fix en `export_glb.py`: bajar el assembly `-0.20` en Z → asienta dentro del recess (look RSR). Decisión del usuario: mantenerla bajada (no borrarla).
+- **Todo se veía sobre-brillante/reflejado**: el código estaba tuneado para el modelo viejo (metalness=0 en todo). El GLB nuevo trae PBR real → los hacks se sumaban de más. Reconciliado:
+  - `Scene.tsx`: `toneMappingExposure 1.6→1.0`, `ambientLight 1.2→0.5`, `directionalLight` key 0.8→0.6 / fill 0.9→0.5 / rim 0.4→0.3, `Environment environmentIntensity 1.3→1.0`.
+  - `Car.tsx`: pintura `clearcoatRoughness 0.06→0.10` y `envMapIntensity 1.25→1.0`; `METAL_MATS` envMapIntensity `1.3→1.0`; agregadas gomas a `FINISH_MATS` (`Rubber/Tire_rough/Tire_base/Tire_extrude/Wiper_rubber ~0.9`, `Plastic_ext_matt 0.85`) — el pack las traía en roughness 0.5 (plásticas).
+  - Resultado: navy se lee profundo (antes lavado a celeste), reflejos de estudio realistas, gomas mate. ✔
+
+### ⚠️ Hallazgos pendientes (no bloquean Fase 1)
 1. **Puerta del conductor modelada ABIERTA** (~70°) en el pack fuente (colección `Door`, 14 meshes). Para el configurador conviene cerrarla por default → rotar los objetos de `Door` a posición cerrada en Blender y re-exportar. Decisión pendiente del usuario.
-2. **Bahía de motor / radiador se ve verde-azulado**: material procedural `Internals`/`Radiator` (TEX_WAVE+EMISSION) que no exporta a glTF → se ve plano. Territorio de **Fase 2 (bake)**.
+2. **Bahía de motor / radiador + plexi de la rejilla se ven verde-azulado**: material procedural `Internals`/`Radiator`/`Plexi bubbles` (TEX_WAVE+EMISSION) que no exporta a glTF → se ve plano/verde. Territorio de **Fase 2 (bake)**.
 3. **Encuadre de cámara** un toque cerrado con el modelo nuevo; el usuario puede zoom out (maxDistance 8). Eventual ajuste fino en Fase 3.
 
 ## ▶️ Próximo paso inmediato
