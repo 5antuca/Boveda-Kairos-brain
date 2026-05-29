@@ -283,8 +283,10 @@ El configurador (`/root/apps/gerstnersinger911`, Next 16 + R3F, deploy **Vercel*
 **Qué se hizo:**
 - `public/models/PorscheSinger.glb` = copia de `Porsche_v4_HIQ.glb` (13MB). Se borró `Porsche911.glb`.
 - `src/components/3d/Car.tsx` reescrito como **loader genérico** (`<primitive object={gltf.scene}/>`, model-agnostic) en vez de gltfjsx. **Cambiar a v5 = cambiar `MODEL_URL`, nada más.**
-  - Escala `0.0254` (pulgadas→m) + auto-centrado y apoyo al piso vía `Box3` (robusto al origen interno del modelo).
-  - Override de materiales por nombre real del GLB: `Paint_ext` (pintura, color dinámico), `Fuchs_1/Fuchs_2/Fuchs_cap` (llantas: color+metalness+roughness).
+  - Escala `0.0254` (pulgadas→m) + auto-centrado (X/Z por bbox completo) y apoyo al piso por la **MEDIANA del fondo de los meshes `Tire_base`** (las 4 ruedas de calle, niveladas en las esquinas). Medido en `useLayoutEffect` post-montaje (matrices finales).
+    - ⚠️ **Gotcha clave**: NO apoyar por el bbox completo ni por `Tire_extrude/Tire_rough` → esos materiales están soldados en mega-meshes (`Text.003`) de la optimización en Max, su bbox llega a `-27in` y hacía flotar el auto ~0.6m. Hay además una rueda de auxilio interna al centro (`Tire main`, `-4.25in`) que la mediana ignora.
+  - **Pintura** = `MeshPhysicalMaterial` propio que reemplaza a `Paint_ext` (que venía sin clearcoat y con baseColorTexture horneada que apagaba el color). Sin `map` → color del selector puro; `clearcoat:1 + clearcoatRoughness:0.06` → refleja el environment como laca. Se reemplaza el slot también en meshes multi-material. Knobs en `Car.tsx` (`paintMaterial`).
+  - Llantas: override por nombre `Fuchs_1/Fuchs_2/Fuchs_cap` (color+metalness+roughness desde el store).
 - `src/components/3d/Scene.tsx`: `OrbitControls` con `enableDamping` + `dampingFactor 0.04` + `rotateSpeed 0.45` + `autoRotate 0.35` → cámara suave/lenta estilo Porsche. Se sacó la `position` hardcodeada del `<Car>` (ahora autocentra).
 - Build local OK (Next 16 Turbopack, TS pasa). Deps instaladas en el checkout del VPS.
 
@@ -296,8 +298,8 @@ El configurador (`/root/apps/gerstnersinger911`, Next 16 + R3F, deploy **Vercel*
 **Caveats / pendientes:**
 - ⚠️ **Fenders traseros facetados** (es v4, falta TurboSmooth → v5). Cuando esté v5: copiar a `public/models/PorscheSinger.glb`, commit, push.
 - Pestaña **Interior** sigue mostrando imágenes estáticas (no toca el 3D). Para cuero real: override `Leather_*` (TODO).
-- **Pintura**: si `Paint_ext` tiene baseColorTexture fuerte, el color dinámico puede verse atenuado. Verificar en vivo; si pasa, anular `.map` del material.
-- Verificar en vivo: encuadre de cámara (fov/target), orientación del auto, y que las llantas Fuchs tomen el color.
+- Texturas/normal-maps finos = round-trip por **Blender** (importar RAW → editar Principled BSDF → export glTF). Reglas: mantener nombres de material (`Paint_ext`, `Fuchs_*`, `Tire_base`), bakear procedurales. Blender `Subdivision Surface` puede hacer el smoothing de fenders en lugar de volver a Max.
+- ✅ Resuelto 2026-05-28/29: grounding (apoya en piso) + pintura con clearcoat reflectante + color del selector real.
 
 ## Próximos pasos (después de re-export v5)
 
