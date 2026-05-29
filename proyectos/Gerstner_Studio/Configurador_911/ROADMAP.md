@@ -3,8 +3,9 @@
 Este documento define las fases de desarrollo e implementación del configurador de GerstnerWerks.
 
 > [!info] Ver también
+> - **[[SPEC_Photoreal_Pipeline]]** — ⭐ SPEC activo + punto de entrada para Claude Code en la Mac: pipeline a fotorrealismo (export limpio del pack Singer → optimizar → bake de procedurales → HDRI/postFX). Empezar acá.
 > - [[ROADMAP_Modelo_Singer_3D]] — roadmap específico para reemplazar el modelo 911 gratuito por el Porsche Singer propio (AutoCAD → web, fotorrealista, interior + aperturas) + auditoría del estado real del código.
-> - [[Optimizacion_3D]] — sesión 2026-05-28 con artista 3D: pipeline ProOptimizer en Max + Draco/WebP en VPS. PENDIENTE: TurboSmooth en body para fix de fenders, re-export v5.
+> - [[Optimizacion_3D]] — sesión 2026-05-28: pipeline ProOptimizer en Max + Draco/WebP + integración del modelo al configurador (grounding, pintura clearcoat, metales PBR). Detalle histórico + recetas.
 
 ## Fase 1: Setup de escena 3D y carga del modelo base
 - [ ] Procesar `Porsche911.glb` a través de `gltfjsx` para extraer la jerarquía de componentes React.
