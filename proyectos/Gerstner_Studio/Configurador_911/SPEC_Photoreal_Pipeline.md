@@ -118,4 +118,4 @@ Que el configurador en **studio.gerstnerwerks.com** se vea **fotorrealista** (ca
 3. Después: Fase 2 (bake de procedurales) o Fase 3 (HDRI estudio + post-procesado).
 
 ## 🔗 Relacionado
-[[Optimizacion_3D]] (detalle de la sesión + recetas gltf-transform + quirks) · [[ROADMAP]] (fases del producto) · [[ROADMAP_Modelo_Singer_3D]] · [[README]]
+[[ROADMAP_Bugs_Visuales]] (bugs visuales pendientes, punto por punto) · [[Optimizacion_3D]] (detalle de la sesión + recetas gltf-transform + quirks) · [[ROADMAP]] (fases del producto) · [[ROADMAP_Modelo_Singer_3D]] · [[README]]
