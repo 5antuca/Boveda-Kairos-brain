@@ -96,6 +96,8 @@ Que el configurador en **studio.gerstnerwerks.com** se vea **fotorrealista** (ca
   - **Salidas de escape → acero pulido** (ya estaba: `Exhaust_matt #c2c2c2` roughness 0.28).
   - **Alfombras → negras** (confirmado: `#141414`).
   - Regla de trabajo del usuario: ante duda de color, PREGUNTAR (las refs tienen varios builds de distinto color).
+- **BUG RAÍZ encontrado: materiales DUPLICADOS por nombre en el GLB** (ej. `Paint_ext` ×2). El código indexaba 1 instancia por nombre y editaba solo esa → las demás instancias quedaban sin tocar (gomas/alfombras/relojes/escape blancos aunque el override "estaba"). **Fix en `Car.tsx`**: helper `applyToMaterials()` que recorre TODOS los slots de TODOS los meshes y aplica `METAL_MATS`/`FINISH_MATS`/`COLOR_MATS` (+ rim + gauge glass) a cada instancia. Ahora los overrides cubren las duplicadas.
+  - Sumado: gomas (`Rubber`/`Tire_*`) forzadas a negro `#0d0d0d`; `Gauge_glass` (venía blanco opaco 0.8 tapando el dial) → vidrio oscuro casi transparente (`#0a0a0a`, opacity 0.2) → relojes se ven negros con agujas/números; `Exhaust_matt` de pulido a **acero cepillado** `#8f8f8f` roughness 0.42 (el pulido se quemaba a blanco con el env).
 - **Metales/grises/interiores/gomas reflejaban demasiado** (env "city" brillante + roughness bajos):
   - `Scene.tsx`: `environmentIntensity 1.0→0.65`.
   - `Car.tsx` `METAL_MATS`: subido roughness (Alu/Metal_ext/Wiper/Brake/Footwell ~0.5-0.55, antes 0.3-0.35) + color gris neutro (`#9a9a9a`-`#a0a0a0`) donde el GLB traía base blanca → leen acero cepillado, no cromo blanco. Chrome/Mirror siguen brillantes (son cromo) pero con color algo más bajo.
