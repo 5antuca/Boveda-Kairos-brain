@@ -21,10 +21,9 @@ relacionado: "[[SPEC_Photoreal_Pipeline]]"
 
 ## 🐞 Bugs a solucionar
 
-### 1. Acrílico verde que "vuela" sobre el spoiler — z-fighting + color
-- **Síntoma:** la rejilla/stone-guard trasera (que el usuario quiere DE SERIE, flotando) parpadea (z-fighting) y se ve verde plano.
-- **Causa:** `Plexi_bubbles` (mesh `Circle.011`) es material **procedural** (no exporta → verde/plano) y sus caras quedan **coplanares/solapadas** con la rejilla metálica → z-fighting.
-- **Solución:** (a) bakear el procedural a textura PBR en Blender (Fase 2); (b) separar levemente en Z las caras coplanares del plexi vs la malla; (c) si se mantiene transparente, revisar `depthWrite`/orden de transparencia.
+### 1. Acrílico verde — ✅ ELIMINADO (solo el acrílico; spoiler y grilla SE MANTIENEN)
+- Decisión final: borrar **solo el acrílico volador** = el plexi verde `Circle.011` (`Plexi_bubbles`). La grilla/spoiler (`Plane`, `Plane.015`, `Plane.027`, bolts) **queda en su lugar**. `export_glb.py` `REMOVE` = `['Plane.394','Plane.393','Plane.245','Circle.011']`.
+- (Nota: hubo un paso donde se borró todo el assembly por error; corregido — solo `Circle.011`.)
 
 ### 2. Llantas (Fuchs) — artefactos/z-fighting
 - **Síntoma:** parpadeo en la llanta.
