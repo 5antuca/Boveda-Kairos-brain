@@ -83,6 +83,13 @@ Que el configurador en **studio.gerstnerwerks.com** se vea **fotorrealista** (ca
   - Resultado: navy se lee profundo (antes lavado a celeste), reflejos de estudio realistas, gomas mate. ✔
 - **Acrílico verde de la rejilla se veía bugueado** (clipeaba al bajarlo + verde por material procedural): borrado `Circle.011` (`Plexi_bubbles`) en `export_glb.py`. Queda la rejilla metálica recesada limpia.
 - **Eliminados emblemas "Singer"** (pedido del usuario): `Plane.394` (`Emblem_gold`, script "Singer" trasero) + `Plane.393` (`Emblem_sticker`, "reimagined") + `Plane.245` (`Chrome`, badge del tablero). Los emblemas **Porsche** se mantienen.
+- **Rejilla trasera: decisión FINAL del usuario = dejarla DE SERIE** (posición original del pack, con el acrílico verde "flotando" tal cual venía). Probamos bajarla (clipeaba/bugueaba) y quitarla, pero el usuario prefiere el estado stock. `export_glb.py` `REMOVE` = solo los 3 emblemas Singer; la rejilla NO se toca. El verde del acrílico es material procedural → se corrige en **Fase 2** (bake).
+- **Alfombras del piso → negras** (pedido del usuario; venían claras: `Carpet_out` casi blanco 0.8, `Carpet_in` gris 0.38). `Car.tsx`: nuevo `COLOR_MATS` setea `Carpet_in`/`Carpet_out` a `#141414`. Además `Footwell_plate` se corrigió (lo había aclarado a gris metálico; ahora `#1c1c1c` casi mate — el pack lo traía negro).
+- **Metales/grises/interiores/gomas reflejaban demasiado** (env "city" brillante + roughness bajos):
+  - `Scene.tsx`: `environmentIntensity 1.0→0.65`.
+  - `Car.tsx` `METAL_MATS`: subido roughness (Alu/Metal_ext/Wiper/Brake/Footwell ~0.5-0.55, antes 0.3-0.35) + color gris neutro (`#9a9a9a`-`#a0a0a0`) donde el GLB traía base blanca → leen acero cepillado, no cromo blanco. Chrome/Mirror siguen brillantes (son cromo) pero con color algo más bajo.
+  - `Car.tsx` `FINISH_MATS`: interiores subidos (cuero rough 0.72→0.82, glossy 0.42→0.55, `Int_glossy` 0.14→0.3, +Recaro_paint/Headlining/Leather_WH); gomas a ~0.97.
+  - `useConfiguratorStore.ts` `PRESET_RIMS`: silver `roughness 0.2→0.42` (era espejo), metalness 0.8→0.9, hex algo más neutro; gold/black también más mate.
 
 ### ⚠️ Hallazgos pendientes (no bloquean Fase 1)
 1. **Puerta del conductor modelada ABIERTA** (~70°) en el pack fuente (colección `Door`, 14 meshes). Para el configurador conviene cerrarla por default → rotar los objetos de `Door` a posición cerrada en Blender y re-exportar. Decisión pendiente del usuario.
