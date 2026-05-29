@@ -13,6 +13,30 @@ Relacionado: [[README]] · [[ROADMAP_Modelo_Singer_3D]] · [[Spec_PorscheSinger_
 
 ---
 
+## ⏩ HANDOFF — continuar en Claude Code corriendo en la Mac (2026-05-29)
+
+**Por qué**: la fase fotorrealista es trabajo de Blender (export + bake) + archivos locales + GPU. Conviene correr Claude Code **en la Mac**. La instancia del VPS no tiene Blender ni "ojos". Es **sesión nueva (arranca en frío)** → leer este doc entero, sobre todo la sección "Integración al configurador".
+
+**Configurador (LIVE en studio.gerstnerwerks.com vía Vercel):**
+- Repo en la Mac: `/Users/5an/Documents/gerstnersinger911`. **`git pull` primero** (trae commits `d042818..aaf11b1`).
+- Modelo actual `public/models/PorscheSinger.glb` = v4_HIQ degradado de SketchUp (sin UVs, meshes soldados en blobs, fenders facetados).
+- Hecho en código (`src/components/3d/Car.tsx`): loader genérico `<primitive>`, escala `0.0254`, grounding por **mediana de `Tire_base`**, pintura `MeshPhysicalMaterial` con clearcoat (color dinámico del store), metales PBR (`METAL_MATS`), acabado mate interior (`FINISH_MATS`). Cámara con damping en `Scene.tsx`. Build OK con Node 20 / Next 16.
+
+**Pack fuente (la base BUENA):**
+- Mac: `~/Downloads/Porsche 911 reimagined by Singer free pack-…zip`. VPS: `/root/singer_pack/`.
+- Trae `.blend` 2.82 (packed, 112MB), FBX (195MB), C4D — con **UVs + geometría limpias**. Mismos nombres de material que el GLB actual → el del 3D degradó este pack.
+- Texturas = SOLO detalle (decals franjas/letras, emblema normal+displacement 4k, cinturón normal, goma normal/dirt, máscaras). **Materiales PROCEDURALES** (shaders Blender/C4D) → NO exportan a glTF.
+
+**Plan a fotorrealista:**
+1. **Export GLB limpio** del `.blend` (`911 by Singer (2.82 packed).blend`) o FBX → Blender File→Export→glTF 2.0 (+Y up, Apply Modifiers). Arregla geometría/UVs/normales/metalness de un saque.
+2. **Optimizar web**: `gltf-transform optimize --texture-compress webp --texture-size 4096` + `draco --quantize-normal 14` (recetas completas más abajo en este doc).
+3. **Bakear procedurales** (cuero/pintura/alfombra) → mapas albedo/roughness/normal en Blender, re-export. **Núcleo del photoreal.**
+4. **Configurador**: HDRI de estudio (`public/env/MR_INT-005_WhiteNeons_NAD1K.hdr` ya está) + post-procesado (`@react-three/postprocessing`: SSAO + bloom + tone) + mantener color de pintura dinámico. Al bakear bien, se pueden **sacar los hacks `METAL_MATS`/`FINISH_MATS`** del código.
+
+**Próximo paso inmediato**: abrir el `.blend` en Blender → export glTF → drop en `public/models/` → ajustar `MODEL_URL` en `Car.tsx` → ver en local con `npm run dev` antes de pushear.
+
+---
+
 ## Estado al cierre de sesión (interrumpido por crash de VSCode)
 
 ### En 3ds Max (PC del artista)
