@@ -11,24 +11,24 @@ import { Suspense, useState } from 'react'
 import { Model as Car } from './Car'
 import * as THREE from 'three'
 
-// Escena cinematográfica (Fase 3) — 100% model-agnostic: cualquier modelo que
-// se cargue hereda esta iluminación de estudio, cámara fotográfica y piso.
+// Escena model-agnostic. Look calcado del Material Preview de Blender:
+// HDRI = forest.exr (el studiolight por defecto de Blender), iluminación SOLO
+// por HDRI (sin luces extra), tone mapping Standard (sin Filmic) y fondo gris
+// neutro como el viewport. Así la web respeta los colores/reflejos del .blend.
 export function Scene() {
-  // DPR adaptativo para fluidez en web: arranca en 1.25 y el PerformanceMonitor
-  // lo baja a 1 si caen los FPS o lo sube a 1.5 si sobra. En retina, dpr 2
-  // renderiza 4× píxeles → es lo que más traba; capar acá da 60fps.
+  // DPR adaptativo para fluidez en web: arranca en 1.25, baja a 1 si caen FPS.
   const [dpr, setDpr] = useState(1.25)
 
   return (
     <Canvas
-      // Cámara fotográfica: focal larga (~fov 24 ≈ 85mm), ángulo bajo, poca
-      // distorsión. Menos "orbital 3D", más foto automotriz.
+      // Cámara fotográfica: focal larga (fov 18 ≈ tele), poca distorsión.
       camera={{ position: [6.45, 1.54, -7.52], fov: 18 }}
       dpr={dpr}
       gl={{
         antialias: true,
-        toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.05,
+        // Blender usa view transform "Standard" → sin curva filmic.
+        // NoToneMapping = solo linear→sRGB, igual que Standard.
+        toneMapping: THREE.NoToneMapping,
         powerPreference: 'high-performance',
       }}
     >
@@ -37,42 +37,30 @@ export function Scene() {
         onIncline={() => setDpr(1.5)}
       />
 
-      <color attach="background" args={['#15171a']} />
-
-      {/* Iluminación cinematográfica: key fuerte y definida + relleno bajo +
-          ambient mínimo → contraste agresivo y zonas oscuras reales, como la
-          fotografía automotriz. */}
-      <ambientLight intensity={0.12} />
-      <directionalLight position={[6, 9, 3]} intensity={1.5} />
-      <directionalLight position={[-7, 3.5, -4]} intensity={0.22} />
-      <spotLight position={[-2, 7, -7]} angle={0.6} penumbra={1} intensity={0.6} />
+      {/* Fondo gris neutro como el viewport de Blender (no se usa el HDRI de
+          fondo; el HDRI va solo para reflejos/iluminación). */}
+      <color attach="background" args={['#3c3c3c']} />
 
       <Suspense fallback={null}>
         <Car />
 
-        {/* Piso: contacto físico. El auto está QUIETO (solo orbita la cámara),
-            así que la sombra se calcula UNA sola vez (frames=1) → no recomputa por
-            frame = gran ahorro de performance. */}
+        {/* Sombra de contacto con el piso (el auto está quieto → frames=1). */}
         <ContactShadows
           resolution={1024}
           frames={1}
           scale={16}
-          blur={2.6}
-          opacity={0.9}
+          blur={2.4}
+          opacity={0.75}
           far={2.2}
           color="#000000"
           position={[0, 0.002, 0]}
         />
 
-        {/* Estudio automotriz: HDRI real (white-neons softbox) → reflejos
-            largos/suaves + FONDO de estudio (desenfocado y atenuado) visible
-            360°. backgroundIntensity bajo → ambiente, no se quema. */}
+        {/* HDRI forest.exr (studiolight de Blender) SOLO para iluminación y
+            reflejos. environmentIntensity 1.0 = strength 1.0 del World. */}
         <Environment
-          files="/env/MR_INT-005_WhiteNeons_NAD1K.hdr"
-          environmentIntensity={0.95}
-          background
-          backgroundBlurriness={0.6}
-          backgroundIntensity={0.28}
+          files="/env/forest.exr"
+          environmentIntensity={1.0}
         />
       </Suspense>
 

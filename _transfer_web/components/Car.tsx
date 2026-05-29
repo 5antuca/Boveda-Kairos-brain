@@ -18,8 +18,12 @@ import { useConfiguratorStore } from '@/store/useConfiguratorStore'
 const MODEL_URL = '/models/SingerClean.glb'
 const SCALE = 1.0 // pack Singer original ya viene en metros (~4.9m de largo)
 
-// Nombres de material reales del GLB del Singer
-const PAINT_MAT = 'Paint ext'
+// Nombres de material reales del GLB del Singer.
+// PAINT_MAT desactivado a propósito: renderizamos la pintura TAL CUAL viene del
+// .blend (azul glossy autoreado en Blender) en vez de reemplazarla por un
+// material dinámico. Así la web respeta el look de Blender. (Para reactivar el
+// selector de color, volver a poner 'Paint ext'.)
+const PAINT_MAT = '__paint_disabled__'
 const RIM_MATS = ['Fuchs_1', 'Fuchs_2', 'Fuchs_cap']
 // El piso lo definen las ruedas de calle. Material Tire_base = meshes de
 // neumático limpios y separados por rueda. (Tire_extrude/Tire_rough están
